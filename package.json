@@ -1,0 +1,48 @@
+export default function Home() {
+  return (
+    <main>
+      <section className="hero">
+        <p className="notice">Grevenmacher Wäifest / Grevenmacher Wine Festival</p>
+        <h1>Kondschafter</h1>
+        <p className="artist">André Scholtes</p>
+        <p><strong>Auktioun Enn / Auction ends:</strong> 13 September 2026 · 19:00</p>
+        <div className="lang">
+          <a href="#lb">Lëtzebuergesch</a>
+          <a href="#en">English</a>
+        </div>
+      </section>
+
+      <div className="grid">
+        <section className="card">
+          <img className="artwork" src="/images/kondschafter.jpg" alt="Kondschafter by André Scholtes" />
+          <p className="notice">Bild ersetzen: <strong>public/images/kondschafter.jpg</strong></p>
+        </section>
+
+        <section className="card">
+          <h2>Aktuellt Héichstgebot / Current Highest Bid</h2>
+          <p className="bid">1.500 €</p>
+          <p>Nächst Mindestgebot / Next minimum bid: <strong>1.550 €</strong></p>
+          <form>
+            <input placeholder="Name" />
+            <textarea placeholder="Address / Adress" rows={3}></textarea>
+            <input placeholder="Email" type="email" />
+            <input placeholder="Phone / Telefon" />
+            <input placeholder="Bid Amount (€) / Gebot (€)" />
+            <button type="button">Submit Bid / Gebot ofginn</button>
+          </form>
+          <p className="notice">Hinweis: Diese erste Version zeigt die Seite online. Die echte Speicherung der Gebote folgt über Supabase.</p>
+        </section>
+      </div>
+
+      <section id="lb" className="card" style={{ marginTop: 24 }}>
+        <h2>Lëtzebuergesch</h2>
+        <p>Wëllkomm op der offizieller Auktiounssäit fir d’Konschtwierk “Kondschafter” vum André Scholtes.</p>
+      </section>
+
+      <section id="en" className="card" style={{ marginTop: 24 }}>
+        <h2>English</h2>
+        <p>Welcome to the official auction page for “Kondschafter” by André Scholtes.</p>
+      </section>
+    </main>
+  )
+}
