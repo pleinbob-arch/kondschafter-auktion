@@ -5,7 +5,7 @@ export default function Home() {
       margin:'0 auto',
       padding:'40px',
       fontFamily:'Arial',
-      backgroundImage:'url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpg)',
+     backgroundImage:'url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/app/background.jpg)',
       backgroundSize:'cover',
       backgroundPosition:'center',
       backgroundRepeat:'no-repeat',
