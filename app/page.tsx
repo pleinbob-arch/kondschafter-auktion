@@ -298,7 +298,35 @@ export default function Home() {
                 {auctionClosed ? 'Auktioun beendet / Auction ended' : 'Gebot späicheren / Submit Bid'}
               </button>
 
-              {message && <p><strong>{message}</strong></p>}
+<p style={{
+  fontSize:'12px',
+  lineHeight:'1.5',
+  color:'#555',
+  marginTop:'4px'
+}}>
+  * Mat der Ofginn vun engem Gebot akzeptéiert de Participant
+  d'Dateschutzerklärung an d'Auktiounsbedingungen.
+  <br />
+  * By submitting a bid, the participant agrees to the
+  privacy policy and auction terms.
+</p>
+
+<p style={{
+  fontSize:'12px',
+  marginTop:'-4px'
+}}>
+  <a
+    href="/privacy"
+    style={{
+      color:'#0f3d91',
+      textDecoration:'underline'
+    }}
+  >
+    Dateschutz / Privacy Policy
+  </a>
+</p>
+
+{message && <p><strong>{message}</strong></p>}
             </form>
           </div>
         </section>
