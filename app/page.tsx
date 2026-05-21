@@ -140,8 +140,22 @@ export default function Home() {
         <h2>Kënschtler: André Scholtes</h2>
 
         <p>
-          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
-        </p>
+  <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+</p>
+
+<section style={{
+  marginTop:'20px',
+  padding:'20px',
+  border:'1px solid #ccc',
+  borderRadius:'12px',
+  background:'rgba(255,255,255,0.75)'
+}}>
+
+  <h2>Countdown</h2>
+
+  <Countdown />
+
+</section>
 
         <img
           src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
