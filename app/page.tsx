@@ -34,6 +34,33 @@ export default function Home() {
 
   useEffect(() => {
     loadHighestBid()
+
+    const channel = supabase
+      .channel('bids-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'bids'
+        },
+        (payload) => {
+          const newAmount = Number(payload.new.amount)
+
+          setHighestBid((currentHighest) => {
+            if (newAmount > currentHighest) {
+              return newAmount
+            }
+
+            return currentHighest
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   async function submitBid(e: React.FormEvent) {
@@ -43,7 +70,7 @@ export default function Home() {
     const amount = Number(form.amount)
 
     if (!form.name || !form.address || !form.email || !amount) {
-      setMessage('Please complete all required fields.')
+      setMessage('Bitte alle Pflichtfelder ausfüllen.')
       return
     }
 
@@ -52,12 +79,19 @@ export default function Home() {
       return
     }
 
-    const { error } = await supabase.from('bids').insert([form])
+    const { error } = await supabase.from('bids').insert([{
+      name: form.name,
+      address: form.address,
+      email: form.email,
+      phone: form.phone,
+      amount: amount,
+      language: form.language
+    }])
 
     if (error) {
-  setMessage('Fehler: ' + error.message)
-  return
-}
+      setMessage('Fehler: ' + error.message)
+      return
+    }
 
     setHighestBid(amount)
     setMessage('Merci! Däi Gebot gouf gespäichert.')
@@ -103,10 +137,10 @@ export default function Home() {
           76. Gréiwemaacher Drauwen- A Wäifest
         </h1>
 
-        <h2>Kënschtler / Artist: André Scholtes</h2>
+        <h2>Kënschtler: André Scholtes</h2>
 
         <p>
-          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00 / Auction ends: 8:00 PM
+          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
         </p>
 
         <img
@@ -137,7 +171,8 @@ export default function Home() {
           </p>
 
           <p>
-            Mindest nächst Gebot / Minimum next bid: <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
+            Mindest nächst Gebot / Minimum next bid:{' '}
+            <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
           </p>
         </section>
 
@@ -208,6 +243,41 @@ export default function Home() {
         <section style={{marginTop:'30px'}}>
           <h2>English</h2>
           <p>Welcome to the official auction page of the "Kondschafter".</p>
+        </section>
+
+        <section style={{
+          marginTop:'50px',
+          paddingTop:'25px',
+          borderTop:'1px solid #999',
+          fontSize:'14px',
+          lineHeight:'1.6'
+        }}>
+          <h3>Organisatioun / Organization</h3>
+
+          <p>Dës Auktioun gëtt organiséiert vun der:</p>
+          <p>This auction is organized by:</p>
+
+          <p>
+            <strong>Kondschafter – association sans but lucratif</strong><br />
+            F10056
+          </p>
+
+          <p>
+            <strong>Adress / Address:</strong><br />
+            1A, Rue Kummert<br />
+            6743 Grevenmacher<br />
+            Luxembourg
+          </p>
+
+          <p>
+            <strong>Kënschtler / Artist:</strong><br />
+            André Scholtes
+          </p>
+
+          <p>
+            <strong>Websäit / Website:</strong><br />
+            https://kondschafter-auktion.vercel.app
+          </p>
         </section>
 
       </div>
