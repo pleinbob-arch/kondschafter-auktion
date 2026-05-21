@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, Session } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +11,8 @@ const supabase = createClient(
 const AUCTION_END = new Date('2026-09-13T19:00:00')
 
 export default function Home() {
+  const [session, setSession] = useState<Session | null>(null)
+  const [loginEmail, setLoginEmail] = useState('')
   const [highestBid, setHighestBid] = useState(1500)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
@@ -18,11 +20,29 @@ export default function Home() {
   const [form, setForm] = useState({
     name: '',
     address: '',
-    email: '',
     phone: '',
     amount: '',
     language: 'lb'
   })
+
+  async function sendMagicLink(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: loginEmail,
+      options: {
+        emailRedirectTo: 'https://kondschafter-auktion.vercel.app'
+      }
+    })
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
+    }
+
+    setMessage('Bestätegungslink gouf geschéckt. Kuck w.e.g. deng E-Mail.')
+  }
 
   async function loadHighestBid() {
     const { data } = await supabase
@@ -37,6 +57,14 @@ export default function Home() {
   }
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+    })
+
+    const authListener = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
     loadHighestBid()
 
     const checkAuctionClosed = () => {
@@ -53,15 +81,15 @@ export default function Home() {
         { event: 'INSERT', schema: 'public', table: 'bids' },
         (payload) => {
           const newAmount = Number(payload.new.amount)
-
-          setHighestBid((currentHighest) => {
-            return newAmount > currentHighest ? newAmount : currentHighest
-          })
+          setHighestBid((currentHighest) =>
+            newAmount > currentHighest ? newAmount : currentHighest
+          )
         }
       )
       .subscribe()
 
     return () => {
+      authListener.data.subscription.unsubscribe()
       supabase.removeChannel(channel)
       clearInterval(closeInterval)
     }
@@ -71,6 +99,11 @@ export default function Home() {
     e.preventDefault()
     setMessage('')
 
+    if (!session?.user?.email) {
+      setMessage('Bitte zuerst per E-Mail bestätigen.')
+      return
+    }
+
     if (new Date() >= AUCTION_END) {
       setMessage('Auktioun beendet / Auction ended')
       return
@@ -78,7 +111,7 @@ export default function Home() {
 
     const amount = Number(form.amount)
 
-    if (!form.name || !form.address || !form.email || !amount) {
+    if (!form.name || !form.address || !amount) {
       setMessage('Bitte alle Pflichtfelder ausfüllen.')
       return
     }
@@ -91,7 +124,7 @@ export default function Home() {
     const { error } = await supabase.from('bids').insert([{
       name: form.name,
       address: form.address,
-      email: form.email,
+      email: session.user.email,
       phone: form.phone,
       amount,
       language: form.language
@@ -104,10 +137,10 @@ export default function Home() {
 
     setHighestBid(amount)
     setMessage('Merci! Däi Gebot gouf gespäichert.')
+
     setForm({
       name: '',
       address: '',
-      email: '',
       phone: '',
       amount: '',
       language: 'lb'
@@ -119,7 +152,7 @@ export default function Home() {
       minHeight:'100vh',
       padding:'24px',
       fontFamily:'Arial, sans-serif',
-      backgroundImage:'linear-gradient(rgba(30,20,10,0.45), rgba(30,20,10,0.55)), url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpeg)',
+      backgroundImage:'linear-gradient(rgba(15,61,145,0.25), rgba(15,61,145,0.35)), url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpeg)',
       backgroundSize:'cover',
       backgroundPosition:'center',
       backgroundAttachment:'fixed'
@@ -128,10 +161,10 @@ export default function Home() {
       <div style={{
         maxWidth:'1100px',
         margin:'0 auto',
-        background:'rgba(255,250,242,0.94)',
+        background:'rgba(255,255,255,0.95)',
         borderRadius:'28px',
         overflow:'hidden',
-        boxShadow:'0 20px 60px rgba(0,0,0,0.35)'
+        boxShadow:'0 20px 60px rgba(0,0,0,0.25)'
       }}>
 
         <section style={{
@@ -154,7 +187,7 @@ export default function Home() {
             fontSize:'clamp(34px, 8vw, 64px)',
             lineHeight:'1.05'
           }}>
-            Kondschafter Auktioun -  fir e gudden Zweck
+            Kondschafter Auktioun
           </h1>
 
           <h2 style={{
@@ -197,17 +230,11 @@ export default function Home() {
           </div>
 
           <div>
-            <div style={{
-              padding:'24px',
-              borderRadius:'22px',
-              background:'#fff',
-              border:'1px solid #eadfce',
-              marginBottom:'20px'
-            }}>
+            <div style={cardStyle}>
               <p style={{
                 margin:'0 0 6px',
                 fontSize:'14px',
-                color:'#705c45'
+                color:'#315f9c'
               }}>
                 Aktuellt Héichstgebot / Current Highest Bid
               </p>
@@ -228,12 +255,9 @@ export default function Home() {
             </div>
 
             <div style={{
-              padding:'20px',
-              borderRadius:'22px',
+              ...cardStyle,
               background:'#eef6ff',
-              border:'1px solid #cfe5ff',
-              textAlign:'center',
-              marginBottom:'20px'
+              textAlign:'center'
             }}>
               <p style={{margin:'0 0 8px'}}>
                 <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
@@ -241,100 +265,132 @@ export default function Home() {
               <Countdown />
             </div>
 
-            {auctionClosed && (
-              <p style={{
-                padding:'14px',
-                borderRadius:'14px',
-                background:'#fee',
-                border:'1px solid #d33',
-                fontWeight:'bold'
-              }}>
-                Auktioun beendet / Auction ended
-              </p>
+            {!session ? (
+              <form onSubmit={sendMagicLink} style={formBoxStyle}>
+                <h2 style={{marginTop:0}}>E-Mail Bestätegung</h2>
+
+                <p>
+                  Fir ze bidden, muss deng E-Mail fir d'éischt confirméiert ginn.
+                  <br />
+                  To place a bid, please confirm your email first.
+                </p>
+
+                <input
+                  placeholder="E-Mail *"
+                  type="email"
+                  value={loginEmail}
+                  onChange={e => setLoginEmail(e.target.value)}
+                  style={inputStyle}
+                  required
+                />
+
+                <button style={buttonStyle}>
+                  Bestätegungslink schécken / Send confirmation link
+                </button>
+
+                {message && <p><strong>{message}</strong></p>}
+              </form>
+            ) : (
+              <form onSubmit={submitBid} style={formBoxStyle}>
+                <h2 style={{marginTop:0}}>Gebot ofginn / Submit Bid</h2>
+
+                <p style={{
+                  padding:'10px',
+                  background:'#eef6ff',
+                  borderRadius:'10px',
+                  fontSize:'14px'
+                }}>
+                  Confirméiert E-Mail / Confirmed email:<br />
+                  <strong>{session.user.email}</strong>
+                </p>
+
+                <input
+                  placeholder="Numm / Name *"
+                  value={form.name}
+                  onChange={e => setForm({...form, name:e.target.value})}
+                  style={inputStyle}
+                />
+
+                <input
+                  placeholder="Adress / Address *"
+                  value={form.address}
+                  onChange={e => setForm({...form, address:e.target.value})}
+                  style={inputStyle}
+                />
+
+                <input
+                  placeholder="Telefon / Phone"
+                  value={form.phone}
+                  onChange={e => setForm({...form, phone:e.target.value})}
+                  style={inputStyle}
+                />
+
+                <input
+                  placeholder="Gebot an Euro / Bid amount in Euro *"
+                  type="number"
+                  value={form.amount}
+                  onChange={e => setForm({...form, amount:e.target.value})}
+                  style={inputStyle}
+                />
+
+                <button
+                  disabled={auctionClosed}
+                  style={{
+                    ...buttonStyle,
+                    background: auctionClosed ? '#777' : '#0f3d91',
+                    cursor: auctionClosed ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {auctionClosed
+                    ? 'Auktioun beendet / Auction ended'
+                    : 'Gebot späicheren / Submit Bid'}
+                </button>
+
+                <p style={{
+                  fontSize:'12px',
+                  lineHeight:'1.5',
+                  color:'#555'
+                }}>
+                  * Mat der Ofginn vun engem Gebot akzeptéiert de Participant
+                  d'Dateschutzerklärung an d'Auktiounsbedingungen.
+                  <br />
+                  * By submitting a bid, the participant agrees to the privacy
+                  policy and auction terms.
+                </p>
+
+                <p style={{fontSize:'12px'}}>
+                  <a href="/privacy" style={{
+                    color:'#0f3d91',
+                    textDecoration:'underline'
+                  }}>
+                    Dateschutz / Privacy Policy
+                  </a>
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => supabase.auth.signOut()}
+                  style={{
+                    border:'none',
+                    background:'transparent',
+                    color:'#0f3d91',
+                    textDecoration:'underline',
+                    cursor:'pointer'
+                  }}
+                >
+                  Ausloggen / Sign out
+                </button>
+
+                {message && <p><strong>{message}</strong></p>}
+              </form>
             )}
-
-            <form onSubmit={submitBid} style={{
-              display:'grid',
-              gap:'12px',
-              padding:'24px',
-              borderRadius:'22px',
-              background:'#fff',
-              border:'1px solid #eadfce'
-            }}>
-              <h2 style={{marginTop:0}}>
-                Gebot ofginn / Submit Bid
-              </h2>
-
-              <input placeholder="Numm / Name *" value={form.name}
-                onChange={e => setForm({...form, name:e.target.value})}
-                style={inputStyle} />
-
-              <input placeholder="Adress / Address *" value={form.address}
-                onChange={e => setForm({...form, address:e.target.value})}
-                style={inputStyle} />
-
-              <input placeholder="E-Mail *" type="email" value={form.email}
-                onChange={e => setForm({...form, email:e.target.value})}
-                style={inputStyle} />
-
-              <input placeholder="Telefon / Phone" value={form.phone}
-                onChange={e => setForm({...form, phone:e.target.value})}
-                style={inputStyle} />
-
-              <input placeholder="Gebot an Euro / Bid amount in Euro *" type="number" value={form.amount}
-                onChange={e => setForm({...form, amount:e.target.value})}
-                style={inputStyle} />
-
-              <button disabled={auctionClosed} style={{
-                padding:'15px',
-                background: auctionClosed ? '#777' : '#0f3d91',
-                color:'white',
-                border:'none',
-                borderRadius:'14px',
-                fontSize:'16px',
-                fontWeight:'bold',
-                cursor: auctionClosed ? 'not-allowed' : 'pointer'
-              }}>
-                {auctionClosed ? 'Auktioun beendet / Auction ended' : 'Gebot späicheren / Submit Bid'}
-              </button>
-
-<p style={{
-  fontSize:'12px',
-  lineHeight:'1.5',
-  color:'#555',
-  marginTop:'4px'
-}}>
-  * Mat der Ofginn vun engem Gebot akzeptéiert de Participant
-  d'Dateschutzerklärung an d'Auktiounsbedingungen.
-  <br />
-  * By submitting a bid, the participant agrees to the
-  privacy policy and auction terms.
-</p>
-
-<p style={{
-  fontSize:'12px',
-  marginTop:'-4px'
-}}>
-  <a
-    href="/privacy"
-    style={{
-      color:'#0f3d91',
-      textDecoration:'underline'
-    }}
-  >
-    Dateschutz / Privacy Policy
-  </a>
-</p>
-
-{message && <p><strong>{message}</strong></p>}
-            </form>
           </div>
         </section>
 
         <footer style={{
           padding:'26px 32px',
-          background:'#2d2118',
-          color:'#f7efe4',
+          background:'#0f3d91',
+          color:'white',
           fontSize:'14px',
           lineHeight:'1.6'
         }}>
@@ -359,6 +415,23 @@ export default function Home() {
   )
 }
 
+const cardStyle = {
+  padding:'24px',
+  borderRadius:'22px',
+  background:'#fff',
+  border:'1px solid #cfe5ff',
+  marginBottom:'20px'
+}
+
+const formBoxStyle = {
+  display:'grid',
+  gap:'12px',
+  padding:'24px',
+  borderRadius:'22px',
+  background:'#fff',
+  border:'1px solid #cfe5ff'
+}
+
 const inputStyle = {
   padding:'13px',
   fontSize:'16px',
@@ -368,8 +441,18 @@ const inputStyle = {
   width:'100%'
 }
 
+const buttonStyle = {
+  padding:'15px',
+  background:'#0f3d91',
+  color:'white',
+  border:'none',
+  borderRadius:'14px',
+  fontSize:'16px',
+  fontWeight:'bold'
+}
+
 const footerLink = {
-  color:'#f7efe4',
+  color:'white',
   textDecoration:'underline'
 }
 
@@ -405,7 +488,7 @@ function Countdown() {
       margin:0,
       fontSize:'18px',
       fontWeight:'bold',
-      color:'#4b1f1f'
+      color:'#0f3d91'
     }}>
       {timeLeft}
     </p>
