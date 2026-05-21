@@ -8,9 +8,13 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+const AUCTION_END = new Date('2026-09-13T19:00:00')
+
 export default function Home() {
   const [highestBid, setHighestBid] = useState(1500)
   const [message, setMessage] = useState('')
+  const [auctionClosed, setAuctionClosed] = useState(false)
+
   const [form, setForm] = useState({
     name: '',
     address: '',
@@ -34,6 +38,14 @@ export default function Home() {
 
   useEffect(() => {
     loadHighestBid()
+
+    const checkAuctionClosed = () => {
+      setAuctionClosed(new Date() >= AUCTION_END)
+    }
+
+    checkAuctionClosed()
+
+    const closeInterval = setInterval(checkAuctionClosed, 1000)
 
     const channel = supabase
       .channel('bids-realtime')
@@ -60,12 +72,19 @@ export default function Home() {
 
     return () => {
       supabase.removeChannel(channel)
+      clearInterval(closeInterval)
     }
   }, [])
 
   async function submitBid(e: React.FormEvent) {
     e.preventDefault()
+
     setMessage('')
+
+    if (new Date() >= AUCTION_END) {
+      setMessage('Auktioun beendet / Auction ended')
+      return
+    }
 
     const amount = Number(form.amount)
 
@@ -94,7 +113,9 @@ export default function Home() {
     }
 
     setHighestBid(amount)
+
     setMessage('Merci! Däi Gebot gouf gespäichert.')
+
     setForm({
       name: '',
       address: '',
@@ -128,36 +149,38 @@ export default function Home() {
       }}>
 
         <h1 style={{
-  fontSize:'clamp(30px, 7vw, 48px)',
-  lineHeight:'1.15',
-  wordBreak:'break-word',
-  overflowWrap:'anywhere',
-  textAlign:'center'
-}}>
-  Kondschafter Auktioun<br />
-  76. Gréiwemaacher Drauwen- A Wäifest
-</h1>
+          fontSize:'clamp(30px, 7vw, 48px)',
+          lineHeight:'1.15',
+          wordBreak:'break-word',
+          overflowWrap:'anywhere',
+          textAlign:'center'
+        }}>
+          Kondschafter Auktioun<br />
+          76. Gréiwemaacher Drauwen- A Wäifest
+        </h1>
 
-        <h2>Kënschtler: André Scholtes</h2>
+        <h2 style={{textAlign:'center'}}>
+          Kënschtler: André Scholtes
+        </h2>
 
-        <p>
-  <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
-</p>
+        <p style={{textAlign:'center'}}>
+          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+        </p>
 
-<section style={{
-  marginTop:'20px',
-  padding:'20px',
-  border:'1px solid #ccc',
-  borderRadius:'12px',
-  background:'rgba(255,255,255,0.75)',
-  textAlign:'center'
-}}>
+        <section style={{
+          marginTop:'20px',
+          padding:'20px',
+          border:'1px solid #ccc',
+          borderRadius:'12px',
+          background:'rgba(255,255,255,0.75)',
+          textAlign:'center'
+        }}>
 
-  <h2>Countdown</h2>
+          <h2>Countdown</h2>
 
-  <Countdown />
+          <Countdown />
 
-</section>
+        </section>
 
         <img
           src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
@@ -192,11 +215,25 @@ export default function Home() {
           </p>
         </section>
 
+        {auctionClosed && (
+          <p style={{
+            marginTop:'30px',
+            padding:'15px',
+            background:'#fee',
+            border:'1px solid #d33',
+            borderRadius:'10px',
+            fontWeight:'bold'
+          }}>
+            Auktioun beendet / Auction ended
+          </p>
+        )}
+
         <form onSubmit={submitBid} style={{
           marginTop:'40px',
           display:'grid',
           gap:'12px'
         }}>
+
           <h2>Gebot ofginn / Submit Bid</h2>
 
           <input
@@ -236,29 +273,42 @@ export default function Home() {
             style={{padding:'12px', fontSize:'16px'}}
           />
 
-          <button style={{
-            padding:'14px',
-            background:'#111',
-            color:'white',
-            border:'none',
-            borderRadius:'10px',
-            fontSize:'16px',
-            fontWeight:'bold'
-          }}>
-            Gebot späicheren / Submit Bid
+          <button
+            disabled={auctionClosed}
+            style={{
+              padding:'14px',
+              background: auctionClosed ? '#777' : '#111',
+              color:'white',
+              border:'none',
+              borderRadius:'10px',
+              fontSize:'16px',
+              fontWeight:'bold',
+              cursor: auctionClosed ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {auctionClosed
+              ? 'Auktioun beendet / Auction ended'
+              : 'Gebot späicheren / Submit Bid'}
           </button>
 
           {message && <p><strong>{message}</strong></p>}
+
         </form>
 
         <section style={{marginTop:'40px'}}>
           <h2>Lëtzebuergesch</h2>
-          <p>Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.</p>
+
+          <p>
+            Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+          </p>
         </section>
 
         <section style={{marginTop:'30px'}}>
           <h2>English</h2>
-          <p>Welcome to the official auction page of the "Kondschafter".</p>
+
+          <p>
+            Welcome to the official auction page of the "Kondschafter".
+          </p>
         </section>
 
         <section style={{
@@ -268,10 +318,16 @@ export default function Home() {
           fontSize:'14px',
           lineHeight:'1.6'
         }}>
+
           <h3>Organisatioun / Organization</h3>
 
-          <p>Dës Auktioun gëtt organiséiert vun der:</p>
-          <p>This auction is organized by:</p>
+          <p>
+            Dës Auktioun gëtt organiséiert vun der:
+          </p>
+
+          <p>
+            This auction is organized by:
+          </p>
 
           <p>
             <strong>Kondschafter – association sans but lucratif</strong><br />
@@ -290,27 +346,36 @@ export default function Home() {
             André Scholtes
           </p>
 
+          <p>
+            <strong>Websäit / Website:</strong><br />
+            https://kondschafter-auktion.vercel.app
+          </p>
+
+          <p style={{
+            marginTop:'30px',
+            fontSize:'12px',
+            opacity:'0.6',
+            textAlign:'center'
+          }}>
+            <a
+              href="/admin"
+              style={{
+                color:'#444',
+                textDecoration:'none'
+              }}
+            >
+              Admin Login
+            </a>
+          </p>
+
         </section>
-<p style={{
-  marginTop:'30px',
-  fontSize:'12px',
-  opacity:'0.6',
-  textAlign:'center'
-}}>
-  <a
-    href="/admin"
-    style={{
-      color:'#444',
-      textDecoration:'none'
-    }}
-  >
-    Admin Login
-  </a>
-</p>
+
       </div>
+
     </main>
   )
 }
+
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState('')
 
@@ -341,12 +406,12 @@ function Countdown() {
   }, [])
 
   return (
-  <p style={{
-    fontSize:'18px',
-    fontWeight:'bold',
-    marginTop:'10px',
-    textAlign:'center'
-  }}>
+    <p style={{
+      fontSize:'18px',
+      fontWeight:'bold',
+      marginTop:'10px',
+      textAlign:'center'
+    }}>
       {timeLeft}
     </p>
   )
