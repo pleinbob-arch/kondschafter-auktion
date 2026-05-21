@@ -186,29 +186,37 @@ export default function Home() {
           color:'white'
         }}>
           <p style={{
-            margin:0,
-            letterSpacing:'2px',
-            textTransform:'uppercase',
-            fontSize:'13px'
-          }}>
-            76. Gréiwemaacher Drauwen- A Wäifest
-          </p>
+  margin:0,
+  letterSpacing:'2px',
+  textTransform:'uppercase',
+  fontSize:'13px'
+}}>
+  76. Gréiwemaacher Drauwen- A Wäifest
+</p>
 
-          <h1 style={{
-            margin:'14px 0 8px',
-            fontSize:'clamp(34px, 8vw, 64px)',
-            lineHeight:'1.05'
-          }}>
-            Kondschafter Auktioun
-          </h1>
+<h1 style={{
+  margin:'14px 0 8px',
+  fontSize:'clamp(34px, 8vw, 64px)',
+  lineHeight:'1.05'
+}}>
+  Kondschafter Auktioun
+</h1>
 
-          <h2 style={{
-            margin:'0',
-            fontWeight:'normal',
-            fontSize:'clamp(18px, 4vw, 26px)'
-          }}>
-            Kënschtler: André Scholtes
-          </h2>
+<h2 style={{
+  margin:'0',
+  fontWeight:'normal',
+  fontSize:'clamp(18px, 4vw, 26px)'
+}}>
+  Kënschtler: André Scholtes
+</h2>
+
+<p style={{
+  marginTop:'14px',
+  fontSize:'16px',
+  opacity:0.92
+}}>
+  Fir de gudden Zweck · Pour la bonne cause · For a good cause
+</p>
         </section>
 
         <section style={{
