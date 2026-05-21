@@ -287,7 +287,7 @@ export default function Home() {
 
               <button disabled={auctionClosed} style={{
                 padding:'15px',
-                background: auctionClosed ? '#777' : '#4b1f1f',
+                background: auctionClosed ? '#777' : '#0f3d91',
                 color:'white',
                 border:'none',
                 borderRadius:'14px',
