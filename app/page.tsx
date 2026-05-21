@@ -114,11 +114,6 @@ export default function Home() {
     André Scholtes
   </p>
 
-  <p>
-    <strong>Websäit / Website:</strong><br />
-    https://kondschafter-auktion.vercel.app
-  </p>
-
 </section>
       </div>
 
