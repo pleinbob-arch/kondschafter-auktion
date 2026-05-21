@@ -12,7 +12,7 @@ export default function Home() {
       <p><strong>Auktioun Enn:</strong> 13 September 2026 - 19:00</p>
 
       <img
-        src="/kondschafter.jpg"
+        src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
         alt="Kondschafter"
         style={{
           width:'100%',
