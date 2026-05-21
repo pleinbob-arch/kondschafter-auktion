@@ -61,6 +61,7 @@ export default function PrivacyPage() {
               <li>Numm a Virnumm</li>
               <li>Adress</li>
               <li>E-Mail-Adress</li>
+              <li>IP-Adress</li>
               <li>Telefonsnummer</li>
               <li>Héicht vum Gebot</li>
               <li>Zäitpunkt vum Gebot</li>
@@ -172,6 +173,7 @@ export default function PrivacyPage() {
               <li>Name</li>
               <li>Address</li>
               <li>Email address</li>
+              <li>IP address</li>
               <li>Phone number</li>
               <li>Bid amount</li>
               <li>Date and time of bid</li>
