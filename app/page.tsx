@@ -43,7 +43,7 @@ export default function Home() {
     const amount = Number(form.amount)
 
     if (!form.name || !form.address || !form.email || !amount) {
-      setMessage('Bitte alle Pflichtfelder ausfüllen.')
+      setMessage('Please complete all required fields.')
       return
     }
 
