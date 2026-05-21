@@ -329,11 +329,12 @@ function Countdown() {
   }, [])
 
   return (
-    <p style={{
-      fontSize:'28px',
-      fontWeight:'bold',
-      marginTop:'10px'
-    }}>
+  <p style={{
+    fontSize:'18px',
+    fontWeight:'bold',
+    marginTop:'10px',
+    textAlign:'center'
+  }}>
       {timeLeft}
     </p>
   )
