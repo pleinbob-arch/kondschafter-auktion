@@ -15,10 +15,18 @@ export default function Home() {
       <div style={{
         background:'rgba(255,255,255,0.88)',
         padding:'30px',
-        borderRadius:'20px'
+        borderRadius:'20px',
+        maxWidth:'100%',
+        boxSizing:'border-box',
+        overflow:'hidden'
       }}>
 
-        <h1 style={{fontSize:'48px'}}>
+        <h1 style={{
+          fontSize:'clamp(30px, 7vw, 48px)',
+          lineHeight:'1.15',
+          wordBreak:'break-word',
+          overflowWrap:'anywhere'
+        }}>
           Kondschafter Auktioun<br />
           76. Gréiwemaacher Drauwen- A Wäifest
         </h1>
