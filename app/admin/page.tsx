@@ -51,7 +51,7 @@ export default function AdminPage() {
   }, [unlocked])
 
   function login() {
-    if (password === 'Kondschafter2026') {
+    if (password === 'Kondschafter2026Humpen') {
       setUnlocked(true)
     } else {
       alert('Falscht Passwuert')
@@ -81,7 +81,6 @@ export default function AdminPage() {
       Adresse: bid.address,
       Email: bid.email,
       Telefon: bid.phone || '',
-      Sprache: bid.language || '',
       IP: bid.ip_address || '',
       Browser: bid.user_agent || '',
       Datum: bid.created_at
@@ -97,7 +96,6 @@ export default function AdminPage() {
       { wch: 25 },
       { wch: 35 },
       { wch: 30 },
-      { wch: 18 },
       { wch: 12 },
       { wch: 18 },
       { wch: 60 },
@@ -254,7 +252,6 @@ export default function AdminPage() {
                 <th style={thStyle}>Adress</th>
                 <th style={thStyle}>Email</th>
                 <th style={thStyle}>Telefon</th>
-                <th style={thStyle}>Sprooch</th>
                 <th style={thStyle}>IP</th>
                 <th style={thStyle}>Browser</th>
                 <th style={thStyle}>Datum</th>
@@ -286,7 +283,6 @@ export default function AdminPage() {
                   <td style={tdStyle}>{bid.address}</td>
                   <td style={tdStyle}>{bid.email}</td>
                   <td style={tdStyle}>{bid.phone}</td>
-                  <td style={tdStyle}>{bid.language}</td>
                   <td style={tdStyle}>{bid.ip_address}</td>
 
                   <td style={{
