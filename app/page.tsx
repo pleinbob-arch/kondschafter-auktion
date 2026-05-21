@@ -1,11 +1,21 @@
 export default function Home() {
   return (
-    <main style={{
-      maxWidth:'1000px',
-      margin:'0 auto',
-      padding:'40px',
-      fontFamily:'Arial'
-    }}>
+ <main style={{
+   <div style={{
+  background:'rgba(255,255,255,0.88)',
+  padding:'30px',
+  borderRadius:'20px'
+}}>
+  maxWidth:'1000px',
+  margin:'0 auto',
+  padding:'40px',
+  fontFamily:'Arial',
+  backgroundImage:'url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpg)',
+  backgroundSize:'cover',
+  backgroundPosition:'center',
+  backgroundRepeat:'no-repeat',
+  minHeight:'100vh'
+}}>
 
       <h1 style={{fontSize:'48px'}}>
         Kondschafter Auktioun<br />
@@ -60,7 +70,7 @@ export default function Home() {
           Welcome to the official auction page of the "Kondschafter".
         </p>
       </section>
-
+</div>
     </main>
   )
 }
