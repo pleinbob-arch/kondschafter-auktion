@@ -1,258 +1,385 @@
-export default function PrivacyPage() {
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
+const AUCTION_END = new Date('2026-09-13T19:00:00')
+
+export default function Home() {
+  const [highestBid, setHighestBid] = useState(1500)
+  const [message, setMessage] = useState('')
+  const [auctionClosed, setAuctionClosed] = useState(false)
+
+  const [form, setForm] = useState({
+    name: '',
+    address: '',
+    email: '',
+    phone: '',
+    amount: '',
+    language: 'lb'
+  })
+
+  async function loadHighestBid() {
+    const { data } = await supabase
+      .from('bids')
+      .select('amount')
+      .order('amount', { ascending: false })
+      .limit(1)
+
+    if (data && data.length > 0) {
+      setHighestBid(Number(data[0].amount))
+    }
+  }
+
+  useEffect(() => {
+    loadHighestBid()
+
+    const checkAuctionClosed = () => {
+      setAuctionClosed(new Date() >= AUCTION_END)
+    }
+
+    checkAuctionClosed()
+    const closeInterval = setInterval(checkAuctionClosed, 1000)
+
+    const channel = supabase
+      .channel('bids-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'bids' },
+        (payload) => {
+          const newAmount = Number(payload.new.amount)
+
+          setHighestBid((currentHighest) => {
+            return newAmount > currentHighest ? newAmount : currentHighest
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+      clearInterval(closeInterval)
+    }
+  }, [])
+
+  async function submitBid(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    if (new Date() >= AUCTION_END) {
+      setMessage('Auktioun beendet / Auction ended')
+      return
+    }
+
+    const amount = Number(form.amount)
+
+    if (!form.name || !form.address || !form.email || !amount) {
+      setMessage('Bitte alle Pflichtfelder ausfüllen.')
+      return
+    }
+
+    if (amount < highestBid + 50) {
+      setMessage(`Däi Gebot muss mindestens ${highestBid + 50} € sinn.`)
+      return
+    }
+
+    const { error } = await supabase.from('bids').insert([{
+      name: form.name,
+      address: form.address,
+      email: form.email,
+      phone: form.phone,
+      amount,
+      language: form.language
+    }])
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
+    }
+
+    setHighestBid(amount)
+    setMessage('Merci! Däi Gebot gouf gespäichert.')
+    setForm({
+      name: '',
+      address: '',
+      email: '',
+      phone: '',
+      amount: '',
+      language: 'lb'
+    })
+  }
+
   return (
     <main style={{
-      maxWidth:'900px',
-      margin:'0 auto',
-      padding:'40px',
-      fontFamily:'Arial',
-      lineHeight:'1.7',
-      whiteSpace:'pre-wrap'
+      minHeight:'100vh',
+      padding:'24px',
+      fontFamily:'Arial, sans-serif',
+      backgroundImage:'linear-gradient(rgba(30,20,10,0.45), rgba(30,20,10,0.55)), url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpeg)',
+      backgroundSize:'cover',
+      backgroundPosition:'center',
+      backgroundAttachment:'fixed'
     }}>
 
-{`
-# Dateschutzerklärung & Auktiounsbedingungen
-
-# Privacy Policy & Auction Terms
-
----
-
-# Lëtzebuergesch
-
-## Dateschutz an Auktiounsbedingungen
-
-Dës Websäit gëtt am Kader vun der Kondschafter Auktioun vum 76. Gréiwemaacher Drauwen- a Wäifest bedriwwen.
-
-### Verantwortlech Organisatioun
-
-Kondschafter – association sans but lucratif
-1A, Rue Kummert
-L-6743 Gréiwemaacher
-Luxembourg
-
-E-Mail: kondschafter@gmail.com
-
----
-
-## Zweck vun der Auktioun
-
-Den Erléis vun dëser Auktioun gëtt integral un eng gemengnëtzeg Stëftung gespent, déi den Dag vun der Auktioun offiziell virgestallt gëtt.
-
----
-
-## Gesammelte Donnéeën
-
-Beim Benotze vun dëser Websäit an/oder beim Ofginn vun engem Gebot kënnen ënner anerem folgend Donnéeë gesammelt a gespäichert ginn:
-
-• Numm a Virnumm
-• Adress
-• E-Mail-Adress
-• Telefonsnummer
-• Héicht vum Gebot
-• Zäitpunkt vum Gebot
-• technesch Donnéeë wéi IP-Adress oder Browser-Informatiounen
-
----
-
-## Zweck vun der Veraarbechtung
-
-Dës Donnéeë ginn ausschliisslech benotzt fir:
-
-• d’Organisatioun an d’Duerchféierung vun der Auktioun
-• d’Verwaltung vun de Geboter
-• d’Kommunikatioun mat de Participanten
-• d’Kontroll vun der Validitéit vun de Participatiounen
-• eventuell administrativ oder gesetzlech Obligatiounen
-
----
-
-## Rechtsgrondlag
-
-D’Veraarbechtung vun den Donnéeë geschitt:
-
-• op Basis vun der Participatioun un der Auktioun
-• dem legitimmen Interessi vun der Organisatioun
-• applicabelen gesetzleche Verpflichtungen
-
----
-
-## Weiderginn vun Donnéeën
-
-Keng perséinlech Donnéeë ginn un Drëttpersoune verkaaft oder fir kommerziell Zwecker weiderginn.
-
----
-
-## Dauer vun der Späicherung
-
-D’Donnéeë ginn nëmme sou laang gespäichert wéi et fir d’Organisatioun an d’Ofschloss vun der Auktioun néideg ass oder gesetzlech virgeschriwwen ass.
-
----
-
-## Rechter vun de Benotzer
-
-All Persoun huet d’Recht:
-
-• Auskunft iwwer hir Donnéeën ze kréien
-• falsch Donnéeë korrigéieren ze loossen
-• d’Läsche vun den Donnéeën ze verlaangen
-• d’Restriktioun vun der Veraarbechtung ze froen
-• géint d’Veraarbechtung Asproch anzereechen
-
-am Kader vun der applicabeler Dateschutzgesetzgebung, notamment dem GDPR.
-
----
-
-## Haftungsausschloss
-
-D’Kondschafter – association sans but lucratif iwwerhëlt keng Haftung fir:
-
-• technesch Problemer oder Ënnerbriechungen
-• falsch Informatiounen
-• Netzwierk- oder Hostingproblemer
-• Feeler bei der Participatioun
-
-D’Organisatioun behält sech d’Recht vir Geboter ofzeleenen oder d’Auktioun unzepassen.
-
----
-
-## Kee Récktrëtt oder Remboursement
-
-All Geboter si verbindlech.
-
-No Zouschlag:
-
-• kann de Kaf net annuléiert ginn
-• gëtt kee Remboursement oder Ëmtausch ugebueden
-
----
-
-## Bezuelung an Iwwergab
-
-D’Gemälde gëtt eréischt no voller Bezuelung un de Gewënner iwwerreecht.
-
----
-
-## Kontakt
-
-Kondschafter – association sans but lucratif
-1A, Rue Kummert
-L-6743 Gréiwemaacher
-Luxembourg
-
-E-Mail: kondschafter@gmail.com
-
----
-
-# English
-
-## Privacy Policy and Auction Terms
-
-This website is operated for the Kondschafter Auction of the 76th Grevenmacher Wine Festival.
-
-### Organizing Association
-
-Kondschafter – association sans but lucratif
-1A, Rue Kummert
-L-6743 Grevenmacher
-Luxembourg
-
-Email: kondschafter@gmail.com
-
----
-
-## Purpose of the Auction
-
-The proceeds of this auction will be donated in full to a charitable foundation.
-
----
-
-## Collected Data
-
-The following personal data may be collected:
-
-• Name
-• Address
-• Email address
-• Phone number
-• Bid amount
-• Date and time of bid
-• Technical information
-
----
-
-## Purpose of Processing
-
-Personal data is used exclusively for:
-
-• auction management
-• bid administration
-• communication with participants
-• legal obligations
-
----
-
-## Data Sharing
-
-No personal data will be sold or shared for commercial purposes.
-
----
-
-## Data Retention
-
-Data will only be retained as long as necessary for the auction.
-
----
-
-## User Rights
-
-Users may request:
-
-• access to their data
-• correction
-• deletion
-• restriction of processing
-• objection to processing
-
-under GDPR regulations.
-
----
-
-## Limitation of Liability
-
-The organizer accepts no liability for:
-
-• technical problems
-• transmission errors
-• hosting failures
-• incorrect information
-
-The organizer reserves the right to refuse bids or modify the auction.
-
----
-
-## No Refunds or Returns
-
-All bids are binding.
-
-No refunds or cancellations will be accepted after allocation.
-
----
-
-## Payment and Delivery
-
-The artwork will only be delivered after full payment has been received.
-
----
-
-## Contact
-
-Kondschafter – association sans but lucratif
-1A, Rue Kummert
-L-6743 Grevenmacher
-Luxembourg
-
-Email: kondschafter@gmail.com
-`}
-
+      <div style={{
+        maxWidth:'1100px',
+        margin:'0 auto',
+        background:'rgba(255,250,242,0.94)',
+        borderRadius:'28px',
+        overflow:'hidden',
+        boxShadow:'0 20px 60px rgba(0,0,0,0.35)'
+      }}>
+
+        <section style={{
+          padding:'44px 28px',
+          textAlign:'center',
+          background:'linear-gradient(135deg, #4b1f1f, #8a5a20)',
+          color:'white'
+        }}>
+          <p style={{
+            margin:0,
+            letterSpacing:'2px',
+            textTransform:'uppercase',
+            fontSize:'13px'
+          }}>
+            76. Gréiwemaacher Drauwen- A Wäifest
+          </p>
+
+          <h1 style={{
+            margin:'14px 0 8px',
+            fontSize:'clamp(34px, 8vw, 64px)',
+            lineHeight:'1.05'
+          }}>
+            Kondschafter Auktioun
+          </h1>
+
+          <h2 style={{
+            margin:'0',
+            fontWeight:'normal',
+            fontSize:'clamp(18px, 4vw, 26px)'
+          }}>
+            Kënschtler: André Scholtes
+          </h2>
+        </section>
+
+        <section style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',
+          gap:'28px',
+          padding:'32px'
+        }}>
+
+          <div>
+            <img
+              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
+              alt="Kondschafter"
+              style={{
+                width:'100%',
+                borderRadius:'22px',
+                display:'block',
+                boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
+              }}
+            />
+
+            <p style={{
+              marginTop:'16px',
+              fontSize:'15px',
+              lineHeight:'1.6'
+            }}>
+              Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+              <br />
+              Welcome to the official auction page of the "Kondschafter".
+            </p>
+          </div>
+
+          <div>
+            <div style={{
+              padding:'24px',
+              borderRadius:'22px',
+              background:'#fff',
+              border:'1px solid #eadfce',
+              marginBottom:'20px'
+            }}>
+              <p style={{
+                margin:'0 0 6px',
+                fontSize:'14px',
+                color:'#705c45'
+              }}>
+                Aktuellt Héichstgebot / Current Highest Bid
+              </p>
+
+              <p style={{
+                margin:0,
+                fontSize:'clamp(42px, 9vw, 62px)',
+                fontWeight:'bold',
+                color:'#4b1f1f'
+              }}>
+                {highestBid.toLocaleString('de-LU')} €
+              </p>
+
+              <p style={{marginTop:'10px'}}>
+                Mindest nächst Gebot:{' '}
+                <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
+              </p>
+            </div>
+
+            <div style={{
+              padding:'20px',
+              borderRadius:'22px',
+              background:'#f7efe4',
+              border:'1px solid #eadfce',
+              textAlign:'center',
+              marginBottom:'20px'
+            }}>
+              <p style={{margin:'0 0 8px'}}>
+                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+              </p>
+              <Countdown />
+            </div>
+
+            {auctionClosed && (
+              <p style={{
+                padding:'14px',
+                borderRadius:'14px',
+                background:'#fee',
+                border:'1px solid #d33',
+                fontWeight:'bold'
+              }}>
+                Auktioun beendet / Auction ended
+              </p>
+            )}
+
+            <form onSubmit={submitBid} style={{
+              display:'grid',
+              gap:'12px',
+              padding:'24px',
+              borderRadius:'22px',
+              background:'#fff',
+              border:'1px solid #eadfce'
+            }}>
+              <h2 style={{marginTop:0}}>
+                Gebot ofginn / Submit Bid
+              </h2>
+
+              <input placeholder="Numm / Name *" value={form.name}
+                onChange={e => setForm({...form, name:e.target.value})}
+                style={inputStyle} />
+
+              <input placeholder="Adress / Address *" value={form.address}
+                onChange={e => setForm({...form, address:e.target.value})}
+                style={inputStyle} />
+
+              <input placeholder="E-Mail *" type="email" value={form.email}
+                onChange={e => setForm({...form, email:e.target.value})}
+                style={inputStyle} />
+
+              <input placeholder="Telefon / Phone" value={form.phone}
+                onChange={e => setForm({...form, phone:e.target.value})}
+                style={inputStyle} />
+
+              <input placeholder="Gebot an Euro / Bid amount in Euro *" type="number" value={form.amount}
+                onChange={e => setForm({...form, amount:e.target.value})}
+                style={inputStyle} />
+
+              <button disabled={auctionClosed} style={{
+                padding:'15px',
+                background: auctionClosed ? '#777' : '#4b1f1f',
+                color:'white',
+                border:'none',
+                borderRadius:'14px',
+                fontSize:'16px',
+                fontWeight:'bold',
+                cursor: auctionClosed ? 'not-allowed' : 'pointer'
+              }}>
+                {auctionClosed ? 'Auktioun beendet / Auction ended' : 'Gebot späicheren / Submit Bid'}
+              </button>
+
+              {message && <p><strong>{message}</strong></p>}
+            </form>
+          </div>
+        </section>
+
+        <footer style={{
+          padding:'26px 32px',
+          background:'#2d2118',
+          color:'#f7efe4',
+          fontSize:'14px',
+          lineHeight:'1.6'
+        }}>
+          <p>
+            <strong>Kondschafter – association sans but lucratif</strong><br />
+            F10056 · 1A, Rue Kummert · 6743 Grevenmacher · Luxembourg
+          </p>
+
+          <p>
+            <strong>Kënschtler / Artist:</strong> André Scholtes
+          </p>
+
+          <p style={{textAlign:'center', marginTop:'22px'}}>
+            <a href="/privacy" style={footerLink}>Dateschutz / Privacy Policy</a>
+            {' · '}
+            <a href="/admin" style={footerLink}>Admin Login</a>
+          </p>
+        </footer>
+
+      </div>
     </main>
+  )
+}
+
+const inputStyle = {
+  padding:'13px',
+  fontSize:'16px',
+  border:'1px solid #d8c8b5',
+  borderRadius:'12px',
+  boxSizing:'border-box' as const,
+  width:'100%'
+}
+
+const footerLink = {
+  color:'#f7efe4',
+  textDecoration:'underline'
+}
+
+function Countdown() {
+  const [timeLeft, setTimeLeft] = useState('')
+
+  useEffect(() => {
+    const targetDate = new Date('2026-09-13T19:00:00')
+
+    const interval = setInterval(() => {
+      const now = new Date()
+      const difference = targetDate.getTime() - now.getTime()
+
+      if (difference <= 0) {
+        setTimeLeft('Auktioun beendet / Auction ended')
+        clearInterval(interval)
+        return
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24)
+      const minutes = Math.floor((difference / (1000 * 60)) % 60)
+      const seconds = Math.floor((difference / 1000) % 60)
+
+      setTimeLeft(`${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <p style={{
+      margin:0,
+      fontSize:'18px',
+      fontWeight:'bold',
+      color:'#4b1f1f'
+    }}>
+      {timeLeft}
+    </p>
   )
 }
