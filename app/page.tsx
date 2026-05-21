@@ -128,15 +128,15 @@ export default function Home() {
       }}>
 
         <h1 style={{
-          fontSize:'clamp(30px, 7vw, 48px)',
-          lineHeight:'1.15',
-          wordBreak:'break-word',
-          overflowWrap:'anywhere'
-      textAlign: 'center'
-        }}>
-          Kondschafter Auktioun<br />
-          76. Gréiwemaacher Drauwen- A Wäifest
-        </h1>
+  fontSize:'clamp(30px, 7vw, 48px)',
+  lineHeight:'1.15',
+  wordBreak:'break-word',
+  overflowWrap:'anywhere',
+  textAlign:'center'
+}}>
+  Kondschafter Auktioun<br />
+  76. Gréiwemaacher Drauwen- A Wäifest
+</h1>
 
         <h2>Kënschtler: André Scholtes</h2>
 
