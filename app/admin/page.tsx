@@ -167,7 +167,7 @@ export default function AdminPage() {
       )}
 
       <button
-        onClick={exportCSV}
+        onClick={exportExcel}
         style={{
           padding:'12px',
           background:'#111',
