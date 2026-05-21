@@ -103,7 +103,7 @@ export default function Home() {
           76. Gréiwemaacher Drauwen- A Wäifest
         </h1>
 
-        <h2>Kënschtler: André Scholtes</h2>
+        <h2>Kënschtler / Artist: André Scholtes</h2>
 
         <p>
           <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
