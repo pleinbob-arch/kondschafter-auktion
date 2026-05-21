@@ -29,19 +29,7 @@ export default function Home() {
     e.preventDefault()
     setMessage('')
 
-    const ipData = await fetch('https://api.ipify.org?format=json')
-const ipJson = await ipData.json()
-
-const { error } = await supabase.from('bids').insert([{
-  name: form.name,
-  address: form.address,
-  email: session.user.email,
-  phone: form.phone,
-  amount,
-  language: form.language,
-  ip_address: ipJson.ip,
-  user_agent: navigator.userAgent
-}])
+    const { error } = await supabase.auth.signInWithOtp({
       email: loginEmail,
       options: {
         emailRedirectTo: 'https://kondschafter-auktion.vercel.app'
@@ -93,6 +81,7 @@ const { error } = await supabase.from('bids').insert([{
         { event: 'INSERT', schema: 'public', table: 'bids' },
         (payload) => {
           const newAmount = Number(payload.new.amount)
+
           setHighestBid((currentHighest) =>
             newAmount > currentHighest ? newAmount : currentHighest
           )
@@ -123,7 +112,7 @@ const { error } = await supabase.from('bids').insert([{
 
     const amount = Number(form.amount)
 
-    if (!form.name || !form.address || !amount) {
+    if (!form.name || !form.address || !form.phone || !amount) {
       setMessage('Bitte alle Pflichtfelder ausfüllen.')
       return
     }
@@ -133,13 +122,24 @@ const { error } = await supabase.from('bids').insert([{
       return
     }
 
+    let ipAddress = ''
+    try {
+      const ipData = await fetch('https://api.ipify.org?format=json')
+      const ipJson = await ipData.json()
+      ipAddress = ipJson.ip || ''
+    } catch {
+      ipAddress = 'unknown'
+    }
+
     const { error } = await supabase.from('bids').insert([{
       name: form.name,
       address: form.address,
       email: session.user.email,
       phone: form.phone,
       amount,
-      language: form.language
+      language: form.language,
+      ip_address: ipAddress,
+      user_agent: navigator.userAgent
     }])
 
     if (error) {
