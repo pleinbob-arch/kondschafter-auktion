@@ -132,6 +132,7 @@ export default function Home() {
           lineHeight:'1.15',
           wordBreak:'break-word',
           overflowWrap:'anywhere'
+      textAlign: 'center'
         }}>
           Kondschafter Auktioun<br />
           76. Gréiwemaacher Drauwen- A Wäifest
