@@ -31,10 +31,29 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    if (unlocked) {
-      loadBids()
-    }
-  }, [unlocked])
+  if (!unlocked) return
+
+  loadBids()
+
+  const channel = supabase
+    .channel('admin-bids-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'bids'
+      },
+      () => {
+        loadBids()
+      }
+    )
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [unlocked])
 
   async function deleteBid(id: number) {
     const confirmDelete = confirm('Gebot wirklich löschen?')
