@@ -6,7 +6,7 @@ export default function Home() {
       padding:'40px',
       fontFamily:'Arial'
     }}>
-      <h1 style={{fontSize:'48px'}}>Kondschafter</h1>
+      <h1 style={{fontSize:'48px'}}>Kondschafter Auktioun 76. Gréiwemaacher Drauwen- A Wäifest</h1>
       <h2>André Scholtes</h2>
 
       <p><strong>Auktioun Enn:</strong> 13 September 2026 - 19:00</p>
