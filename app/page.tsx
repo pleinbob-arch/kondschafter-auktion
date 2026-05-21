@@ -79,7 +79,47 @@ export default function Home() {
             Welcome to the official auction page of the "Kondschafter".
           </p>
         </section>
+<section style={{
+  marginTop:'50px',
+  paddingTop:'25px',
+  borderTop:'1px solid #999',
+  fontSize:'14px',
+  lineHeight:'1.6'
+}}>
 
+  <h3>Organisatioun / Organization</h3>
+
+  <p>
+    Dës Auktioun gëtt organiséiert vun der:
+  </p>
+
+  <p>
+    This auction is organized by:
+  </p>
+
+  <p>
+    <strong>Kondschafter – association sans but lucratif</strong><br />
+    F10056
+  </p>
+
+  <p>
+    <strong>Adress / Address:</strong><br />
+    1A, Rue Kummert<br />
+    6743 Grevenmacher<br />
+    Luxembourg
+  </p>
+
+  <p>
+    <strong>Kënschtler / Artist:</strong><br />
+    André Scholtes
+  </p>
+
+  <p>
+    <strong>Websäit / Website:</strong><br />
+    https://kondschafter-auktion.vercel.app
+  </p>
+
+</section>
       </div>
 
     </main>
