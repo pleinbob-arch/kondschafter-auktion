@@ -298,3 +298,42 @@ export default function Home() {
     </main>
   )
 }
+function Countdown() {
+  const [timeLeft, setTimeLeft] = useState('')
+
+  useEffect(() => {
+    const targetDate = new Date('2026-09-13T19:00:00')
+
+    const interval = setInterval(() => {
+      const now = new Date()
+      const difference = targetDate.getTime() - now.getTime()
+
+      if (difference <= 0) {
+        setTimeLeft('Auktioun beendet / Auction ended')
+        clearInterval(interval)
+        return
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24)
+      const minutes = Math.floor((difference / (1000 * 60)) % 60)
+      const seconds = Math.floor((difference / 1000) % 60)
+
+      setTimeLeft(
+        `${days} Deeg / Days, ${hours}h ${minutes}m ${seconds}s`
+      )
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <p style={{
+      fontSize:'28px',
+      fontWeight:'bold',
+      marginTop:'10px'
+    }}>
+      {timeLeft}
+    </p>
+  )
+}
