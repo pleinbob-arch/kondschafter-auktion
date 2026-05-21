@@ -137,7 +137,7 @@ export default function Home() {
         <section style={{
           padding:'44px 28px',
           textAlign:'center',
-          background:'linear-gradient(135deg, #4b1f1f, #8a5a20)',
+          background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
         }}>
           <p style={{
@@ -216,7 +216,7 @@ export default function Home() {
                 margin:0,
                 fontSize:'clamp(42px, 9vw, 62px)',
                 fontWeight:'bold',
-                color:'#4b1f1f'
+                color:'#0f3d91'
               }}>
                 {highestBid.toLocaleString('de-LU')} €
               </p>
@@ -230,7 +230,7 @@ export default function Home() {
             <div style={{
               padding:'20px',
               borderRadius:'22px',
-              background:'#f7efe4',
+              background:'#eef6ff',
               border:'1px solid #eadfce',
               textAlign:'center',
               marginBottom:'20px'
