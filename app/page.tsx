@@ -412,8 +412,12 @@ export default function Home() {
           </p>
 
           <p>
-            <strong>Kënschtler / Artist:</strong> André Scholtes
-          </p>
+  <strong>Kënschtler / Artist:</strong><br />
+  IT WAS NOT ME S.à r.l.<br />
+  B276670<br />
+  11, Rue des Tanneurs<br />
+  6790 Grevenmacher
+</p>
 
           <p style={{textAlign:'center', marginTop:'22px'}}>
             <a href="/privacy" style={footerLink}>Dateschutz / Privacy Policy</a>
