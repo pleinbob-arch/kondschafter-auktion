@@ -231,7 +231,7 @@ export default function Home() {
               padding:'20px',
               borderRadius:'22px',
               background:'#eef6ff',
-              border:'1px solid #eadfce',
+              border:'1px solid #cfe5ff',
               textAlign:'center',
               marginBottom:'20px'
             }}>
@@ -334,7 +334,7 @@ export default function Home() {
 const inputStyle = {
   padding:'13px',
   fontSize:'16px',
-  border:'1px solid #d8c8b5',
+  border:'1px solid #b7d8ff',
   borderRadius:'12px',
   boxSizing:'border-box' as const,
   width:'100%'
