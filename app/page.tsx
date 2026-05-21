@@ -260,7 +260,7 @@ export default function Home() {
               textAlign:'center'
             }}>
               <p style={{margin:'0 0 8px'}}>
-                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+                <strong>Auktioun Enn:</strong> 21 May 2026 - 17:15
               </p>
               <Countdown />
             </div>
