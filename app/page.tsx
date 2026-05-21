@@ -25,19 +25,7 @@ export default function Home() {
         }}
       />
 
-      <section style={{marginTop:'40px'}}>
-        <h2>Lëtzebuergesch</h2>
-        <p>
-          Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
-        </p>
-      </section>
 
-      <section style={{marginTop:'30px'}}>
-        <h2>English</h2>
-        <p>
-          Welcome to the official auction page of the "Kondschafter".
-        </p>
-      </section>
 
       <section style={{
         marginTop:'40px',
@@ -51,3 +39,16 @@ export default function Home() {
     </main>
   )
 }
+      <section style={{marginTop:'40px'}}>
+        <h2>Lëtzebuergesch</h2>
+        <p>
+          Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+        </p>
+      </section>
+
+      <section style={{marginTop:'30px'}}>
+        <h2>English</h2>
+        <p>
+          Welcome to the official auction page of the "Kondschafter".
+        </p>
+      </section>
