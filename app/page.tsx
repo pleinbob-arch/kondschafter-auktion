@@ -185,7 +185,7 @@ export default function Home() {
           background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
         }}>
-          <p style={{
+         <p style={{
   margin:0,
   letterSpacing:'2px',
   textTransform:'uppercase',
@@ -201,6 +201,14 @@ export default function Home() {
 }}>
   Kondschafter Auktioun
 </h1>
+
+<p style={{
+  margin:'0 0 14px',
+  fontSize:'16px',
+  opacity:0.92
+}}>
+  Fir de gudden Zweck · Pour la bonne cause · For a good cause
+</p>
 
 <h2 style={{
   margin:'0',
