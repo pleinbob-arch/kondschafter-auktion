@@ -154,7 +154,7 @@ export default function Home() {
             fontSize:'clamp(34px, 8vw, 64px)',
             lineHeight:'1.05'
           }}>
-            Kondschafter Auktioun
+            Kondschafter Auktioun -  fir e gudden Zweck
           </h1>
 
           <h2 style={{
