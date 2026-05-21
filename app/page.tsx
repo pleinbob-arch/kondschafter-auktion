@@ -106,7 +106,7 @@ export default function Home() {
         <h2>Kënschtler / Artist: André Scholtes</h2>
 
         <p>
-          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+          <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00 / Auction ends: 8:00 PM
         </p>
 
         <img
