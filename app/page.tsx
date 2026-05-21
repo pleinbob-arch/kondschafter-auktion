@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const AUCTION_END = new Date('2026-09-13T17:20:00')
+const AUCTION_END = new Date('2026-05-21T17:25:00')
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
