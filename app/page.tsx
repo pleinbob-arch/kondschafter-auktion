@@ -352,13 +352,38 @@ export default function Home() {
           </p>
 
           <p style={{
-            marginTop:'30px',
-            fontSize:'12px',
-            opacity:'0.6',
-            textAlign:'center'
-          }}>
-            <a
-              href="/admin"
+  marginTop:'30px',
+  fontSize:'12px',
+  opacity:'0.6',
+  textAlign:'center'
+}}>
+  <a
+    href="/admin"
+    style={{
+      color:'#444',
+      textDecoration:'none'
+    }}
+  >
+    Admin Login
+  </a>
+</p>
+
+<p style={{
+  marginTop:'10px',
+  fontSize:'12px',
+  opacity:'0.6',
+  textAlign:'center'
+}}>
+  <a
+    href="/privacy"
+    style={{
+      color:'#444',
+      textDecoration:'none'
+    }}
+  >
+    Dateschutz / Privacy Policy
+  </a>
+</p>
               style={{
                 color:'#444',
                 textDecoration:'none'
