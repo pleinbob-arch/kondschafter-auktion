@@ -295,7 +295,22 @@ export default function Home() {
             https://kondschafter-auktion.vercel.app
           </p>
         </section>
-
+<p style={{
+  marginTop:'30px',
+  fontSize:'12px',
+  opacity:'0.6',
+  textAlign:'center'
+}}>
+  <a
+    href="/admin"
+    style={{
+      color:'#444',
+      textDecoration:'none'
+    }}
+  >
+    Admin Login
+  </a>
+</p>
       </div>
     </main>
   )
