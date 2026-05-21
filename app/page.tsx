@@ -29,7 +29,19 @@ export default function Home() {
     e.preventDefault()
     setMessage('')
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const ipData = await fetch('https://api.ipify.org?format=json')
+const ipJson = await ipData.json()
+
+const { error } = await supabase.from('bids').insert([{
+  name: form.name,
+  address: form.address,
+  email: session.user.email,
+  phone: form.phone,
+  amount,
+  language: form.language,
+  ip_address: ipJson.ip,
+  user_agent: navigator.userAgent
+}])
       email: loginEmail,
       options: {
         emailRedirectTo: 'https://kondschafter-auktion.vercel.app'
