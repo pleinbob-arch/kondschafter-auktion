@@ -218,13 +218,6 @@ export default function Home() {
   Kënschtler: André Scholtes
 </h2>
 
-<p style={{
-  marginTop:'14px',
-  fontSize:'16px',
-  opacity:0.92
-}}>
-  Fir de gudden Zweck · Pour la bonne cause · For a good cause
-</p>
         </section>
 
         <section style={{
