@@ -81,7 +81,7 @@ export default function AdminPage() {
         fontFamily:'Arial'
       }}>
         <h1>Adminbereich</h1>
-        <p>Nur fir de Comité / Ausschuss.</p>
+        <p>Kondschafter - association sans but lucratif</p>
 
         <input
           type="password"
