@@ -55,9 +55,9 @@ export default function Home() {
     const { error } = await supabase.from('bids').insert([form])
 
     if (error) {
-      setMessage('Fehler: Gebot konnte nicht gespeichert werden.')
-      return
-    }
+  setMessage('Fehler: ' + error.message)
+  return
+}
 
     setHighestBid(amount)
     setMessage('Merci! Däi Gebot gouf gespäichert.')
