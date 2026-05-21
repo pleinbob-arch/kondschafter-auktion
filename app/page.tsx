@@ -260,7 +260,7 @@ export default function Home() {
               textAlign:'center'
             }}>
               <p style={{margin:'0 0 8px'}}>
-                <strong>Auktioun Enn:</strong> 21 May 2026 - 17:15
+                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
               </p>
               <Countdown />
             </div>
@@ -319,7 +319,7 @@ export default function Home() {
                 />
 
                 <input
-                  placeholder="Telefon / Phone"
+                  placeholder="Telefon / Phone *"
                   value={form.phone}
                   onChange={e => setForm({...form, phone:e.target.value})}
                   style={inputStyle}
@@ -343,7 +343,7 @@ export default function Home() {
                 >
                   {auctionClosed
                     ? 'Auktioun beendet / Auction ended'
-                    : 'Gebot späicheren / Submit Bid'}
+                    : 'Gebot späicheren / Submit Bid *'}
                 </button>
 
                 <p style={{
