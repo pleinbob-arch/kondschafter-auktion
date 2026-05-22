@@ -57,9 +57,20 @@ export default function Home() {
   }
 
   useEffect(() => {
+  const code = new URLSearchParams(window.location.search).get('code')
+
+  if (code) {
+    supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+      if (!error) {
+        setSession(data.session)
+        window.history.replaceState({}, document.title, '/')
+      }
+    })
+  } else {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
     })
+  }
 
     const authListener = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
