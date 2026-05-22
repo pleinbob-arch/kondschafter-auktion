@@ -336,9 +336,16 @@ export default function Home() {
                   required
                 />
 
-                <button style={buttonStyle}>
-  Bestätegungslink schécken / Send confirmation link
-</button>
+                <p style={{
+  fontSize:'13px',
+  color:'#666',
+  marginTop:'10px',
+  lineHeight:'1.5'
+}}>
+  Falls keng E-Mail ukënnt, kontrolléier w.e.g. och däi Spam-Ordner.
+  <br />
+  If you do not receive an email, please also check your spam folder.
+</p>
 
                 {message && <p><strong>{message}</strong></p>}
               </form>
