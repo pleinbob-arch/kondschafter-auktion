@@ -148,8 +148,8 @@ export default function Home() {
     }
 
     const { error } = await supabase.from('bids').insert([{
-      name: form.name,
-      address: form.address,
+      name: `${form.firstName} ${form.lastName}`,
+address: `${form.street}, ${form.city}`,
       email: session.user.email,
       phone: form.phone,
       amount,
@@ -167,12 +167,14 @@ export default function Home() {
     setMessage('Merci! Däi Gebot gouf gespäichert.')
 
     setForm({
-      name: '',
-      address: '',
-      phone: '',
-      amount: '',
-      language: 'lb'
-    })
+  firstName: '',
+  lastName: '',
+  street: '',
+  city: '',
+  phone: '',
+  amount: '',
+  language: 'lb'
+})
   }
 
   return (
