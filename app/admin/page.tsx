@@ -83,7 +83,7 @@ export default function AdminPage() {
   'postgres_changes',
   { event: '*', schema: 'public', table: 'bids' },
   () => {
-    loadHighestBid()
+    loadBids()
   }
 )
       .subscribe()
