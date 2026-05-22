@@ -47,16 +47,18 @@ export default function Home() {
     setMessage('Bestätegungslink gouf geschéckt. Kuck w.e.g. deng E-Mail.')
   }
 
-  {lastBid && (
-  <p style={{
-    marginTop:'14px',
-    fontSize:'14px',
-    color:'#555'
-  }}>
-    Viregt Gebot / Previous Bid:{' '}
-    <strong>{Number(lastBid.amount).toLocaleString('de-LU')} €</strong>
-  </p>
-)}
+  async function loadHighestBid() {
+  const { data } = await supabase
+    .from('bids')
+    .select('*')
+    .order('amount', { ascending: false })
+    .limit(2)
+
+  if (data && data.length > 0) {
+    setHighestBid(Number(data[0].amount))
+    setLastBid(data[1] || null)
+  }
+}
 
   useEffect(() => {
   const code = new URLSearchParams(window.location.search).get('code')
@@ -133,8 +135,8 @@ export default function Home() {
       return
     }
 
-    if (amount < highestBid + 50) {
-      setMessage(`Däi Gebot muss mindestens ${highestBid + 50} € sinn.`)
+    if (amount < highestBid + 5) {
+      setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
       return
     }
 
@@ -281,6 +283,16 @@ address: `${form.street}, ${form.city}`,
                 Mindest nächst Gebot:{' '}
                 <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
               </p>
+              {lastBid && (
+  <p style={{
+    marginTop:'14px',
+    fontSize:'14px',
+    color:'#555'
+  }}>
+    Viregt Gebot / Previous Bid:{' '}
+    <strong>{Number(lastBid.amount).toLocaleString('de-LU')} €</strong>
+  </p>
+)}
             </div>
 
             <div style={{
