@@ -9,7 +9,10 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const ADMIN_EMAIL = 'plein.bob@gmail.com'
+const ADMIN_EMAILS = [
+  'plein.bob@gmail.com',
+  'kondschafter@gmail.com'
+]
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null)
@@ -18,7 +21,9 @@ export default function AdminPage() {
   const [bids, setBids] = useState<any[]>([])
   const [message, setMessage] = useState('')
 
-  const isAdmin = session?.user?.email === ADMIN_EMAIL
+  const isAdmin = ADMIN_EMAILS.includes(
+  session?.user?.email || ''
+)
 
   const highestBid = bids[0] || null
   const uniqueBidders = new Set(bids.map(bid => bid.email)).size
