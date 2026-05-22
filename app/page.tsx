@@ -337,8 +337,8 @@ export default function Home() {
                 />
 
                 <button style={buttonStyle}>
-                  Bestätegungslink schécken / Send confirmation link
-                </button>
+  Bestätegungslink schécken / Send confirmation link
+</button>
 
                 {message && <p><strong>{message}</strong></p>}
               </form>
