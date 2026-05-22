@@ -210,7 +210,8 @@ address: `${form.street}, ${form.city}`,
   alignItems:'center',
   gap:'14px',
   marginBottom:'18px'
-}}>
+}}
+            />
 
   <img
     src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
