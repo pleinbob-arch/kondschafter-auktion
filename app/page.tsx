@@ -235,7 +235,44 @@ export default function Home() {
     }}
   />
 
-  <p style={{
+</div>
+
+<div>
+            <div style={cardStyle}>
+              <p style={{
+                margin:'0 0 6px',
+                fontSize:'14px',
+                color:'#315f9c'
+              }}>
+                Aktuellt Héichstgebot / Current Highest Bid
+              </p>
+
+              <p style={{
+                margin:0,
+                fontSize:'clamp(42px, 9vw, 62px)',
+                fontWeight:'bold',
+                color:'#0f3d91'
+              }}>
+                {highestBid.toLocaleString('de-LU')} €
+              </p>
+
+              <p style={{marginTop:'10px'}}>
+                Mindest nächst Gebot:{' '}
+                <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
+              </p>
+            </div>
+
+            <div style={{
+              ...cardStyle,
+              background:'#eef6ff',
+              textAlign:'center'
+            }}>
+              <p style={{margin:'0 0 8px'}}>
+                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+              </p>
+              <Countdown />
+            </div>
+ <p style={{
     marginTop:'22px',
     fontSize:'16px',
     lineHeight:'1.9',
@@ -283,44 +320,6 @@ export default function Home() {
     </span>
 
   </p>
-</div>
-
-<div>
-            <div style={cardStyle}>
-              <p style={{
-                margin:'0 0 6px',
-                fontSize:'14px',
-                color:'#315f9c'
-              }}>
-                Aktuellt Héichstgebot / Current Highest Bid
-              </p>
-
-              <p style={{
-                margin:0,
-                fontSize:'clamp(42px, 9vw, 62px)',
-                fontWeight:'bold',
-                color:'#0f3d91'
-              }}>
-                {highestBid.toLocaleString('de-LU')} €
-              </p>
-
-              <p style={{marginTop:'10px'}}>
-                Mindest nächst Gebot:{' '}
-                <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
-              </p>
-            </div>
-
-            <div style={{
-              ...cardStyle,
-              background:'#eef6ff',
-              textAlign:'center'
-            }}>
-              <p style={{margin:'0 0 8px'}}>
-                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
-              </p>
-              <Countdown />
-            </div>
-
             {!session ? (
               <form onSubmit={sendMagicLink} style={formBoxStyle}>
                 <h2 style={{marginTop:0}}>E-Mail Bestätegung</h2>
