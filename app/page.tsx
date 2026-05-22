@@ -245,17 +245,6 @@ export default function Home() {
               Welcome to the official auction page of the "Kondschafter".
             </p>
           </div>
-<img
-  src="/verein.jpg"
-  alt="Kondschafter"
-  style={{
-    width:'100%',
-    maxWidth:'700px',
-    borderRadius:'22px',
-    marginTop:'28px',
-    boxShadow:'0 10px 30px rgba(0,0,0,0.25)'
-  }}
-/>
 
 <p style={{
   marginTop:'22px',
