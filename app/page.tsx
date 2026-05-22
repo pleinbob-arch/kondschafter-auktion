@@ -263,12 +263,14 @@ address: `${form.street}, ${form.city}`,
 <div>
             <div style={cardStyle}>
               <p style={{
-                margin:'0 0 6px',
-                fontSize:'14px',
-                color:'#315f9c'
-              }}>
-                Aktuellt Héichstgebot / Current Highest Bid
-              </p>
+  margin:'0 0 10px',
+  fontSize:'18px',
+  fontWeight:'bold',
+  color:'#315f9c',
+  letterSpacing:'0.3px'
+}}>
+  Aktuellt Héichstgebot / Current Highest Bid
+</p>
 
               <p style={{
                 margin:0,
@@ -279,11 +281,32 @@ address: `${form.street}, ${form.city}`,
                 {highestBid.toLocaleString('de-LU')} €
               </p>
 
-              <p style={{marginTop:'10px'}}>
-                Mindest nächst Gebot:{' '}
-                <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
-              </p>
-              {lastBid && (
+              <div style={{
+  marginTop:'16px',
+  paddingTop:'14px',
+  borderTop:'1px solid #d9e8ff',
+  display:'flex',
+  flexDirection:'column',
+  gap:'8px',
+  fontSize:'14px',
+  color:'#555'
+}}>
+  <div>
+    Mindest nächst Gebot:{' '}
+    <strong style={{color:'#0f3d91'}}>
+      {(highestBid + 50).toLocaleString('de-LU')} €
+    </strong>
+  </div>
+
+  {lastBid && (
+    <div>
+      Viregt Gebot / Previous Bid:{' '}
+      <strong style={{color:'#0f3d91'}}>
+        {Number(lastBid.amount).toLocaleString('de-LU')} €
+      </strong>
+    </div>
+  )}
+</div>
   <p style={{
     marginTop:'14px',
     fontSize:'14px',
