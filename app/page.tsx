@@ -261,26 +261,6 @@ export default function Home() {
     a verbannen Konscht, Traditioun a Solidaritéit.
   </em>
 
-  <br /><br />
-
-  <strong>
-    Welcome to the official auction page of the
-    "Kondschafter".
-  </strong>
-
-  <br /><br />
-
-  <em>
-    The Kondschafter have been actively supporting the
-    traditions and spirit of the Grevenmacher Wine Festival
-    for many years.
-    <br /><br />
-
-    With this auction, we support a charitable cause while
-    bringing together art, tradition and solidarity.
-  </em>
-
-</p>
 </div>
 
           <div>
