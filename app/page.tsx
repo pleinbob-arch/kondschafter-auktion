@@ -77,16 +77,12 @@ export default function Home() {
     const channel = supabase
       .channel('bids-realtime')
       .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bids' },
-        (payload) => {
-          const newAmount = Number(payload.new.amount)
-
-          setHighestBid((currentHighest) =>
-            newAmount > currentHighest ? newAmount : currentHighest
-          )
-        }
-      )
+  'postgres_changes',
+  { event: '*', schema: 'public', table: 'bids' },
+  () => {
+    loadHighestBid()
+  }
+)
       .subscribe()
 
     return () => {
