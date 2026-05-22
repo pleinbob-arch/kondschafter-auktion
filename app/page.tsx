@@ -245,18 +245,42 @@ export default function Home() {
   opacity:0.96
 }}>
 
-  <strong>
+  <p style={{
+  marginTop:'22px',
+  fontSize:'16px',
+  lineHeight:'1.9',
+  maxWidth:'760px',
+  marginLeft:'auto',
+  marginRight:'auto',
+  opacity:0.96,
+  textAlign:'center'
+}}>
+
+  <span style={{
+    fontWeight:'bold',
+    fontSize:'22px',
+    display:'block',
+    marginBottom:'10px'
+  }}>
     Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
-  </strong>
-             <strong>
+  </span>
+
+  <span style={{
+    fontWeight:'bold',
+    fontSize:'18px',
+    display:'block',
+    opacity:0.92,
+    marginBottom:'24px'
+  }}>
     Welcome to the official auction page of the
     "Kondschafter".
-  </strong>
+  </span>
 
-  <br /><br />
-
-
-    <em>
+  <span style={{
+    fontStyle:'italic',
+    display:'block',
+    color:'rgba(255,255,255,0.92)'
+  }}>
     D’Kondschafter engagéieren sech säit ville Joren fir
     d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
     Drauwen- a Wäifest.
@@ -264,11 +288,9 @@ export default function Home() {
 
     Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
     a verbannen Konscht, Traditioun a Solidaritéit.
-  </em>
+  </span>
 
 </p>
-
-</div>
 
 <div>
             <div style={cardStyle}>
