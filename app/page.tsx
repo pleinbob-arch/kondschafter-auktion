@@ -335,7 +335,9 @@ export default function Home() {
                   style={inputStyle}
                   required
                 />
-
+<button style={buttonStyle}>
+  Bestätegungslink schécken / Send confirmation link
+</button>
                 <p style={{
   fontSize:'13px',
   color:'#666',
