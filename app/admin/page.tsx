@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, Session } from '@supabase/supabase-js'
 import * as XLSX from 'xlsx'
 
 const supabase = createClient(
@@ -9,73 +9,67 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+const ADMIN_EMAIL = 'plein.bob@gmail.com'
+
 export default function AdminPage() {
-const [loading, setLoading] = useState(true)
-const [isAdmin, setIsAdmin] = useState(false)
-const [emailInput, setEmailInput] = useState('')
+  const [session, setSession] = useState<Session | null>(null)
+  const [emailInput, setEmailInput] = useState('')
+  const [loading, setLoading] = useState(true)
   const [bids, setBids] = useState<any[]>([])
+  const [message, setMessage] = useState('')
 
-  async function loadBids() {
-    async function sendMagicLink() {
-  const { error } = await supabase.auth.signInWithOtp({
-    email: emailInput,
-    options: {
-      emailRedirectTo: 'https://kondschafter-auktion.vercel.app/admin'
+  const isAdmin = session?.user?.email === ADMIN_EMAIL
+
+  async function sendMagicLink(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: emailInput,
+      options: {
+        emailRedirectTo: 'https://kondschafter-auktion.vercel.app/admin'
+      }
+    })
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
     }
-  })
 
-  if (error) {
-    alert(error.message)
-    return
+    setMessage('Magic Link geschéckt. Kuck w.e.g. deng E-Mail.')
   }
 
-  alert('Magic Link geschéckt!')
-}
-    const { data } = await supabase
+  async function loadBids() {
+    const { data, error } = await supabase
       .from('bids')
       .select('*')
       .order('amount', { ascending: false })
 
-    if (data) {
-      setBids(data)
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
     }
+
+    setBids(data || [])
   }
 
   useEffect(() => {
-  async function checkAdmin() {
-    const { data } = await supabase.auth.getSession()
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
 
-    const email = data.session?.user?.email
+    const authListener = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
 
-    if (email === 'plein.bob@gmail.com') {
-      setIsAdmin(true)
-      loadBids()
+    return () => {
+      authListener.data.subscription.unsubscribe()
     }
+  }, [])
 
-    setLoading(false)
-  }
-
-  checkAdmin()
-
-  const channel = supabase
-    .channel('admin-bids-realtime')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'bids'
-      },
-      () => {
-        loadBids()
-      }
-    )
-    .subscribe()
-
-  return () => {
-    supabase.removeChannel(channel)
-  }
-}, [])
+  useEffect(() => {
+    if (!isAdmin) return
 
     loadBids()
 
@@ -97,19 +91,21 @@ const [emailInput, setEmailInput] = useState('')
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [unlocked])
+  }, [isAdmin])
 
   async function deleteBid(id:number) {
-    const confirmed = confirm(
-      'Wëlls du dëst Gebot wierklech läschen?'
-    )
-
+    const confirmed = confirm('Wëlls du dëst Gebot wierklech läschen?')
     if (!confirmed) return
 
-    await supabase
+    const { error } = await supabase
       .from('bids')
       .delete()
       .eq('id', id)
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
+    }
 
     loadBids()
   }
@@ -137,87 +133,76 @@ const [emailInput, setEmailInput] = useState('')
       { wch: 25 },
       { wch: 35 },
       { wch: 30 },
-      { wch: 12 },
+      { wch: 18 },
       { wch: 18 },
       { wch: 60 },
       { wch: 22 }
     ]
 
     const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Gebote')
+    XLSX.writeFile(workbook, 'kondschafter-gebote.xlsx')
+  }
 
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      'Gebote'
-    )
-
-    XLSX.writeFile(
-      workbook,
-      'kondschafter-gebote.xlsx'
+  if (loading) {
+    return (
+      <main style={pageCenterStyle}>
+        <div style={loginBoxStyle}>
+          <h1 style={titleStyle}>Adminbereich</h1>
+          <p>Lueden...</p>
+        </div>
+      </main>
     )
   }
 
-  if (!unlocked) {
+  if (!session) {
     return (
-      <main style={{
-        minHeight:'100vh',
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
-        background:'#eef6ff',
-        fontFamily:'Arial'
-      }}>
+      <main style={pageCenterStyle}>
+        <form onSubmit={sendMagicLink} style={loginBoxStyle}>
+          <h1 style={titleStyle}>Admin Login</h1>
 
-        <div style={{
-          background:'white',
-          padding:'40px',
-          borderRadius:'24px',
-          width:'100%',
-          maxWidth:'420px',
-          boxShadow:'0 10px 30px rgba(0,0,0,0.12)'
-        }}>
-
-          <h1 style={{
-            marginTop:0,
-            color:'#0f3d91',
-            textAlign:'center'
-          }}>
-            Admin Login
-          </h1>
+          <p>
+            Login per Magic Link. Nëmmen autoriséiert Admin-E-Mailen
+            kréien Zougang.
+          </p>
 
           <input
-            type="password"
-            placeholder="Passwuert"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              width:'100%',
-              padding:'14px',
-              borderRadius:'12px',
-              border:'1px solid #b7d8ff',
-              marginBottom:'16px',
-              fontSize:'16px',
-              boxSizing:'border-box'
-            }}
+            type="email"
+            placeholder="Admin E-Mail"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+            style={inputStyle}
+            required
           />
 
-          <button
-            onClick={login}
-            style={{
-              width:'100%',
-              padding:'14px',
-              background:'#0f3d91',
-              color:'white',
-              border:'none',
-              borderRadius:'12px',
-              fontWeight:'bold',
-              fontSize:'16px',
-              cursor:'pointer'
-            }}
-          >
-            Login
+          <button type="submit" style={buttonStyle}>
+            Magic Link schécken
           </button>
 
+          {message && <p><strong>{message}</strong></p>}
+        </form>
+      </main>
+    )
+  }
+
+  if (!isAdmin) {
+    return (
+      <main style={pageCenterStyle}>
+        <div style={loginBoxStyle}>
+          <h1 style={titleStyle}>Kee Zougang</h1>
+
+          <p>
+            Deng E-Mail ass ageloggt, mee net als Admin autoriséiert:
+          </p>
+
+          <p><strong>{session.user.email}</strong></p>
+
+          <button
+            onClick={() => supabase.auth.signOut()}
+            style={buttonStyle}
+          >
+            Ausloggen
+          </button>
         </div>
       </main>
     )
@@ -245,29 +230,38 @@ const [emailInput, setEmailInput] = useState('')
           flexWrap:'wrap'
         }}>
 
-          <h1 style={{
-            margin:0,
-            color:'#0f3d91'
-          }}>
-            Kondschafter Adminbereich
-          </h1>
+          <div>
+            <h1 style={{
+              margin:0,
+              color:'#0f3d91'
+            }}>
+              Kondschafter Adminbereich
+            </h1>
 
-          <button
-            onClick={exportExcel}
-            style={{
-              padding:'12px 18px',
-              background:'#111',
-              color:'white',
-              border:'none',
-              borderRadius:'12px',
-              fontWeight:'bold',
-              cursor:'pointer'
-            }}
-          >
-            Excel Export
-          </button>
+            <p>
+              Ageloggt als: <strong>{session.user.email}</strong>
+            </p>
+          </div>
+
+          <div style={{display:'flex', gap:'10px', flexWrap:'wrap'}}>
+            <button onClick={exportExcel} style={buttonStyle}>
+              Excel Export
+            </button>
+
+            <button
+              onClick={() => supabase.auth.signOut()}
+              style={{
+                ...buttonStyle,
+                background:'#777'
+              }}
+            >
+              Ausloggen
+            </button>
+          </div>
 
         </div>
+
+        {message && <p><strong>{message}</strong></p>}
 
         <div style={{
           background:'white',
@@ -305,9 +299,7 @@ const [emailInput, setEmailInput] = useState('')
                 <tr
                   key={bid.id}
                   style={{
-                    background:index % 2 === 0
-                      ? 'white'
-                      : '#f7fbff'
+                    background:index % 2 === 0 ? 'white' : '#f7fbff'
                   }}
                 >
                   <td style={tdStyle}>{index + 1}</td>
@@ -338,8 +330,7 @@ const [emailInput, setEmailInput] = useState('')
 
                   <td style={tdStyle}>
                     {bid.created_at
-                      ? new Date(bid.created_at)
-                          .toLocaleString('de-LU')
+                      ? new Date(bid.created_at).toLocaleString('de-LU')
                       : ''}
                   </td>
 
@@ -368,6 +359,51 @@ const [emailInput, setEmailInput] = useState('')
       </div>
     </main>
   )
+}
+
+const pageCenterStyle = {
+  minHeight:'100vh',
+  display:'flex',
+  justifyContent:'center',
+  alignItems:'center',
+  background:'#eef6ff',
+  fontFamily:'Arial',
+  padding:'24px'
+}
+
+const loginBoxStyle = {
+  background:'white',
+  padding:'40px',
+  borderRadius:'24px',
+  width:'100%',
+  maxWidth:'460px',
+  boxShadow:'0 10px 30px rgba(0,0,0,0.12)'
+}
+
+const titleStyle = {
+  marginTop:0,
+  color:'#0f3d91',
+  textAlign:'center' as const
+}
+
+const inputStyle = {
+  width:'100%',
+  padding:'14px',
+  borderRadius:'12px',
+  border:'1px solid #b7d8ff',
+  marginBottom:'16px',
+  fontSize:'16px',
+  boxSizing:'border-box' as const
+}
+
+const buttonStyle = {
+  padding:'12px 18px',
+  background:'#0f3d91',
+  color:'white',
+  border:'none',
+  borderRadius:'12px',
+  fontWeight:'bold',
+  cursor:'pointer'
 }
 
 const thStyle = {
