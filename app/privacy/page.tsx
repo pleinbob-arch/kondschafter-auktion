@@ -256,7 +256,37 @@ export default function PrivacyPage() {
               organizer are final.
             </p>
           </Card>
+          
+<div style={{
+  marginTop:'40px',
+  paddingTop:'24px',
+  borderTop:'1px solid #d9e8ff',
+  lineHeight:'1.8'
+}}>
 
+  <h2 style={{color:'#0f3d91'}}>
+    Responsabilitéitsinformatiounen / Legal Information
+  </h2>
+
+  <p>
+    <strong>Kondschafter – association sans but lucratif</strong><br />
+    R.C.S.L. F10056<br />
+    1A, Rue Kummert<br />
+    6743 Grevenmacher<br />
+    Luxembourg
+  </p>
+
+  <p>
+    <strong>Kënschtler / Artist</strong><br />
+    André Scholtes<br />
+    IT WAS NOT ME S.à r.l.<br />
+    R.C.S.L. B276670<br />
+    11, Rue des Tanneurs<br />
+    6790 Grevenmacher<br />
+    Luxembourg
+  </p>
+
+</div>
           <div style={{ marginTop:'50px', textAlign:'center' }}>
             <a
               href="/"
@@ -321,33 +351,4 @@ function Card({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-<div style={{
-  marginTop:'40px',
-  paddingTop:'24px',
-  borderTop:'1px solid #d9e8ff',
-  lineHeight:'1.8'
-}}>
 
-  <h2 style={{color:'#0f3d91'}}>
-    Responsabilitéitsinformatiounen / Legal Information
-  </h2>
-
-  <p>
-    <strong>Kondschafter – association sans but lucratif</strong><br />
-    R.C.S.L. F10056<br />
-    1A, Rue Kummert<br />
-    6743 Grevenmacher<br />
-    Luxembourg
-  </p>
-
-  <p>
-    <strong>Kënschtler / Artist</strong><br />
-    André Scholtes<br />
-    IT WAS NOT ME S.à r.l.<br />
-    R.C.S.L. B276670<br />
-    11, Rue des Tanneurs<br />
-    6790 Grevenmacher<br />
-    Luxembourg
-  </p>
-
-</div>
