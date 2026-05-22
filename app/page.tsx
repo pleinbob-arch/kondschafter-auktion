@@ -532,6 +532,12 @@ address: `${form.street}, ${form.city}`,
   </p>
 
 </footer>
+
+      </div>
+    </main>
+  )
+}
+
 const cardStyle = {
   padding:'24px',
   borderRadius:'22px',
