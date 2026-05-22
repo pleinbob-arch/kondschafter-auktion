@@ -294,28 +294,11 @@ address: `${form.street}, ${form.city}`,
   <div>
     Mindest nächst Gebot:{' '}
     <strong style={{color:'#0f3d91'}}>
-      {(highestBid + 50).toLocaleString('de-LU')} €
+      {(highestBid + 5).toLocaleString('de-LU')} €
     </strong>
   </div>
 
-  {lastBid && (
-    <div>
-      Viregt Gebot / Previous Bid:{' '}
-      <strong style={{color:'#0f3d91'}}>
-        {Number(lastBid.amount).toLocaleString('de-LU')} €
-      </strong>
-    </div>
-  )}
-</div>
-  <p style={{
-    marginTop:'14px',
-    fontSize:'14px',
-    color:'#555'
-  }}>
-    Viregt Gebot / Previous Bid:{' '}
-    <strong>{Number(lastBid.amount).toLocaleString('de-LU')} €</strong>
-  </p>
-)}
+  
             </div>
 
             <div style={{
