@@ -177,7 +177,8 @@ address: `${form.street}, ${form.city}`,
   amount: '',
   language: 'lb'
 })
-
+  }
+  
   return (
     <main style={{
       minHeight:'100vh',
