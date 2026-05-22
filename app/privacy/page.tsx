@@ -39,9 +39,7 @@ export default function PrivacyPage() {
             <SubTitle title="Verantwortlech Organisatioun" />
             <p>
               <strong>Kondschafter – association sans but lucratif</strong><br />
-              1A, Rue Kummert<br />
-              L-6743 Gréiwemaacher<br />
-              Luxembourg
+             
             </p>
             <p><strong>E-Mail:</strong> kondschafter@gmail.com</p>
           </Card>
