@@ -244,29 +244,43 @@ export default function Home() {
   marginRight:'auto',
   opacity:0.96
 }}>
-  Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
-  <br />
-  D’Kondschafter engagéieren sech säit ville Joren fir
-  d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
-  Drauwen- a Wäifest.
+
+  <strong>
+    Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+  </strong>
+
   <br /><br />
 
-  Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
-  a verbannen Konscht, Traditioun a Solidaritéit.
+  <em>
+    D’Kondschafter engagéieren sech säit ville Joren fir
+    d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+    Drauwen- a Wäifest.
+    <br /><br />
+
+    Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
+    a verbannen Konscht, Traditioun a Solidaritéit.
+  </em>
+
   <br /><br />
 
-  Welcome to the official auction page of the
-  "Kondschafter".
-  <br />
-  The Kondschafter have been actively supporting the
-  traditions and spirit of the Grevenmacher Wine Festival
-  for many years.
+  <strong>
+    Welcome to the official auction page of the
+    "Kondschafter".
+  </strong>
+
   <br /><br />
 
- With this auction, we support a charitable cause while
-bringing together art, tradition and solidarity.
+  <em>
+    The Kondschafter have been actively supporting the
+    traditions and spirit of the Grevenmacher Wine Festival
+    for many years.
+    <br /><br />
+
+    With this auction, we support a charitable cause while
+    bringing together art, tradition and solidarity.
+  </em>
+
 </p>
-
 </div>
 
           <div>
