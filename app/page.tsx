@@ -301,7 +301,6 @@ export default function Home() {
       d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
       Drauwen- a Wäifest.
       <br /><br />
-
       Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
       a verbannen Konscht, Traditioun a Solidaritéit.
     </span>
