@@ -291,18 +291,6 @@ export default function Home() {
       Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter
     </span>
 
-    <br />
-
-    <span style={{
-      fontWeight:'bold',
-      fontSize:'18px',
-      display:'block',
-      opacity:0.92,
-      marginBottom:'24px'
-    }}>
-      Welcome to the official auction page of the
-      "Kondschafter"
-    </span>
 
     <span style={{
       fontStyle:'italic',
