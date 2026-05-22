@@ -108,76 +108,77 @@ export default function Home() {
   }, [])
 
   async function submitBid(e: React.FormEvent) {
-    e.preventDefault()
-    setMessage('')
+  e.preventDefault()
+  setMessage('')
 
-    if (!session?.user?.email) {
-      setMessage('Bitte zuerst per E-Mail bestätigen.')
-      return
-    }
+  if (!session?.user?.email) {
+    setMessage('Bitte zuerst per E-Mail bestätigen.')
+    return
+  }
 
-    if (new Date() >= AUCTION_END) {
-      setMessage('Auktioun beendet / Auction ended')
-      return
-    }
+  if (new Date() >= AUCTION_END) {
+    setMessage('Auktioun beendet / Auction ended')
+    return
+  }
 
-    const amount = Number(form.amount)
+  const amount = Number(form.amount)
 
   if (
-  !form.firstName ||
-  !form.lastName ||
-  !form.street ||
-  !form.city ||
-  !form.phone ||
-  !amount
-) {
-      setMessage('Bitte alle Pflichtfelder ausfüllen.')
-      return
-    }
-
-    if (amount < highestBid + 5) {
-      setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
-      return
-    }
-
-    let ipAddress = ''
-    try {
-      const ipData = await fetch('https://api.ipify.org?format=json')
-      const ipJson = await ipData.json()
-      ipAddress = ipJson.ip || ''
-    } catch {
-      ipAddress = 'unknown'
-    }
-
-    const { error } = await supabase.from('bids').insert([{
-      name: `${form.firstName} ${form.lastName}`,
-address: `${form.street}, ${form.city}`,
-      email: session.user.email,
-      phone: form.phone,
-      amount,
-      language: form.language,
-      ip_address: ipAddress,
-      user_agent: navigator.userAgent
-    }])
-
-    if (error) {
-      setMessage('Fehler: ' + error.message)
-      return
-    }
-
-    setHighestBid(amount)
-    setMessage('Merci! Däi Gebot gouf gespäichert.')
-
-    setForm({
-  firstName: '',
-  lastName: '',
-  street: '',
-  city: '',
-  phone: '',
-  amount: '',
-  language: 'lb'
-})
+    !form.firstName ||
+    !form.lastName ||
+    !form.street ||
+    !form.city ||
+    !form.phone ||
+    !amount
+  ) {
+    setMessage('Bitte alle Pflichtfelder ausfüllen.')
+    return
   }
+
+  if (amount < highestBid + 5) {
+    setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
+    return
+  }
+
+  let ipAddress = ''
+
+  try {
+    const ipData = await fetch('https://api.ipify.org?format=json')
+    const ipJson = await ipData.json()
+    ipAddress = ipJson.ip || ''
+  } catch {
+    ipAddress = 'unknown'
+  }
+
+  const { error } = await supabase.from('bids').insert([{
+    name: `${form.firstName} ${form.lastName}`,
+    address: `${form.street}, ${form.city}`,
+    email: session.user.email,
+    phone: form.phone,
+    amount,
+    language: form.language,
+    ip_address: ipAddress,
+    user_agent: navigator.userAgent
+  }])
+
+  if (error) {
+    setMessage('Fehler: ' + error.message)
+    return
+  }
+
+  setHighestBid(amount)
+  setMessage('Merci! Däi Gebot gouf gespäichert.')
+
+  setForm({
+    firstName: '',
+    lastName: '',
+    street: '',
+    city: '',
+    phone: '',
+    amount: '',
+    language: 'lb'
+  })
+}
   
   return (
     <main style={{
