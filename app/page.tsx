@@ -230,7 +230,7 @@ export default function Home() {
   textTransform:'uppercase',
   fontSize:'20px'
 }}>
-  76. Gréiwemaacher Drauwen- A Wäifest
+  76. Gréiwemaacher Drauwen- A Wäifest 2026
 </p>
 
 <h1 style={{
