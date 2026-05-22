@@ -264,6 +264,7 @@ export default function Home() {
   }}>
     Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
   </span>
+    <br />
 
   <span style={{
     fontWeight:'bold',
