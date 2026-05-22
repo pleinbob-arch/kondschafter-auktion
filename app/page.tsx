@@ -49,12 +49,12 @@ export default function Home() {
   async function loadHighestBid() {
     const { data } = await supabase
       .from('bids')
-      .select('amount')
+      .select('*')
       .order('amount', { ascending: false })
       .limit(1)
 
     if (data && data.length > 0) {
-      setHighestBid(Number(data[0].amount))
+      setLastBid(data[0])
     }
   }
 
