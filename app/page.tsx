@@ -13,7 +13,7 @@ const AUCTION_END = new Date('2026-09-13T19:00:00+02:00')
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
   const [loginEmail, setLoginEmail] = useState('')
-  const [highestBid, setHighestBid] = useState(500)
+  const [highestBid, setHighestBid] = useState(50)
   const [lastBid, setLastBid] = useState<any>(null)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
