@@ -206,13 +206,7 @@ export default function Home() {
   Fir de gudden Zweck · Pour la bonne cause · For a good cause
 </p>
 
-<h2 style={{
-  margin:'0',
-  fontWeight:'normal',
-  fontSize:'clamp(18px, 4vw, 26px)'
-}}>
-  Kënschtler: André Scholtes
-</h2>
+
 
         </section>
 
@@ -246,7 +240,16 @@ export default function Home() {
               }}>
                 Aktuellt Héichstgebot / Current Highest Bid
               </p>
-
+<p style={{
+  marginTop:'10px',
+  marginBottom:'20px',
+  fontSize:'13px',
+  color:'#666',
+  textAlign:'center',
+  fontStyle:'italic'
+}}>
+  © André Scholtes
+</p>
               <p style={{
                 margin:0,
                 fontSize:'clamp(42px, 9vw, 62px)',
