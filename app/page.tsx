@@ -205,7 +205,7 @@ export default function Home() {
 }}>
   Fir de gudden Zweck · Pour la bonne cause · For a good cause
 </p>
-
+</section>
         <section style={{
           display:'grid',
           gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',
