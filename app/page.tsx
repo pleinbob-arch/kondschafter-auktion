@@ -292,7 +292,7 @@ address: `${form.street}, ${form.city}`,
     color:'#555'
   }}>
     <div>
-      Mindest nächst Gebot:{' '}
+      Mindest nächst Gebot / Min next Bid:{' '}
       <strong style={{color:'#0f3d91'}}>
         {(highestBid + 5).toLocaleString('de-LU')} €
       </strong>
