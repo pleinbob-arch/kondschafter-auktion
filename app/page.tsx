@@ -415,22 +415,22 @@ export default function Home() {
           fontSize:'14px',
           lineHeight:'1.6'
         }}>
-          <p>
-            <strong>Kondschafter – association sans but lucratif</strong><br />
-            F10056 ·/>
-            1A, Rue Kummert ·
-            6743 Grevenmacher ·/>
-            Luxembourg />
-          </p>
+      <p>
+  <strong>Kondschafter – association sans but lucratif</strong><br />
+  F10056<br />
+  1A, Rue Kummert<br />
+  6743 Grevenmacher<br />
+  Luxembourg
+</p>
 
-          <p>
+<p>
   <strong>Kënschtler / Artist:</strong><br />
   André Scholtes<br /><br />
   IT WAS NOT ME S.à r.l.<br />
   B276670<br />
   11, Rue des Tanneurs<br />
-  6790 Grevenmacher />
-  Luxembourg />
+  6790 Grevenmacher<br />
+  Luxembourg
 </p>
 
           <p style={{textAlign:'center', marginTop:'22px'}}>
