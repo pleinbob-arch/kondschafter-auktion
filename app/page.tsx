@@ -300,7 +300,7 @@ export default function Home() {
       D’Kondschafter engagéieren sech säit ville Joren fir
       d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
       Drauwen- a Wäifest.
-      <br /><br />
+      <br /><br 
       Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
       a verbannen Konscht, Traditioun a Solidaritéit.
     </span>
