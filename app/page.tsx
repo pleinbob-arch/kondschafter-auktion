@@ -18,12 +18,14 @@ export default function Home() {
   const [auctionClosed, setAuctionClosed] = useState(false)
 
   const [form, setForm] = useState({
-    name: '',
-    address: '',
-    phone: '',
-    amount: '',
-    language: 'lb'
-  })
+  firstName: '',
+  lastName: '',
+  street: '',
+  city: '',
+  phone: '',
+  amount: '',
+  language: 'lb'
+})
 
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault()
@@ -366,18 +368,32 @@ export default function Home() {
                 </p>
 
                 <input
-                  placeholder="Numm / Name *"
-                  value={form.name}
-                  onChange={e => setForm({...form, name:e.target.value})}
-                  style={inputStyle}
-                />
+  placeholder="Virnumm / First Name *"
+  value={form.firstName}
+  onChange={e => setForm({...form, firstName:e.target.value})}
+  style={inputStyle}
+/>
 
-                <input
-                  placeholder="Adress / Address *"
-                  value={form.address}
-                  onChange={e => setForm({...form, address:e.target.value})}
-                  style={inputStyle}
-                />
+<input
+  placeholder="Numm / Last Name *"
+  value={form.lastName}
+  onChange={e => setForm({...form, lastName:e.target.value})}
+  style={inputStyle}
+/>
+
+<input
+  placeholder="Strooss + Nummer / Street + Number *"
+  value={form.street}
+  onChange={e => setForm({...form, street:e.target.value})}
+  style={inputStyle}
+/>
+
+<input
+  placeholder="PLZ + Uertschaft / ZIP Code + City *"
+  value={form.city}
+  onChange={e => setForm({...form, city:e.target.value})}
+  style={inputStyle}
+/>
 
                 <input
                   placeholder="Telefon / Phone *"
