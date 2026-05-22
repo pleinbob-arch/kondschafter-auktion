@@ -55,8 +55,9 @@ export default function Home() {
       .limit(1)
 
     if (data && data.length > 0) {
-      setLastBid(data[0])
-    }
+  setHighestBid(Number(data[0].amount))
+  setLastBid(data[0])
+}
   }
 
   useEffect(() => {
