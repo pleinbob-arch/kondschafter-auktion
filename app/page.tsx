@@ -499,43 +499,39 @@ address: `${form.street}, ${form.city}`,
           </div>
         </section>
 
-        <footer style={{
-          padding:'26px 32px',
-          background:'#0f3d91',
-          color:'white',
-          fontSize:'14px',
-          lineHeight:'1.6'
-        }}>
-      <p>
-  <strong>Kondschafter – association sans but lucratif</strong><br />
-  F10056<br />
-  1A, Rue Kummert<br />
-  6743 Grevenmacher<br />
-  Luxembourg
-</p>
+       <footer style={{
+  padding:'22px 32px',
+  background:'#0f3d91',
+  color:'white',
+  fontSize:'14px'
+}}>
 
-<p>
-  <strong>Kënschtler / Artist:</strong><br />
-  André Scholtes<br />
-  IT WAS NOT ME S.à r.l.<br />
-  B276670<br />
-  11, Rue des Tanneurs<br />
-  6790 Grevenmacher<br />
-  Luxembourg
-</p>
+  <p style={{
+    textAlign:'center',
+    margin:0,
+    lineHeight:'1.8'
+  }}>
+    <a href="/privacy" style={footerLink}>
+      Dateschutz / Privacy Policy
+    </a>
 
-          <p style={{textAlign:'center', marginTop:'22px'}}>
-            <a href="/privacy" style={footerLink}>Dateschutz / Privacy Policy</a>
-            {' · '}
-            <a href="/admin" style={footerLink}>Admin Login</a>
-          </p>
-        </footer>
+    {' · '}
 
-      </div>
-    </main>
-  )
-}
+    <a href="/admin" style={footerLink}>
+      Admin Login
+    </a>
+  </p>
 
+  <p style={{
+    textAlign:'center',
+    marginTop:'16px',
+    fontSize:'12px',
+    opacity:0.82
+  }}>
+    © 2026 Kondschafter Grevenmacher ASBL. All rights reserved.
+  </p>
+
+</footer>
 const cardStyle = {
   padding:'24px',
   borderRadius:'22px',
