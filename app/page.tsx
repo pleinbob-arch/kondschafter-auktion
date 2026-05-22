@@ -263,9 +263,12 @@ export default function Home() {
   for many years.
   <br /><br />
 
-  With this auction, we support a charitable cause while
-  bringing together art, tradition and solidarity.
+ With this auction, we support a charitable cause while
+bringing together art, tradition and solidarity.
 </p>
+
+</div>
+
           <div>
             <div style={cardStyle}>
               <p style={{
