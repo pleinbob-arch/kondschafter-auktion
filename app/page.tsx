@@ -196,7 +196,7 @@ export default function Home() {
   margin:0,
   letterSpacing:'2px',
   textTransform:'uppercase',
-  fontSize:'13px'
+  fontSize:'20px'
 }}>
   76. Gréiwemaacher Drauwen- A Wäifest
 </p>
