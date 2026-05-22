@@ -222,7 +222,7 @@ address: `${form.street}, ${form.city}`,
       borderRadius:'14px',
       background:'rgba(255,255,255,0.12)',
       padding:'6px'
-    }}
+    }}>
 
 </div>
          <p style={{
