@@ -10,11 +10,27 @@ const supabase = createClient(
 )
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('')
-  const [unlocked, setUnlocked] = useState(false)
+const [loading, setLoading] = useState(true)
+const [isAdmin, setIsAdmin] = useState(false)
+const [emailInput, setEmailInput] = useState('')
   const [bids, setBids] = useState<any[]>([])
 
   async function loadBids() {
+    async function sendMagicLink() {
+  const { error } = await supabase.auth.signInWithOtp({
+    email: emailInput,
+    options: {
+      emailRedirectTo: 'https://kondschafter-auktion.vercel.app/admin'
+    }
+  })
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  alert('Magic Link geschéckt!')
+}
     const { data } = await supabase
       .from('bids')
       .select('*')
@@ -26,7 +42,40 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    if (!unlocked) return
+  async function checkAdmin() {
+    const { data } = await supabase.auth.getSession()
+
+    const email = data.session?.user?.email
+
+    if (email === 'plein.bob@gmail.com') {
+      setIsAdmin(true)
+      loadBids()
+    }
+
+    setLoading(false)
+  }
+
+  checkAdmin()
+
+  const channel = supabase
+    .channel('admin-bids-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'bids'
+      },
+      () => {
+        loadBids()
+      }
+    )
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [])
 
     loadBids()
 
@@ -49,14 +98,6 @@ export default function AdminPage() {
       supabase.removeChannel(channel)
     }
   }, [unlocked])
-
-  function login() {
-    if (password === 'Kondschafter2026Humpen') {
-      setUnlocked(true)
-    } else {
-      alert('Falscht Passwuert')
-    }
-  }
 
   async function deleteBid(id:number) {
     const confirmed = confirm(
