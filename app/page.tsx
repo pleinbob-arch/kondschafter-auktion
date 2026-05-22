@@ -213,18 +213,18 @@ address: `${form.street}, ${form.city}`,
 }}
             />
 
-  <img
-    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
-    alt="Kondschafter Logo"
-    style={{
-      width:'72px',
-      height:'72px',
-      objectFit:'contain',
-      borderRadius:'14px',
-      background:'rgba(255,255,255,0.12)',
-      padding:'6px'
-    }}>
-
+  <<img
+  src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
+  alt="Kondschafter Logo"
+  style={{
+    width:'72px',
+    height:'72px',
+    objectFit:'contain',
+    borderRadius:'14px',
+    background:'rgba(255,255,255,0.12)',
+    padding:'6px'
+  }}
+/>
 </div>
          <p style={{
   margin:0,
