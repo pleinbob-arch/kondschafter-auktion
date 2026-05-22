@@ -80,16 +80,12 @@ export default function AdminPage() {
     const channel = supabase
       .channel('admin-bids-realtime')
       .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'bids'
-        },
-        () => {
-          loadBids()
-        }
-      )
+  'postgres_changes',
+  { event: '*', schema: 'public', table: 'bids' },
+  () => {
+    loadHighestBid()
+  }
+)
       .subscribe()
 
     return () => {
