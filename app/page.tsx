@@ -228,7 +228,16 @@ export default function Home() {
       boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
     }}
   />
-
+<p style={{
+  marginTop:'10px',
+  marginBottom:'20px',
+  fontSize:'13px',
+  color:'#666',
+  textAlign:'center',
+  fontStyle:'italic'
+}}>
+  © Konschtwierk: André Scholtes
+</p>
 </div>
 
 <div>
@@ -240,16 +249,7 @@ export default function Home() {
               }}>
                 Aktuellt Héichstgebot / Current Highest Bid
               </p>
-<p style={{
-  marginTop:'10px',
-  marginBottom:'20px',
-  fontSize:'13px',
-  color:'#666',
-  textAlign:'center',
-  fontStyle:'italic'
-}}>
-  © André Scholtes
-</p>
+
               <p style={{
                 margin:0,
                 fontSize:'clamp(42px, 9vw, 62px)',
