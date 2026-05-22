@@ -248,10 +248,16 @@ export default function Home() {
   <strong>
     Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
   </strong>
+             <strong>
+    Welcome to the official auction page of the
+    "Kondschafter".
+  </strong>
 
   <br /><br />
 
-  <em>
+  <br /><br />
+
+    <em>
     D’Kondschafter engagéieren sech säit ville Joren fir
     d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
     Drauwen- a Wäifest.
@@ -261,9 +267,11 @@ export default function Home() {
     a verbannen Konscht, Traditioun a Solidaritéit.
   </em>
 
+</p>
+
 </div>
 
-          <div>
+<div>
             <div style={cardStyle}>
               <p style={{
                 margin:'0 0 6px',
