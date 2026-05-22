@@ -547,7 +547,7 @@ export default function Home() {
     fontSize:'12px',
     opacity:0.82
   }}>
-    © 2026 Kondschafter - association sans but lucratif - Grevenmacher. All rights reserved.
+    © 2026 Kondschafter - association sans but lucratif - Grevenmacher - All rights reserved.
   </p>
 
 </footer>
