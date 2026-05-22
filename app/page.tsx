@@ -176,7 +176,7 @@ export default function Home() {
       }}>
 
         <section style={{
-          padding:'30px 28px',
+          padding:'24px 28px',
           textAlign:'center',
           background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
