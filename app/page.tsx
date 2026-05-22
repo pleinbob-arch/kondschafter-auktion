@@ -233,13 +233,33 @@ export default function Home() {
   76. Gréiwemaacher Drauwen- A Wäifest 2026
 </p>
 
-<h1 style={{
-  margin:'14px 0 8px',
-  fontSize:'clamp(34px, 8vw, 64px)',
-  lineHeight:'1.05'
+<div style={{
+  display:'flex',
+  alignItems:'center',
+  justifyContent:'center',
+  gap:'14px',
+  marginBottom:'10px'
 }}>
-  Kondschafter Auktioun
-</h1>
+
+  <img
+    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
+    alt="Kondschafter Logo"
+    style={{
+      width:'42px',
+      height:'42px',
+      objectFit:'contain'
+    }}
+  />
+
+  <h1 style={{
+    margin:0,
+    fontSize:'clamp(34px, 8vw, 64px)',
+    lineHeight:'1.05'
+  }}>
+    Kondschafter Auktioun
+  </h1>
+
+</div>
 
 <p style={{
   margin:'0 0 14px',
