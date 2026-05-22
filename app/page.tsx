@@ -245,7 +245,44 @@ export default function Home() {
               Welcome to the official auction page of the "Kondschafter".
             </p>
           </div>
+<img
+  src="/verein.jpg"
+  alt="Kondschafter"
+  style={{
+    width:'100%',
+    maxWidth:'700px',
+    borderRadius:'22px',
+    marginTop:'28px',
+    boxShadow:'0 10px 30px rgba(0,0,0,0.25)'
+  }}
+/>
 
+<p style={{
+  marginTop:'22px',
+  fontSize:'16px',
+  lineHeight:'1.7',
+  maxWidth:'760px',
+  marginLeft:'auto',
+  marginRight:'auto',
+  opacity:0.96
+}}>
+  D’Kondschafter engagéieren sech säit ville Joren
+  fir d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+  Drauwen- a Wäifest.
+  <br /><br />
+
+  Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
+  a verbannen Konscht, Traditioun a Solidaritéit.
+  <br /><br />
+
+  The Kondschafter have been actively supporting the
+  traditions and spirit of the Grevenmacher Wine Festival
+  for many years.
+  <br /><br />
+
+  With this auction, we support a charitable cause while
+  bringing together art, tradition and solidarity.
+</p>
           <div>
             <div style={cardStyle}>
               <p style={{
