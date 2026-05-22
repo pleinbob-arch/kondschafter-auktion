@@ -223,27 +223,6 @@ address: `${form.street}, ${form.city}`,
       background:'rgba(255,255,255,0.12)',
       padding:'6px'
     }}
-  />
-
-  <div style={{textAlign:'left'}}>
-    <p style={{
-      margin:0,
-      fontSize:'13px',
-      letterSpacing:'2px',
-      textTransform:'uppercase',
-      opacity:0.9
-    }}>
-      Kondschafter Grevenmacher
-    </p>
-
-    <p style={{
-      margin:'4px 0 0',
-      fontSize:'15px',
-      fontWeight:'bold'
-    }}>
-      Association sans but lucratif
-    </p>
-  </div>
 
 </div>
          <p style={{
