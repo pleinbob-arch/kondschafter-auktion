@@ -14,6 +14,7 @@ export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
   const [loginEmail, setLoginEmail] = useState('')
   const [highestBid, setHighestBid] = useState(500)
+  const [lastBid, setLastBid] = useState<any>(null)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
 
