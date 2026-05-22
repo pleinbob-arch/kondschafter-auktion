@@ -121,7 +121,14 @@ export default function Home() {
 
     const amount = Number(form.amount)
 
-    if (!form.name || !form.address || !form.phone || !amount) {
+  if (
+  !form.firstName ||
+  !form.lastName ||
+  !form.street ||
+  !form.city ||
+  !form.phone ||
+  !amount
+) {
       setMessage('Bitte alle Pflichtfelder ausfüllen.')
       return
     }
