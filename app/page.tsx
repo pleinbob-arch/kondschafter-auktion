@@ -176,7 +176,7 @@ export default function Home() {
       }}>
 
         <section style={{
-          padding:'44px 28px',
+          padding:'30px 28px',
           textAlign:'center',
           background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
@@ -288,7 +288,7 @@ export default function Home() {
       display:'block',
       marginBottom:'10px'
     }}>
-      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter
     </span>
 
     <br />
@@ -301,7 +301,7 @@ export default function Home() {
       marginBottom:'24px'
     }}>
       Welcome to the official auction page of the
-      "Kondschafter".
+      "Kondschafter"
     </span>
 
     <span style={{
