@@ -223,75 +223,67 @@ export default function Home() {
           padding:'32px'
         }}>
 
-          <div>
-            <img
-              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
-              alt="Kondschafter"
-              style={{
-                width:'100%',
-                borderRadius:'22px',
-                display:'block',
-                boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
-              }}
-            />
-
-           <p style={{
-  marginTop:'22px',
-  fontSize:'16px',
-  lineHeight:'1.8',
-  maxWidth:'760px',
-  marginLeft:'auto',
-  marginRight:'auto',
-  opacity:0.96
-}}>
+<div>
+  <img
+    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
+    alt="Kondschafter"
+    style={{
+      width:'100%',
+      borderRadius:'22px',
+      display:'block',
+      boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
+    }}
+  />
 
   <p style={{
-  marginTop:'22px',
-  fontSize:'16px',
-  lineHeight:'1.9',
-  maxWidth:'760px',
-  marginLeft:'auto',
-  marginRight:'auto',
-  opacity:0.96,
-  textAlign:'center'
-}}>
-
-  <span style={{
-    fontWeight:'bold',
-    fontSize:'22px',
-    display:'block',
-    marginBottom:'10px'
+    marginTop:'22px',
+    fontSize:'16px',
+    lineHeight:'1.9',
+    maxWidth:'760px',
+    marginLeft:'auto',
+    marginRight:'auto',
+    opacity:0.96,
+    textAlign:'center'
   }}>
-    Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
-  </span>
+
+    <span style={{
+      fontWeight:'bold',
+      fontSize:'22px',
+      display:'block',
+      marginBottom:'10px'
+    }}>
+      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+    </span>
+
     <br />
 
-  <span style={{
-    fontWeight:'bold',
-    fontSize:'18px',
-    display:'block',
-    opacity:0.92,
-    marginBottom:'24px'
-  }}>
-    Welcome to the official auction page of the
-    "Kondschafter".
-  </span>
+    <span style={{
+      fontWeight:'bold',
+      fontSize:'18px',
+      display:'block',
+      opacity:0.92,
+      marginBottom:'24px'
+    }}>
+      Welcome to the official auction page of the
+      "Kondschafter".
+    </span>
 
-  <span style={{
-    fontStyle:'italic',
-    display:'block',
-    color:'rgba(255,255,255,0.92)'
-  }}>
-    D’Kondschafter engagéieren sech säit ville Joren fir
-    d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
-    Drauwen- a Wäifest.
-    <br /><br />
+    <span style={{
+      fontStyle:'italic',
+      display:'block',
+      color:'#1d3557'
+    }}>
+      D’Kondschafter engagéieren sech säit ville Joren fir
+      d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+      Drauwen- a Wäifest.
+      <br /><br />
 
-    Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
-    a verbannen Konscht, Traditioun a Solidaritéit.
-  </span>
+      Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
+      a verbannen Konscht, Traditioun a Solidaritéit.
+    </span>
 
-</p>
+  </p>
+</div>
 
 <div>
             <div style={cardStyle}>
