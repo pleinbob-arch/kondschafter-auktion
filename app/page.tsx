@@ -284,7 +284,38 @@ address: `${form.street}, ${form.city}`,
                 <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
               </p>
             </div>
+{lastBid && (
+  <div style={{
+    ...cardStyle,
+    background:'#f7fbff'
+  }}>
+    <p style={{
+      margin:'0 0 6px',
+      fontSize:'14px',
+      color:'#315f9c'
+    }}>
+      Lescht Gebot / Last Bid
+    </p>
 
+    <p style={{
+      margin:0,
+      fontSize:'24px',
+      fontWeight:'bold',
+      color:'#0f3d91'
+    }}>
+      {Number(lastBid.amount).toLocaleString('de-LU')} €
+    </p>
+
+    <p style={{
+      marginTop:'8px',
+      fontSize:'14px'
+    }}>
+      {lastBid.created_at
+        ? new Date(lastBid.created_at).toLocaleString('de-LU')
+        : ''}
+    </p>
+  </div>
+)}
             <div style={{
               ...cardStyle,
               background:'#eef6ff',
