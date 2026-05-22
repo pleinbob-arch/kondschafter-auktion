@@ -235,28 +235,19 @@ export default function Home() {
               }}
             />
 
-            <p style={{
-              marginTop:'16px',
-              fontSize:'15px',
-              lineHeight:'1.6'
-            }}>
-              Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
-              <br />
-              Welcome to the official auction page of the "Kondschafter".
-            </p>
-          </div>
-
-<p style={{
+           <p style={{
   marginTop:'22px',
   fontSize:'16px',
-  lineHeight:'1.7',
+  lineHeight:'1.8',
   maxWidth:'760px',
   marginLeft:'auto',
   marginRight:'auto',
   opacity:0.96
 }}>
-  D’Kondschafter engagéieren sech säit ville Joren
-  fir d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+  Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter.
+  <br />
+  D’Kondschafter engagéieren sech säit ville Joren fir
+  d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
   Drauwen- a Wäifest.
   <br /><br />
 
@@ -264,6 +255,9 @@ export default function Home() {
   a verbannen Konscht, Traditioun a Solidaritéit.
   <br /><br />
 
+  Welcome to the official auction page of the
+  "Kondschafter".
+  <br />
   The Kondschafter have been actively supporting the
   traditions and spirit of the Grevenmacher Wine Festival
   for many years.
