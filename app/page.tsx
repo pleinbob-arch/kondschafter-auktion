@@ -255,7 +255,6 @@ export default function Home() {
 
   <br /><br />
 
-  <br /><br />
 
     <em>
     D’Kondschafter engagéieren sech säit ville Joren fir
