@@ -205,15 +205,9 @@ address: `${form.street}, ${form.city}`,
           background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
         }}>
-          <div style={{
-  display:'flex',
-  alignItems:'center',
-  gap:'14px',
-  marginBottom:'18px'
-}}
-            />
+        
 
-  <<img
+  <img
   src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
   alt="Kondschafter Logo"
   style={{
