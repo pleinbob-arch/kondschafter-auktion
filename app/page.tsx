@@ -417,7 +417,10 @@ export default function Home() {
         }}>
           <p>
             <strong>Kondschafter – association sans but lucratif</strong><br />
-            F10056 · 1A, Rue Kummert · 6743 Grevenmacher · Luxembourg
+            F10056 ·/>
+            1A, Rue Kummert ·
+            6743 Grevenmacher ·/>
+            Luxembourg />
           </p>
 
           <p>
@@ -426,7 +429,8 @@ export default function Home() {
   IT WAS NOT ME S.à r.l.<br />
   B276670<br />
   11, Rue des Tanneurs<br />
-  6790 Grevenmacher
+  6790 Grevenmacher />
+  Luxembourg />
 </p>
 
           <p style={{textAlign:'center', marginTop:'22px'}}>
