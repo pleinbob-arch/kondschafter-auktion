@@ -425,7 +425,7 @@ export default function Home() {
 
 <p>
   <strong>Kënschtler / Artist:</strong><br />
-  André Scholtes<br /><br />
+  André Scholtes<br />
   IT WAS NOT ME S.à r.l.<br />
   B276670<br />
   11, Rue des Tanneurs<br />
