@@ -20,6 +20,10 @@ export default function AdminPage() {
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL
 
+  const highestBid = bids[0] || null
+  const uniqueBidders = new Set(bids.map(bid => bid.email)).size
+  const totalBids = bids.length
+
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault()
     setMessage('')
@@ -191,10 +195,7 @@ export default function AdminPage() {
         <div style={loginBoxStyle}>
           <h1 style={titleStyle}>Kee Zougang</h1>
 
-          <p>
-            Deng E-Mail ass ageloggt, mee net als Admin autoriséiert:
-          </p>
-
+          <p>Deng E-Mail ass ageloggt, mee net als Admin autoriséiert:</p>
           <p><strong>{session.user.email}</strong></p>
 
           <button
@@ -211,7 +212,7 @@ export default function AdminPage() {
   return (
     <main style={{
       minHeight:'100vh',
-      padding:'30px',
+      padding:'20px',
       background:'#eef6ff',
       fontFamily:'Arial'
     }}>
@@ -229,16 +230,12 @@ export default function AdminPage() {
           gap:'12px',
           flexWrap:'wrap'
         }}>
-
           <div>
-            <h1 style={{
-              margin:0,
-              color:'#0f3d91'
-            }}>
+            <h1 style={{margin:0, color:'#0f3d91'}}>
               Kondschafter Adminbereich
             </h1>
 
-            <p>
+            <p style={{marginBottom:0}}>
               Ageloggt als: <strong>{session.user.email}</strong>
             </p>
           </div>
@@ -250,114 +247,207 @@ export default function AdminPage() {
 
             <button
               onClick={() => supabase.auth.signOut()}
-              style={{
-                ...buttonStyle,
-                background:'#777'
-              }}
+              style={{...buttonStyle, background:'#777'}}
             >
               Ausloggen
             </button>
           </div>
+        </div>
 
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))',
+          gap:'16px',
+          marginBottom:'24px'
+        }}>
+          <DashboardCard
+            title="Héichstgebot"
+            value={highestBid ? `${Number(highestBid.amount).toLocaleString('de-LU')} €` : '—'}
+            detail={highestBid ? highestBid.name : 'Nach kee Gebot'}
+          />
+
+          <DashboardCard
+            title="Total Geboter"
+            value={String(totalBids)}
+            detail="All enregistréiert Geboter"
+          />
+
+          <DashboardCard
+            title="Bieter"
+            value={String(uniqueBidders)}
+            detail="Unik E-Mail-Adressen"
+          />
         </div>
 
         {message && <p><strong>{message}</strong></p>}
 
         <div style={{
-          background:'white',
-          borderRadius:'22px',
-          overflow:'auto',
-          boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
+          display:'grid',
+          gap:'16px'
         }}>
+          {bids.map((bid, index) => (
+            <div
+              key={bid.id}
+              style={{
+                background:index === 0 ? '#fff7d6' : 'white',
+                border:index === 0 ? '2px solid #e6b800' : '1px solid #cfe5ff',
+                borderRadius:'18px',
+                padding:'18px',
+                boxShadow:'0 6px 18px rgba(0,0,0,0.06)'
+              }}
+            >
+              <div style={{
+                display:'flex',
+                justifyContent:'space-between',
+                gap:'12px',
+                flexWrap:'wrap',
+                marginBottom:'12px'
+              }}>
+                <div>
+                  <p style={{
+                    margin:'0 0 4px',
+                    color:'#0f3d91',
+                    fontWeight:'bold'
+                  }}>
+                    #{index + 1} {index === 0 ? '· Aktuell führend' : ''}
+                  </p>
 
-          <table style={{
-            width:'100%',
-            borderCollapse:'collapse',
-            minWidth:'1200px'
-          }}>
-
-            <thead style={{
-              background:'#0f3d91',
-              color:'white'
-            }}>
-              <tr>
-                <th style={thStyle}>#</th>
-                <th style={thStyle}>Gebot</th>
-                <th style={thStyle}>Name</th>
-                <th style={thStyle}>Adress</th>
-                <th style={thStyle}>Email</th>
-                <th style={thStyle}>Telefon</th>
-                <th style={thStyle}>IP</th>
-                <th style={thStyle}>Browser</th>
-                <th style={thStyle}>Datum</th>
-                <th style={thStyle}>Aktion</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {bids.map((bid, index) => (
-                <tr
-                  key={bid.id}
-                  style={{
-                    background:index % 2 === 0 ? 'white' : '#f7fbff'
-                  }}
-                >
-                  <td style={tdStyle}>{index + 1}</td>
-
-                  <td style={{
-                    ...tdStyle,
-                    fontWeight:'bold',
+                  <h2 style={{
+                    margin:'0',
+                    fontSize:'28px',
                     color:'#0f3d91'
                   }}>
                     {Number(bid.amount).toLocaleString('de-LU')} €
-                  </td>
+                  </h2>
+                </div>
 
-                  <td style={tdStyle}>{bid.name}</td>
-                  <td style={tdStyle}>{bid.address}</td>
-                  <td style={tdStyle}>{bid.email}</td>
-                  <td style={tdStyle}>{bid.phone}</td>
-                  <td style={tdStyle}>{bid.ip_address}</td>
+                <button
+                  onClick={() => deleteBid(bid.id)}
+                  style={{
+                    padding:'9px 13px',
+                    border:'none',
+                    borderRadius:'10px',
+                    background:'#d62828',
+                    color:'white',
+                    cursor:'pointer',
+                    height:'fit-content'
+                  }}
+                >
+                  Läschen
+                </button>
+              </div>
 
-                  <td style={{
-                    ...tdStyle,
-                    maxWidth:'220px',
-                    overflow:'hidden',
-                    textOverflow:'ellipsis',
-                    whiteSpace:'nowrap'
-                  }}>
-                    {bid.user_agent}
-                  </td>
+              <div style={{
+                display:'grid',
+                gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))',
+                gap:'12px',
+                fontSize:'14px'
+              }}>
+                <Info label="Name" value={bid.name} />
+                <Info label="Adress" value={bid.address} />
+                <Info label="Email" value={bid.email} />
+                <Info label="Telefon" value={bid.phone || '—'} />
+                <Info label="IP" value={bid.ip_address || '—'} />
+                <Info
+                  label="Datum"
+                  value={bid.created_at
+                    ? new Date(bid.created_at).toLocaleString('de-LU')
+                    : '—'}
+                />
+              </div>
 
-                  <td style={tdStyle}>
-                    {bid.created_at
-                      ? new Date(bid.created_at).toLocaleString('de-LU')
-                      : ''}
-                  </td>
+              <details style={{marginTop:'12px'}}>
+                <summary style={{
+                  cursor:'pointer',
+                  color:'#0f3d91',
+                  fontWeight:'bold'
+                }}>
+                  Browser / User Agent
+                </summary>
 
-                  <td style={tdStyle}>
-                    <button
-                      onClick={() => deleteBid(bid.id)}
-                      style={{
-                        padding:'8px 12px',
-                        border:'none',
-                        borderRadius:'10px',
-                        background:'#d62828',
-                        color:'white',
-                        cursor:'pointer'
-                      }}
-                    >
-                      Läschen
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
+                <p style={{
+                  fontSize:'12px',
+                  overflowWrap:'anywhere',
+                  background:'#f7fbff',
+                  padding:'10px',
+                  borderRadius:'10px'
+                }}>
+                  {bid.user_agent || '—'}
+                </p>
+              </details>
+            </div>
+          ))}
         </div>
 
       </div>
     </main>
+  )
+}
+
+function DashboardCard({
+  title,
+  value,
+  detail
+}: {
+  title:string
+  value:string
+  detail:string
+}) {
+  return (
+    <div style={{
+      background:'white',
+      border:'1px solid #cfe5ff',
+      borderRadius:'18px',
+      padding:'20px',
+      boxShadow:'0 6px 18px rgba(0,0,0,0.06)'
+    }}>
+      <p style={{
+        margin:'0 0 8px',
+        color:'#315f9c',
+        fontSize:'14px'
+      }}>
+        {title}
+      </p>
+
+      <p style={{
+        margin:0,
+        fontSize:'30px',
+        fontWeight:'bold',
+        color:'#0f3d91'
+      }}>
+        {value}
+      </p>
+
+      <p style={{
+        margin:'8px 0 0',
+        fontSize:'13px',
+        color:'#666'
+      }}>
+        {detail}
+      </p>
+    </div>
+  )
+}
+
+function Info({ label, value }: { label:string, value:string }) {
+  return (
+    <div>
+      <p style={{
+        margin:'0 0 3px',
+        fontSize:'12px',
+        color:'#666',
+        fontWeight:'bold'
+      }}>
+        {label}
+      </p>
+
+      <p style={{
+        margin:0,
+        overflowWrap:'anywhere'
+      }}>
+        {value}
+      </p>
+    </div>
   )
 }
 
@@ -404,16 +494,4 @@ const buttonStyle = {
   borderRadius:'12px',
   fontWeight:'bold',
   cursor:'pointer'
-}
-
-const thStyle = {
-  padding:'16px',
-  textAlign:'left' as const,
-  fontSize:'14px'
-}
-
-const tdStyle = {
-  padding:'14px 16px',
-  borderBottom:'1px solid #e7eef7',
-  fontSize:'14px'
 }
