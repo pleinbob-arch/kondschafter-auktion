@@ -47,18 +47,16 @@ export default function Home() {
     setMessage('Bestätegungslink gouf geschéckt. Kuck w.e.g. deng E-Mail.')
   }
 
-  async function loadHighestBid() {
-    const { data } = await supabase
-      .from('bids')
-      .select('*')
-      .order('amount', { ascending: false })
-      .limit(1)
-
-    if (data && data.length > 0) {
-  setHighestBid(Number(data[0].amount))
-  setLastBid(data[0])
-}
-  }
+  {lastBid && (
+  <p style={{
+    marginTop:'14px',
+    fontSize:'14px',
+    color:'#555'
+  }}>
+    Viregt Gebot / Previous Bid:{' '}
+    <strong>{Number(lastBid.amount).toLocaleString('de-LU')} €</strong>
+  </p>
+)}
 
   useEffect(() => {
   const code = new URLSearchParams(window.location.search).get('code')
@@ -284,38 +282,7 @@ address: `${form.street}, ${form.city}`,
                 <strong>{(highestBid + 50).toLocaleString('de-LU')} €</strong>
               </p>
             </div>
-{lastBid && (
-  <div style={{
-    ...cardStyle,
-    background:'#f7fbff'
-  }}>
-    <p style={{
-      margin:'0 0 6px',
-      fontSize:'14px',
-      color:'#315f9c'
-    }}>
-      Lescht Gebot / Last Bid
-    </p>
 
-    <p style={{
-      margin:0,
-      fontSize:'24px',
-      fontWeight:'bold',
-      color:'#0f3d91'
-    }}>
-      {Number(lastBid.amount).toLocaleString('de-LU')} €
-    </p>
-
-    <p style={{
-      marginTop:'8px',
-      fontSize:'14px'
-    }}>
-      {lastBid.created_at
-        ? new Date(lastBid.created_at).toLocaleString('de-LU')
-        : ''}
-    </p>
-  </div>
-)}
             <div style={{
               ...cardStyle,
               background:'#eef6ff',
