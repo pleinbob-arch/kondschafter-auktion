@@ -566,7 +566,7 @@ viewerChannel
           </div>
         </section>
 
-       <footer style={{
+      <footer style={{
   padding:'22px 32px',
   background:'#0f3d91',
   color:'white',
@@ -587,6 +587,12 @@ viewerChannel
     <a href="/admin" style={footerLink}>
       Admin Login
     </a>
+
+    {' · '}
+
+    <a href="/stream" style={footerLink}>
+      Stream
+    </a>
   </p>
 
   <p style={{
@@ -599,7 +605,6 @@ viewerChannel
   </p>
 
 </footer>
-
       </div>
     </main>
   )
