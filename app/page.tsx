@@ -17,6 +17,7 @@ export default function Home() {
   const [lastBid, setLastBid] = useState<any>(null)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
+  const [viewerCount, setViewerCount] = useState(1)
 
   const [form, setForm] = useState({
   firstName: '',
@@ -88,7 +89,27 @@ export default function Home() {
 
     checkAuctionClosed()
     const closeInterval = setInterval(checkAuctionClosed, 1000)
+const viewerChannel = supabase.channel('auction-viewers', {
+  config: {
+    presence: {
+      key: crypto.randomUUID()
+    }
+  }
+})
 
+viewerChannel
+  .on('presence', { event: 'sync' }, () => {
+    const state = viewerChannel.presenceState()
+    const count = Object.values(state).flat().length
+    setViewerCount(count || 1)
+  })
+  .subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      await viewerChannel.track({
+        online_at: new Date().toISOString()
+      })
+    }
+  })
     const channel = supabase
       .channel('bids-realtime')
       .on(
@@ -103,6 +124,7 @@ export default function Home() {
     return () => {
       authListener.data.subscription.unsubscribe()
       supabase.removeChannel(channel)
+      supabase.removeChannel(viewerChannel)
       clearInterval(closeInterval)
     }
   }, [])
@@ -342,6 +364,28 @@ export default function Home() {
               </p>
               <Countdown />
             </div>
+  <div style={{
+  ...cardStyle,
+  background:'#f7fbff',
+  textAlign:'center'
+}}>
+  <p style={{
+    margin:'0 0 6px',
+    fontSize:'14px',
+    color:'#315f9c'
+  }}>
+    Live Zuschauer / Live Viewers
+  </p>
+
+  <p style={{
+    margin:0,
+    fontSize:'30px',
+    fontWeight:'bold',
+    color:'#0f3d91'
+  }}>
+    {viewerCount}
+  </p>
+</div>
  <p style={{
     marginTop:'22px',
     fontSize:'16px',
