@@ -165,7 +165,7 @@ export default function StreamPage() {
           <div>
 
             <img
-              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/artwork.jpg"
+              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
               alt="Artwork"
               style={{
                 width:'100%',
