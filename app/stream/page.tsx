@@ -104,18 +104,17 @@ return (
     }}>
 
       {/* Header */}
-      <div style={{
-  textAlign:'center'
+     <div style={{
+  background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
+  borderRadius:'26px',
+  color:'white',
+  display:'flex',
+  alignItems:'center',
+  justifyContent:'center',
+  gap:'24px',
+  textAlign:'center',
+  boxShadow:'0 10px 35px rgba(0,0,0,0.18)'
 }}>
-        background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
-        borderRadius:'26px',
-        color:'white',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center',
-        gap:'24px',
-        boxShadow:'0 10px 35px rgba(0,0,0,0.18)'
-      }}>
         <img
           src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
           alt="Logo"
