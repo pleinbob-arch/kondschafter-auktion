@@ -207,23 +207,7 @@ export default function Home() {
           color:'white'
         }}>
         
-<div style={{
-  display:'flex',
-  justifyContent:'center',
-  marginBottom:'18px'
-}}>
 
-  <img
-    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
-    alt="Kondschafter Logo"
-    style={{
-      width:'72px',
-      height:'72px',
-      objectFit:'contain'
-    }}
-  />
-
-</div>
          <p style={{
   margin:0,
   letterSpacing:'2px',
