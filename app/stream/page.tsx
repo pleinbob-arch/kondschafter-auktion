@@ -85,202 +85,225 @@ export default function StreamPage() {
     return () => clearInterval(interval)
   }, [])
 
-  return (
-    <main style={{
-      minHeight:'100vh',
-      padding:'24px',
-      fontFamily:'Arial, sans-serif',
-      background:'linear-gradient(180deg, #dcefff 0%, #f7fbff 100%)'
+return (
+  <main style={{
+    width:'100vw',
+    height:'100vh',
+    overflow:'hidden',
+    padding:'28px',
+    boxSizing:'border-box',
+    fontFamily:'Arial, sans-serif',
+    background:'linear-gradient(135deg, #dcefff 0%, #ffffff 100%)'
+  }}>
+
+    <div style={{
+      height:'100%',
+      display:'grid',
+      gridTemplateRows:'150px 1fr',
+      gap:'24px'
     }}>
 
+      {/* Header */}
       <div style={{
-        maxWidth:'1600px',
-        margin:'0 auto'
+        background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
+        borderRadius:'26px',
+        color:'white',
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        gap:'24px',
+        boxShadow:'0 10px 35px rgba(0,0,0,0.18)'
+      }}>
+        <img
+          src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
+          alt="Logo"
+          style={{
+            width:'76px',
+            height:'76px',
+            objectFit:'contain',
+            background:'white',
+            borderRadius:'14px',
+            padding:'6px'
+          }}
+        />
+
+        <div>
+          <p style={{
+            margin:'0 0 6px',
+            fontSize:'22px',
+            letterSpacing:'1.5px',
+            textTransform:'uppercase'
+          }}>
+            76. Gréiwemaacher Drauwen- a Wäifest 2026
+          </p>
+
+          <h1 style={{
+            margin:0,
+            fontSize:'72px',
+            lineHeight:'1'
+          }}>
+            Kondschafter Auktioun
+          </h1>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div style={{
+        display:'grid',
+        gridTemplateColumns:'52% 48%',
+        gap:'24px',
+        minHeight:0
       }}>
 
+        {/* Bild */}
         <div style={{
-          background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
-          borderRadius:'28px',
-          padding:'28px',
-          color:'white',
-          marginBottom:'28px',
-          textAlign:'center',
-          boxShadow:'0 10px 35px rgba(0,0,0,0.15)'
+          background:'white',
+          borderRadius:'26px',
+          padding:'18px',
+          boxShadow:'0 10px 30px rgba(0,0,0,0.12)',
+          display:'flex',
+          flexDirection:'column',
+          minHeight:0
         }}>
+          <img
+            src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
+            alt="Artwork"
+            style={{
+              width:'100%',
+              height:'100%',
+              objectFit:'contain',
+              minHeight:0
+            }}
+          />
 
           <p style={{
-            margin:'0 0 10px',
-            fontSize:'22px',
-            letterSpacing:'1px'
+            margin:'10px 0 0',
+            textAlign:'center',
+            fontSize:'18px',
+            fontStyle:'italic',
+            color:'#555'
           }}>
-            76. GRÉIWEMAACHER DRAUWEN- A WÄIFEST 2026
+            © Konschtwierk: André Scholtes
           </p>
-
-          <div style={{
-            display:'flex',
-            alignItems:'center',
-            justifyContent:'center',
-            gap:'18px'
-          }}>
-
-            <img
-              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
-              alt="Logo"
-              style={{
-                width:'70px',
-                height:'70px',
-                objectFit:'contain',
-                background:'white',
-                borderRadius:'12px',
-                padding:'6px'
-              }}
-            />
-
-            <h1 style={{
-              margin:0,
-              fontSize:'clamp(58px, 7vw, 100px)',
-              lineHeight:'1'
-            }}>
-              Kondschafter Auktioun
-            </h1>
-
-          </div>
-
-          <p style={{
-            marginTop:'18px',
-            fontSize:'28px'
-          }}>
-            Fir de gudden Zweck · Pour la bonne cause · For a good cause
-          </p>
-
         </div>
 
+        {/* Infos */}
         <div style={{
           display:'grid',
-          gridTemplateColumns:'1.2fr 1fr',
-          gap:'28px',
-          alignItems:'start'
+          gridTemplateRows:'1.35fr 0.75fr 0.75fr',
+          gap:'24px',
+          minHeight:0
         }}>
 
-          <div>
-
-            <img
-              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
-              alt="Artwork"
-              style={{
-                width:'100%',
-                borderRadius:'28px',
-                boxShadow:'0 15px 40px rgba(0,0,0,0.18)'
-              }}
-            />
-
+          <div style={{
+            background:'white',
+            border:'1px solid #cfe5ff',
+            borderRadius:'26px',
+            padding:'34px',
+            boxShadow:'0 10px 30px rgba(0,0,0,0.1)'
+          }}>
             <p style={{
-              textAlign:'center',
-              marginTop:'12px',
-              fontStyle:'italic',
-              color:'#444',
-              fontSize:'22px'
+              margin:'0 0 16px',
+              fontSize:'34px',
+              fontWeight:'bold',
+              color:'#315f9c'
             }}>
-              © Konschtwierk: André Scholtes
+              Aktuellt Héichstgebot / Current Highest Bid
             </p>
 
+            <p style={{
+              margin:0,
+              fontSize:'118px',
+              lineHeight:'1',
+              fontWeight:'bold',
+              color:'#0f3d91'
+            }}>
+              {highestBid.toLocaleString('de-LU')} €
+            </p>
+
+            <div style={{
+              marginTop:'26px',
+              paddingTop:'22px',
+              borderTop:'2px solid #d9e8ff',
+              fontSize:'28px',
+              lineHeight:'1.6',
+              color:'#444'
+            }}>
+              <div>
+                Nächst méiglecht Gebot / Next Possible Bid:{' '}
+                <strong style={{color:'#0f3d91'}}>
+                  {(highestBid + 5).toLocaleString('de-LU')} €
+                </strong>
+              </div>
+
+              <div>
+                Viregt Gebot / Previous Bid:{' '}
+                <strong style={{color:'#0f3d91'}}>
+                  {previousBid.toLocaleString('de-LU')} €
+                </strong>
+              </div>
+            </div>
           </div>
 
           <div style={{
-            display:'grid',
-            gap:'22px'
+            background:'#eef6ff',
+            border:'1px solid #cfe5ff',
+            borderRadius:'26px',
+            padding:'28px',
+            textAlign:'center',
+            boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
           }}>
+            <p style={{
+              margin:'0 0 12px',
+              fontSize:'30px',
+              fontWeight:'bold',
+              color:'#315f9c'
+            }}>
+              Auktioun Enn: 13 September 2026 · 19:00
+            </p>
 
-            <Card>
+            <p style={{
+              margin:0,
+              fontSize:'42px',
+              fontWeight:'bold',
+              color:'#0f3d91'
+            }}>
+              {timeLeft}
+            </p>
+          </div>
 
-              <p style={{
-                margin:'0 0 18px',
-                color:'#2155a3',
-                fontWeight:'bold',
-                fontSize:'34px'
-              }}>
-                Aktuellt Héichstgebot / Current Highest Bid
-              </p>
+          <div style={{
+            background:'white',
+            border:'1px solid #cfe5ff',
+            borderRadius:'26px',
+            padding:'28px',
+            textAlign:'center',
+            boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
+          }}>
+            <p style={{
+              margin:'0 0 10px',
+              fontSize:'28px',
+              color:'#315f9c'
+            }}>
+              Live Zuschauer / Live Viewers
+            </p>
 
-              <h2 style={{
-                margin:'0 0 24px',
-                fontSize:'clamp(72px, 9vw, 120px)',
-                color:'#123f91',
-                lineHeight:'1'
-              }}>
-                {highestBid.toLocaleString('de-LU')} €
-              </h2>
-
-              <div style={{
-                borderTop:'2px solid #d7e5ff',
-                paddingTop:'18px',
-                fontSize:'26px',
-                lineHeight:'1.7'
-              }}>
-
-                <p style={{margin:'0 0 8px'}}>
-                  Nächst méiglecht Gebot / Next Possible Bid:{' '}
-                  <strong>{(highestBid + 5).toLocaleString('de-LU')} €</strong>
-                </p>
-
-                <p style={{margin:0}}>
-                  Viregt Gebot / Previous Bid:{' '}
-                  <strong>{previousBid.toLocaleString('de-LU')} €</strong>
-                </p>
-
-              </div>
-
-            </Card>
-
-            <Card centered>
-
-              <p style={{
-                margin:'0 0 10px',
-                fontSize:'34px',
-                fontWeight:'bold'
-              }}>
-                Auktioun Enn: 13 September 2026 · 19:00
-              </p>
-
-              <p style={{
-                margin:0,
-                fontSize:'40px',
-                color:'#123f91',
-                fontWeight:'bold'
-              }}>
-                {timeLeft}
-              </p>
-
-            </Card>
-
-            <Card centered>
-
-              <p style={{
-                margin:'0 0 10px',
-                fontSize:'26px',
-                color:'#2155a3'
-              }}>
-                Live Zuschauer / Live Viewers
-              </p>
-
-              <p style={{
-                margin:0,
-                fontSize:'74px',
-                fontWeight:'bold',
-                color:'#123f91'
-              }}>
-                {viewerCount}
-              </p>
-
-            </Card>
-
+            <p style={{
+              margin:0,
+              fontSize:'76px',
+              fontWeight:'bold',
+              color:'#0f3d91',
+              lineHeight:'1'
+            }}>
+              {viewerCount}
+            </p>
           </div>
 
         </div>
-
       </div>
-    </main>
-  )
+    </div>
+  </main>
+)
 }
 
 function Card({
