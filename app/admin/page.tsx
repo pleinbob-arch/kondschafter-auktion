@@ -20,10 +20,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [bids, setBids] = useState<any[]>([])
   const [message, setMessage] = useState('')
+  const [viewerCount, setViewerCount] = useState(0)
 
-  const isAdmin = ADMIN_EMAILS.includes(
-  session?.user?.email || ''
-)
+  const isAdmin = ADMIN_EMAILS.includes(session?.user?.email || '')
 
   const highestBid = bids[0] || null
   const uniqueBidders = new Set(bids.map(bid => bid.email)).size
@@ -63,10 +62,22 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
+    const code = new URLSearchParams(window.location.search).get('code')
+
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+        if (!error) {
+          setSession(data.session)
+          window.history.replaceState({}, document.title, '/admin')
+        }
+        setLoading(false)
+      })
+    } else {
+      supabase.auth.getSession().then(({ data }) => {
+        setSession(data.session)
+        setLoading(false)
+      })
+    }
 
     const authListener = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
@@ -85,16 +96,27 @@ export default function AdminPage() {
     const channel = supabase
       .channel('admin-bids-realtime')
       .on(
-  'postgres_changes',
-  { event: '*', schema: 'public', table: 'bids' },
-  () => {
-    loadBids()
-  }
-)
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bids' },
+        () => {
+          loadBids()
+        }
+      )
+      .subscribe()
+
+    const viewerChannel = supabase.channel('auction-viewers')
+
+    viewerChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = viewerChannel.presenceState()
+        const count = Object.values(state).flat().length
+        setViewerCount(count)
+      })
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
+      supabase.removeChannel(viewerChannel)
     }
   }, [isAdmin])
 
@@ -217,12 +239,10 @@ export default function AdminPage() {
       background:'#eef6ff',
       fontFamily:'Arial'
     }}>
-
       <div style={{
         maxWidth:'1400px',
         margin:'0 auto'
       }}>
-
         <div style={{
           display:'flex',
           justifyContent:'space-between',
@@ -277,6 +297,12 @@ export default function AdminPage() {
             title="Bieter"
             value={String(uniqueBidders)}
             detail="Unik E-Mail-Adressen"
+          />
+
+          <DashboardCard
+            title="Live Zuschauer"
+            value={String(viewerCount)}
+            detail="Aktuell op der Auktiounssäit"
           />
         </div>
 
@@ -379,7 +405,6 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
-
       </div>
     </main>
   )
