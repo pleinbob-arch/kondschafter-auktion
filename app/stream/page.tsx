@@ -105,6 +105,8 @@ return (
 
       {/* Header */}
       <div style={{
+  textAlign:'center'
+}}>
         background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
         borderRadius:'26px',
         color:'white',
