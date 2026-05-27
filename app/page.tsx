@@ -5,7 +5,14 @@ import { createClient, Session } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      detectSessionInUrl: true,
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  }
 )
 
 const AUCTION_END = new Date('2026-09-13T19:00:00+02:00')
@@ -211,23 +218,32 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code')
+  supabase.auth.getSession().then(({ data }) => {
+    setSession(data.session)
 
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
-        if (!error) {
-          setSession(data.session)
-          if (data.session?.user?.id) {
-            loadBidderProfile(data.session.user.id)
-          } else {
-            setProfileLoading(false)
-          }
-          window.history.replaceState({}, '', window.location.pathname)
-        } else {
-          setProfileLoading(false)
-          setMessage('Fehler bei der E-Mail-Bestätigung: ' + error.message)
-        }
-      })
+    if (data.session?.user?.id) {
+      loadBidderProfile(data.session.user.id)
+    } else {
+      setProfileLoading(false)
+    }
+
+    if (window.location.hash || window.location.search) {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  })
+
+  const authListener = supabase.auth.onAuthStateChange((_event, session) => {
+    setSession(session)
+
+    if (session?.user?.id) {
+      loadBidderProfile(session.user.id)
+    } else {
+      setBidderProfile(null)
+      setProfileLoading(false)
+    }
+  })
+
+  // Rest von deinem useEffect bleibt gleich...
     } else {
       supabase.auth.getSession().then(({ data }) => {
         setSession(data.session)
