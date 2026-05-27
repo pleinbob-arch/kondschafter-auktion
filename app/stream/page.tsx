@@ -213,12 +213,13 @@ return (
             </p>
 
             <p style={{
-              margin:0,
-              fontSize:'118px',
-              lineHeight:'1',
-              fontWeight:'bold',
-              color:'#0f3d91'
-            }}>
+  margin:0,
+  fontSize:'118px',
+  lineHeight:'1',
+  fontWeight:'bold',
+  color:'#0f3d91',
+  transition:'all 0.4s ease'
+}}>
               {highestBid.toLocaleString('de-LU')} €
             </p>
 
@@ -298,6 +299,25 @@ return (
             }}>
               {viewerCount}
             </p>
+            <Card centered>
+  <p style={{
+    margin:'0 0 12px',
+    fontSize:'24px',
+    color:'#315f9c',
+    fontWeight:'bold'
+  }}>
+    Matbidden / Place your bid
+  </p>
+
+  <img
+    src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://kondschafter-auktion.vercel.app"
+    alt="QR Code"
+    style={{
+      width:'220px',
+      height:'220px'
+    }}
+  />
+</Card>
           </div>
 
         </div>
