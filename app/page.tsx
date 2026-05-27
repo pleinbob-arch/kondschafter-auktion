@@ -403,7 +403,7 @@ viewerChannel
       display:'block',
       marginBottom:'10px'
     }}>
-      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter
+      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter ASBL
     </span>
 
 
