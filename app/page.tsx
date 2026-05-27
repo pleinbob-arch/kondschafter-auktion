@@ -236,7 +236,7 @@ viewerChannel
   textTransform:'uppercase',
   fontSize:'20px'
 }}>
-  76. Gréiwemaacher Drauwen- A Wäifest 2026
+  76. Gréiwemaacher Drauwen- A Wäifest
 </p>
 
 <div style={{
