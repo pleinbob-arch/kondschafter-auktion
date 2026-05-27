@@ -314,6 +314,13 @@ function Card({
   children: React.ReactNode
   centered?: boolean
 }) {
+  useEffect(() => {
+  const interval = setInterval(() => {
+    window.location.reload()
+  }, 1000 * 60 * 5)
+
+  return () => clearInterval(interval)
+}, [])
   return (
     <div style={{
       background:'rgba(255,255,255,0.92)',
