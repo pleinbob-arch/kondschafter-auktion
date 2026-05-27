@@ -213,14 +213,9 @@ viewerChannel
   setMessage('Merci! Däi Gebot gouf gespäichert.')
 
   setForm({
-    firstName: '',
-    lastName: '',
-    street: '',
-    city: '',
-    phone: '',
-    amount: '',
-    language: 'lb'
-  })
+  ...form,
+  amount: ''
+})
 }
   
   return (
