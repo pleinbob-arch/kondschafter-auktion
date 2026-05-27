@@ -243,77 +243,55 @@ export default function Home() {
     }
   })
 
-  // Rest von deinem useEffect bleibt gleich...
-    } else {
-      supabase.auth.getSession().then(({ data }) => {
-        setSession(data.session)
-        if (data.session?.user?.id) {
-          loadBidderProfile(data.session.user.id)
-        } else {
-          setProfileLoading(false)
-        }
-      })
-    }
+  loadHighestBid()
 
-    const authListener = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      if (session?.user?.id) {
-        loadBidderProfile(session.user.id)
-      } else {
-        setBidderProfile(null)
-        setProfileLoading(false)
+  const checkAuctionClosed = () => {
+    setAuctionClosed(new Date() >= AUCTION_END)
+  }
+
+  checkAuctionClosed()
+  const closeInterval = setInterval(checkAuctionClosed, 1000)
+
+  const viewerChannel = supabase.channel('auction-viewers', {
+    config: {
+      presence: {
+        key: crypto.randomUUID()
+      }
+    }
+  })
+
+  viewerChannel
+    .on('presence', { event: 'sync' }, () => {
+      const state = viewerChannel.presenceState()
+      const count = Object.values(state).flat().length
+      setViewerCount(count || 1)
+    })
+    .subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await viewerChannel.track({
+          online_at: new Date().toISOString()
+        })
       }
     })
 
-    loadHighestBid()
-
-    const checkAuctionClosed = () => {
-      setAuctionClosed(new Date() >= AUCTION_END)
-    }
-
-    checkAuctionClosed()
-    const closeInterval = setInterval(checkAuctionClosed, 1000)
-
-    const viewerChannel = supabase.channel('auction-viewers', {
-      config: {
-        presence: {
-          key: crypto.randomUUID()
-        }
+  const channel = supabase
+    .channel('bids-realtime')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'bids' },
+      () => {
+        loadHighestBid()
       }
-    })
+    )
+    .subscribe()
 
-    viewerChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = viewerChannel.presenceState()
-        const count = Object.values(state).flat().length
-        setViewerCount(count || 1)
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await viewerChannel.track({
-            online_at: new Date().toISOString()
-          })
-        }
-      })
-
-    const channel = supabase
-      .channel('bids-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'bids' },
-        () => {
-          loadHighestBid()
-        }
-      )
-      .subscribe()
-
-    return () => {
-      authListener.data.subscription.unsubscribe()
-      supabase.removeChannel(channel)
-      supabase.removeChannel(viewerChannel)
-      clearInterval(closeInterval)
-    }
-  }, [])
+  return () => {
+    authListener.data.subscription.unsubscribe()
+    supabase.removeChannel(channel)
+    supabase.removeChannel(viewerChannel)
+    clearInterval(closeInterval)
+  }
+}, [])
 
   useEffect(() => {
     const handleVisibility = () => {
