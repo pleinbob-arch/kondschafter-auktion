@@ -10,8 +10,23 @@ const supabase = createClient(
 
 const AUCTION_END = new Date('2026-09-13T19:00:00+02:00')
 
+type BidderProfile = {
+  id: string
+  user_id: string
+  email: string
+  first_name: string
+  last_name: string
+  street: string
+  city: string
+  phone: string
+  language: string
+}
+
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
+  const [profileLoading, setProfileLoading] = useState(true)
+  const [bidderProfile, setBidderProfile] = useState<BidderProfile | null>(null)
+
   const [loginEmail, setLoginEmail] = useState('')
   const [highestBid, setHighestBid] = useState(50)
   const [lastBid, setLastBid] = useState<any>(null)
@@ -19,15 +34,16 @@ export default function Home() {
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
 
-  const [form, setForm] = useState({
-  firstName: '',
-  lastName: '',
-  street: '',
-  city: '',
-  phone: '',
-  amount: '',
-  language: 'lb'
-})
+  const [profileForm, setProfileForm] = useState({
+    firstName: '',
+    lastName: '',
+    street: '',
+    city: '',
+    phone: '',
+    language: 'lb'
+  })
+
+  const [bidAmount, setBidAmount] = useState('')
 
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault()
@@ -49,36 +65,188 @@ export default function Home() {
   }
 
   async function loadHighestBid() {
-  const { data } = await supabase
-    .from('bids')
-    .select('*')
-    .order('amount', { ascending: false })
-    .limit(2)
+    const { data } = await supabase
+      .from('bids')
+      .select('*')
+      .order('amount', { ascending: false })
+      .limit(2)
 
-  if (data && data.length > 0) {
-    setHighestBid(Number(data[0].amount))
-    setLastBid(data[1] || null)
+    if (data && data.length > 0) {
+      setHighestBid(Number(data[0].amount))
+      setLastBid(data[1] || null)
+    }
   }
-}
+
+  async function loadBidderProfile(userId: string) {
+    setProfileLoading(true)
+
+    const { data, error } = await supabase
+      .from('bidders')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (error) {
+      setMessage('Fehler beim Laden der Bieterdaten: ' + error.message)
+      setBidderProfile(null)
+      setProfileLoading(false)
+      return
+    }
+
+    setBidderProfile(data || null)
+    setProfileLoading(false)
+  }
+
+  async function saveBidderProfile(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    if (!session?.user?.id || !session?.user?.email) {
+      setMessage('Bitte zuerst per E-Mail bestätigen.')
+      return
+    }
+
+    if (
+      !profileForm.firstName ||
+      !profileForm.lastName ||
+      !profileForm.street ||
+      !profileForm.city ||
+      !profileForm.phone
+    ) {
+      setMessage('Bitte alle Pflichtfelder ausfüllen.')
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('bidders')
+      .insert([{
+        user_id: session.user.id,
+        email: session.user.email,
+        first_name: profileForm.firstName,
+        last_name: profileForm.lastName,
+        street: profileForm.street,
+        city: profileForm.city,
+        phone: profileForm.phone,
+        language: profileForm.language
+      }])
+      .select('*')
+      .single()
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
+    }
+
+    setBidderProfile(data)
+    setMessage('Merci! Deng Donnéeë goufe gespäichert. Du kanns elo bidden.')
+  }
+
+  async function submitBid(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    if (!session?.user?.email) {
+      setMessage('Bitte zuerst per E-Mail bestätigen.')
+      return
+    }
+
+    if (!bidderProfile) {
+      setMessage('Bitte zuerst deine Daten ausfüllen.')
+      return
+    }
+
+    if (new Date() >= AUCTION_END) {
+      setMessage('Auktioun beendet / Auction ended')
+      return
+    }
+
+    const amount = Number(bidAmount)
+
+    if (!amount) {
+      setMessage('Bitte ein Gebot eingeben.')
+      return
+    }
+
+    if (amount < highestBid + 5) {
+      setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
+      return
+    }
+
+    let ipAddress = ''
+
+    try {
+      const ipData = await fetch('https://api.ipify.org?format=json')
+      const ipJson = await ipData.json()
+      ipAddress = ipJson.ip || ''
+    } catch {
+      ipAddress = 'unknown'
+    }
+
+    const { error } = await supabase.from('bids').insert([{
+      name: `${bidderProfile.first_name} ${bidderProfile.last_name}`,
+      address: `${bidderProfile.street}, ${bidderProfile.city}`,
+      email: bidderProfile.email,
+      phone: bidderProfile.phone,
+      amount,
+      language: bidderProfile.language || 'lb',
+      ip_address: ipAddress,
+      user_agent: navigator.userAgent
+    }])
+
+    if (error) {
+      setMessage('Fehler: ' + error.message)
+      return
+    }
+
+    setHighestBid(amount)
+    setBidAmount('')
+    setMessage('Merci! Däi Gebot gouf gespäichert.')
+  }
+
+  async function signOut() {
+    setMessage('')
+    setBidderProfile(null)
+    setProfileLoading(false)
+    await supabase.auth.signOut()
+  }
 
   useEffect(() => {
-  const code = new URLSearchParams(window.location.search).get('code')
+    const code = new URLSearchParams(window.location.search).get('code')
 
-  if (code) {
-    supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
-      if (!error) {
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+        if (!error) {
+          setSession(data.session)
+          if (data.session?.user?.id) {
+            loadBidderProfile(data.session.user.id)
+          } else {
+            setProfileLoading(false)
+          }
+          window.history.replaceState({}, '', window.location.pathname)
+        } else {
+          setProfileLoading(false)
+          setMessage('Fehler bei der E-Mail-Bestätigung: ' + error.message)
+        }
+      })
+    } else {
+      supabase.auth.getSession().then(({ data }) => {
         setSession(data.session)
-        window.history.replaceState({}, '', window.location.pathname)
-      }
-    })
-  } else {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-    })
-  }
+        if (data.session?.user?.id) {
+          loadBidderProfile(data.session.user.id)
+        } else {
+          setProfileLoading(false)
+        }
+      })
+    }
 
     const authListener = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
+      if (session?.user?.id) {
+        loadBidderProfile(session.user.id)
+      } else {
+        setBidderProfile(null)
+        setProfileLoading(false)
+      }
     })
 
     loadHighestBid()
@@ -89,36 +257,38 @@ export default function Home() {
 
     checkAuctionClosed()
     const closeInterval = setInterval(checkAuctionClosed, 1000)
-const viewerChannel = supabase.channel('auction-viewers', {
-  config: {
-    presence: {
-      key: crypto.randomUUID()
-    }
-  }
-})
 
-viewerChannel
-  .on('presence', { event: 'sync' }, () => {
-    const state = viewerChannel.presenceState()
-    const count = Object.values(state).flat().length
-    setViewerCount(count || 1)
-  })
-  .subscribe(async (status) => {
-    if (status === 'SUBSCRIBED') {
-      await viewerChannel.track({
-        online_at: new Date().toISOString()
+    const viewerChannel = supabase.channel('auction-viewers', {
+      config: {
+        presence: {
+          key: crypto.randomUUID()
+        }
+      }
+    })
+
+    viewerChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = viewerChannel.presenceState()
+        const count = Object.values(state).flat().length
+        setViewerCount(count || 1)
       })
-    }
-  })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await viewerChannel.track({
+            online_at: new Date().toISOString()
+          })
+        }
+      })
+
     const channel = supabase
       .channel('bids-realtime')
       .on(
-  'postgres_changes',
-  { event: '*', schema: 'public', table: 'bids' },
-  () => {
-    loadHighestBid()
-  }
-)
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bids' },
+        () => {
+          loadHighestBid()
+        }
+      )
       .subscribe()
 
     return () => {
@@ -128,88 +298,21 @@ viewerChannel
       clearInterval(closeInterval)
     }
   }, [])
+
   useEffect(() => {
-  const handleVisibility = () => {
-    if (document.visibilityState === 'visible') {
-      loadHighestBid()
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadHighestBid()
+      }
     }
-  }
 
-  document.addEventListener('visibilitychange', handleVisibility)
+    document.addEventListener('visibilitychange', handleVisibility)
 
-  return () => {
-    document.removeEventListener('visibilitychange', handleVisibility)
-  }
-}, [])
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [])
 
-  async function submitBid(e: React.FormEvent) {
-  e.preventDefault()
-  setMessage('')
-
-  if (!session?.user?.email) {
-    setMessage('Bitte zuerst per E-Mail bestätigen.')
-    return
-  }
-
-  if (new Date() >= AUCTION_END) {
-    setMessage('Auktioun beendet / Auction ended')
-    return
-  }
-
-  const amount = Number(form.amount)
-
-  if (
-    !form.firstName ||
-    !form.lastName ||
-    !form.street ||
-    !form.city ||
-    !form.phone ||
-    !amount
-  ) {
-    setMessage('Bitte alle Pflichtfelder ausfüllen.')
-    return
-  }
-
-  if (amount < highestBid + 5) {
-    setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
-    return
-  }
-
-  let ipAddress = ''
-
-  try {
-    const ipData = await fetch('https://api.ipify.org?format=json')
-    const ipJson = await ipData.json()
-    ipAddress = ipJson.ip || ''
-  } catch {
-    ipAddress = 'unknown'
-  }
-
-  const { error } = await supabase.from('bids').insert([{
-    name: `${form.firstName} ${form.lastName}`,
-    address: `${form.street}, ${form.city}`,
-    email: session.user.email,
-    phone: form.phone,
-    amount,
-    language: form.language,
-    ip_address: ipAddress,
-    user_agent: navigator.userAgent
-  }])
-
-  if (error) {
-    setMessage('Fehler: ' + error.message)
-    return
-  }
-
-  setHighestBid(amount)
-  setMessage('Merci! Däi Gebot gouf gespäichert.')
-
-  setForm({
-  ...form,
-  amount: ''
-})
-}
-  
   return (
     <main style={{
       minHeight:'100vh',
@@ -236,131 +339,127 @@ viewerChannel
           background:'linear-gradient(135deg, #0f3d91, #6bb6ff)',
           color:'white'
         }}>
-        
+          <p style={{
+            margin:0,
+            letterSpacing:'2px',
+            textTransform:'uppercase',
+            fontSize:'20px'
+          }}>
+            76. Gréiwemaacher Drauwen- A Wäifest
+          </p>
 
-         <p style={{
-  margin:0,
-  letterSpacing:'2px',
-  textTransform:'uppercase',
-  fontSize:'20px'
-}}>
-  76. Gréiwemaacher Drauwen- A Wäifest
-</p>
+          <div style={{
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'center',
+            gap:'14px',
+            marginBottom:'10px'
+          }}>
+            <img
+              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
+              alt="Kondschafter Logo"
+              style={{
+                width:'42px',
+                height:'42px',
+                objectFit:'contain'
+              }}
+            />
 
-<div style={{
-  display:'flex',
-  alignItems:'center',
-  justifyContent:'center',
-  gap:'14px',
-  marginBottom:'10px'
-}}>
+            <h1 style={{
+              margin:0,
+              fontSize:'clamp(34px, 8vw, 64px)',
+              lineHeight:'1.05'
+            }}>
+              Kondschafter Auktioun
+            </h1>
+          </div>
 
-  <img
-    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
-    alt="Kondschafter Logo"
-    style={{
-      width:'42px',
-      height:'42px',
-      objectFit:'contain'
-    }}
-  />
+          <p style={{
+            margin:'0 0 14px',
+            fontSize:'16px',
+            opacity:0.92
+          }}>
+            Fir de gudden Zweck · Pour la bonne cause · For a good cause
+          </p>
+        </section>
 
-  <h1 style={{
-    margin:0,
-    fontSize:'clamp(34px, 8vw, 64px)',
-    lineHeight:'1.05'
-  }}>
-    Kondschafter Auktioun
-  </h1>
-
-</div>
-
-<p style={{
-  margin:'0 0 14px',
-  fontSize:'16px',
-  opacity:0.92
-}}>
-  Fir de gudden Zweck · Pour la bonne cause · For a good cause
-</p>
-</section>
         <section style={{
           display:'grid',
           gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',
           gap:'28px',
           padding:'32px'
         }}>
+          <div>
+            <img
+              src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
+              alt="Kondschafter"
+              style={{
+                width:'100%',
+                borderRadius:'22px',
+                display:'block',
+                boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
+              }}
+            />
+            <p style={{
+              marginTop:'10px',
+              marginBottom:'20px',
+              fontSize:'13px',
+              color:'#666',
+              textAlign:'center',
+              fontStyle:'italic'
+            }}>
+              © Konschtwierk: André Scholtes
+            </p>
+          </div>
 
-<div>
-  <img
-    src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
-    alt="Kondschafter"
-    style={{
-      width:'100%',
-      borderRadius:'22px',
-      display:'block',
-      boxShadow:'0 12px 30px rgba(0,0,0,0.25)'
-    }}
-  />
-<p style={{
-  marginTop:'10px',
-  marginBottom:'20px',
-  fontSize:'13px',
-  color:'#666',
-  textAlign:'center',
-  fontStyle:'italic'
-}}>
-  © Konschtwierk: André Scholtes
-</p>
-</div>
-
-<div>
+          <div>
             <div style={cardStyle}>
-  <p style={{
-    margin:'0 0 10px',
-    fontSize:'18px',
-    fontWeight:'bold',
-    color:'#315f9c',
-    letterSpacing:'0.3px'
-  }}>
-    Aktuellt Héichstgebot / Current Highest Bid
-  </p>
+              <p style={{
+                margin:'0 0 10px',
+                fontSize:'18px',
+                fontWeight:'bold',
+                color:'#315f9c',
+                letterSpacing:'0.3px'
+              }}>
+                Aktuellt Héichstgebot / Current Highest Bid
+              </p>
 
-  <p style={{
-    margin:0,
-    fontSize:'clamp(42px, 9vw, 62px)',
-    fontWeight:'bold',
-    color:'#0f3d91'
-  }}>
-    {highestBid.toLocaleString('de-LU')} €
-  </p>
+              <p style={{
+                margin:0,
+                fontSize:'clamp(42px, 9vw, 62px)',
+                fontWeight:'bold',
+                color:'#0f3d91'
+              }}>
+                {highestBid.toLocaleString('de-LU')} €
+              </p>
 
-  <div style={{
-    marginTop:'16px',
-    paddingTop:'14px',
-    borderTop:'1px solid #d9e8ff',
-    display:'flex',
-    flexDirection:'column',
-    gap:'8px',
-    fontSize:'14px',
-    color:'#555'
-  }}>
-    <div>
-      Nächst méiglecht Gebot / Next Possible Bid:{' '}
-      <strong style={{color:'#0f3d91'}}>
-        {(highestBid + 5).toLocaleString('de-LU')} €
-      </strong>
-    </div>
+              <div style={{
+                marginTop:'16px',
+                paddingTop:'14px',
+                borderTop:'1px solid #d9e8ff',
+                display:'flex',
+                flexDirection:'column',
+                gap:'8px',
+                fontSize:'14px',
+                color:'#555'
+              }}>
+                <div>
+                  Nächst méiglecht Gebot / Next Possible Bid:{' '}
+                  <strong style={{color:'#0f3d91'}}>
+                    {(highestBid + 5).toLocaleString('de-LU')} €
+                  </strong>
+                </div>
 
-    {lastBid && (
-      <div>
-        Viregt Gebot / Previous Bid:{' '}
-        <strong style={{color:'#0f3d91'}}>
-          {Number(lastBid.amount).toLocaleString('de-LU')} €
-        </strong>
-      </div>
-    )}
-  </div>
-</div>
+                {lastBid && (
+                  <div>
+                    Viregt Gebot / Previous Bid:{' '}
+                    <strong style={{color:'#0f3d91'}}>
+                      {Number(lastBid.amount).toLocaleString('de-LU')} €
+                    </strong>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div style={{
               ...cardStyle,
@@ -372,66 +471,66 @@ viewerChannel
               </p>
               <Countdown />
             </div>
-  <div style={{
-  ...cardStyle,
-  background:'#f7fbff',
-  textAlign:'center'
-}}>
-  <p style={{
-    margin:'0 0 6px',
-    fontSize:'14px',
-    color:'#315f9c'
-  }}>
-    Live Zuschauer / Live Viewers
-  </p>
 
-  <p style={{
-    margin:0,
-    fontSize:'30px',
-    fontWeight:'bold',
-    color:'#0f3d91'
-  }}>
-    {viewerCount}
-  </p>
-</div>
- <p style={{
-    marginTop:'22px',
-    fontSize:'16px',
-    lineHeight:'1.9',
-    maxWidth:'760px',
-    marginLeft:'auto',
-    marginRight:'auto',
-    opacity:0.96,
-    textAlign:'center'
-  }}>
+            <div style={{
+              ...cardStyle,
+              background:'#f7fbff',
+              textAlign:'center'
+            }}>
+              <p style={{
+                margin:'0 0 6px',
+                fontSize:'14px',
+                color:'#315f9c'
+              }}>
+                Live Zuschauer / Live Viewers
+              </p>
 
-    <span style={{
-      fontWeight:'bold',
-      fontSize:'22px',
-      display:'block',
-      marginBottom:'10px'
-    }}>
-      Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter ASBL
-    </span>
+              <p style={{
+                margin:0,
+                fontSize:'30px',
+                fontWeight:'bold',
+                color:'#0f3d91'
+              }}>
+                {viewerCount}
+              </p>
+            </div>
 
+            <p style={{
+              marginTop:'22px',
+              fontSize:'16px',
+              lineHeight:'1.9',
+              maxWidth:'760px',
+              marginLeft:'auto',
+              marginRight:'auto',
+              opacity:0.96,
+              textAlign:'center'
+            }}>
+              <span style={{
+                fontWeight:'bold',
+                fontSize:'22px',
+                display:'block',
+                marginBottom:'10px'
+              }}>
+                Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter ASBL
+              </span>
 
-    <span style={{
-      fontStyle:'italic',
-      display:'block',
-      color:'#1d3557'
-    }}>
-      D’Kondschafter engagéieren sech säit ville Joren fir
-      d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
-      Drauwen- a Wäifest.
-      <br />
-      Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
-      a verbannen Konscht, Traditioun a Solidaritéit.
-    </span>
+              <span style={{
+                fontStyle:'italic',
+                display:'block',
+                color:'#1d3557'
+              }}>
+                D’Kondschafter engagéieren sech säit ville Joren fir
+                d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+                Drauwen- a Wäifest.
+                <br />
+                Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
+                a verbannen Konscht, Traditioun a Solidaritéit.
+              </span>
+            </p>
 
-  </p>
             {!session ? (
               <form onSubmit={sendMagicLink} style={formBoxStyle}>
-                <h2 style={{marginTop:0}}>E-Mail Bestätegung</h2>
+                <h2 style={{marginTop:0}}>1. E-Mail Bestätegung</h2>
 
                 <p>
                   Fir ze bidden, muss deng E-Mail fir d'éischt confirméiert ginn.
@@ -447,25 +546,32 @@ viewerChannel
                   style={inputStyle}
                   required
                 />
-<button style={buttonStyle}>
-  Bestätegungslink schécken / Send confirmation link
-</button>
+
+                <button style={buttonStyle}>
+                  Bestätegungslink schécken / Send confirmation link
+                </button>
+
                 <p style={{
-  fontSize:'13px',
-  color:'#666',
-  marginTop:'10px',
-  lineHeight:'1.5'
-}}>
-  Falls keng E-Mail ukënnt, kontrolléier w.e.g. och däi Spam-Ordner.
-  <br />
-  If you do not receive an email, please also check your spam folder.
-</p>
+                  fontSize:'13px',
+                  color:'#666',
+                  marginTop:'10px',
+                  lineHeight:'1.5'
+                }}>
+                  Falls keng E-Mail ukënnt, kontrolléier w.e.g. och däi Spam-Ordner.
+                  <br />
+                  If you do not receive an email, please also check your spam folder.
+                </p>
 
                 {message && <p><strong>{message}</strong></p>}
               </form>
-            ) : (
-              <form onSubmit={submitBid} style={formBoxStyle}>
-                <h2 style={{marginTop:0}}>Gebot ofginn / Submit Bid</h2>
+            ) : profileLoading ? (
+              <div style={formBoxStyle}>
+                <h2 style={{marginTop:0}}>Donnéeë ginn gelueden...</h2>
+                <p>Please wait...</p>
+              </div>
+            ) : !bidderProfile ? (
+              <form onSubmit={saveBidderProfile} style={formBoxStyle}>
+                <h2 style={{marginTop:0}}>2. Deng Donnéeën / Your Details</h2>
 
                 <p style={{
                   padding:'10px',
@@ -478,46 +584,84 @@ viewerChannel
                 </p>
 
                 <input
-  placeholder="Virnumm / First Name *"
-  value={form.firstName}
-  onChange={e => setForm({...form, firstName:e.target.value})}
-  style={inputStyle}
-/>
+                  placeholder="Virnumm / First Name *"
+                  value={profileForm.firstName}
+                  onChange={e => setProfileForm({...profileForm, firstName:e.target.value})}
+                  style={inputStyle}
+                  required
+                />
 
-<input
-  placeholder="Numm / Last Name *"
-  value={form.lastName}
-  onChange={e => setForm({...form, lastName:e.target.value})}
-  style={inputStyle}
-/>
+                <input
+                  placeholder="Numm / Last Name *"
+                  value={profileForm.lastName}
+                  onChange={e => setProfileForm({...profileForm, lastName:e.target.value})}
+                  style={inputStyle}
+                  required
+                />
 
-<input
-  placeholder="Strooss + Nummer / Street + Number *"
-  value={form.street}
-  onChange={e => setForm({...form, street:e.target.value})}
-  style={inputStyle}
-/>
+                <input
+                  placeholder="Strooss + Nummer / Street + Number *"
+                  value={profileForm.street}
+                  onChange={e => setProfileForm({...profileForm, street:e.target.value})}
+                  style={inputStyle}
+                  required
+                />
 
-<input
-  placeholder="PLZ + Uertschaft / ZIP Code + City *"
-  value={form.city}
-  onChange={e => setForm({...form, city:e.target.value})}
-  style={inputStyle}
-/>
+                <input
+                  placeholder="PLZ + Uertschaft / ZIP Code + City *"
+                  value={profileForm.city}
+                  onChange={e => setProfileForm({...profileForm, city:e.target.value})}
+                  style={inputStyle}
+                  required
+                />
 
                 <input
                   placeholder="Telefon / Phone *"
-                  value={form.phone}
-                  onChange={e => setForm({...form, phone:e.target.value})}
+                  value={profileForm.phone}
+                  onChange={e => setProfileForm({...profileForm, phone:e.target.value})}
                   style={inputStyle}
+                  required
                 />
+
+                <button style={buttonStyle}>
+                  Donnéeë späicheren / Save details
+                </button>
+
+                <button
+                  type="button"
+                  onClick={signOut}
+                  style={logoutStyle}
+                >
+                  Ausloggen / Sign out
+                </button>
+
+                {message && <p><strong>{message}</strong></p>}
+              </form>
+            ) : (
+              <form onSubmit={submitBid} style={formBoxStyle}>
+                <h2 style={{marginTop:0}}>3. Gebot ofginn / Submit Bid</h2>
+
+                <p style={{
+                  padding:'10px',
+                  background:'#eef6ff',
+                  borderRadius:'10px',
+                  fontSize:'14px',
+                  lineHeight:'1.6'
+                }}>
+                  Confirméiert E-Mail / Confirmed email:<br />
+                  <strong>{bidderProfile.email}</strong>
+                  <br />
+                  Bidder:<br />
+                  <strong>{bidderProfile.first_name} {bidderProfile.last_name}</strong>
+                </p>
 
                 <input
                   placeholder="Gebot an Euro / Bid amount in Euro *"
                   type="number"
-                  value={form.amount}
-                  onChange={e => setForm({...form, amount:e.target.value})}
+                  value={bidAmount}
+                  onChange={e => setBidAmount(e.target.value)}
                   style={inputStyle}
+                  required
                 />
 
                 <button
@@ -556,14 +700,8 @@ viewerChannel
 
                 <button
                   type="button"
-                  onClick={() => supabase.auth.signOut()}
-                  style={{
-                    border:'none',
-                    background:'transparent',
-                    color:'#0f3d91',
-                    textDecoration:'underline',
-                    cursor:'pointer'
-                  }}
+                  onClick={signOut}
+                  style={logoutStyle}
                 >
                   Ausloggen / Sign out
                 </button>
@@ -574,45 +712,43 @@ viewerChannel
           </div>
         </section>
 
-      <footer style={{
-  padding:'22px 32px',
-  background:'#0f3d91',
-  color:'white',
-  fontSize:'14px'
-}}>
+        <footer style={{
+          padding:'22px 32px',
+          background:'#0f3d91',
+          color:'white',
+          fontSize:'14px'
+        }}>
+          <p style={{
+            textAlign:'center',
+            margin:0,
+            lineHeight:'1.8'
+          }}>
+            <a href="/privacy" style={footerLink}>
+              Dateschutz / Privacy Policy
+            </a>
 
-  <p style={{
-    textAlign:'center',
-    margin:0,
-    lineHeight:'1.8'
-  }}>
-    <a href="/privacy" style={footerLink}>
-      Dateschutz / Privacy Policy
-    </a>
+            {' · '}
 
-    {' · '}
+            <a href="/admin" style={footerLink}>
+              Admin Login
+            </a>
 
-    <a href="/admin" style={footerLink}>
-      Admin Login
-    </a>
+            {' · '}
 
-    {' · '}
+            <a href="/stream" style={footerLink}>
+              Stream
+            </a>
+          </p>
 
-    <a href="/stream" style={footerLink}>
-      Stream
-    </a>
-  </p>
-
-  <p style={{
-    textAlign:'center',
-    marginTop:'16px',
-    fontSize:'12px',
-    opacity:0.82
-  }}>
-    © 2026 Kondschafter - association sans but lucratif - Grevenmacher - All rights reserved.
-  </p>
-
-</footer>
+          <p style={{
+            textAlign:'center',
+            marginTop:'16px',
+            fontSize:'12px',
+            opacity:0.82
+          }}>
+            © 2026 Kondschafter - association sans but lucratif - Grevenmacher - All rights reserved.
+          </p>
+        </footer>
       </div>
     </main>
   )
@@ -652,6 +788,14 @@ const buttonStyle = {
   borderRadius:'14px',
   fontSize:'16px',
   fontWeight:'bold'
+}
+
+const logoutStyle = {
+  border:'none',
+  background:'transparent',
+  color:'#0f3d91',
+  textDecoration:'underline',
+  cursor:'pointer'
 }
 
 const footerLink = {
