@@ -128,6 +128,19 @@ viewerChannel
       clearInterval(closeInterval)
     }
   }, [])
+  useEffect(() => {
+  const handleVisibility = () => {
+    if (document.visibilityState === 'visible') {
+      window.location.reload()
+    }
+  }
+
+  document.addEventListener('visibilitychange', handleVisibility)
+
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibility)
+  }
+}, [])
 
   async function submitBid(e: React.FormEvent) {
   e.preventDefault()
