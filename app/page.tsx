@@ -68,7 +68,7 @@ export default function Home() {
     supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
       if (!error) {
         setSession(data.session)
-        window.history.replaceState({}, document.title, '/')
+        window.history.replaceState({}, '', window.location.pathname)
       }
     })
   } else {
