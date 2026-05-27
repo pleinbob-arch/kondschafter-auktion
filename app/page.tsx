@@ -129,16 +129,24 @@ viewerChannel
     }
   }, [])
   useEffect(() => {
+  const refreshPage = () => {
+    window.location.reload()
+  }
+
   const handleVisibility = () => {
     if (document.visibilityState === 'visible') {
-      window.location.reload()
+      refreshPage()
     }
   }
 
   document.addEventListener('visibilitychange', handleVisibility)
+  window.addEventListener('focus', refreshPage)
+  window.addEventListener('pageshow', refreshPage)
 
   return () => {
     document.removeEventListener('visibilitychange', handleVisibility)
+    window.removeEventListener('focus', refreshPage)
+    window.removeEventListener('pageshow', refreshPage)
   }
 }, [])
 
