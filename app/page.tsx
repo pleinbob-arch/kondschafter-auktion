@@ -704,14 +704,6 @@ export default function Home() {
                   policy and auction terms.
                 </p>
 
-                <p style={{fontSize:'12px'}}>
-                  <a href="/privacy" style={{
-                    color:'#0f3d91',
-                    textDecoration:'underline'
-                  }}>
-                    Dateschutz / Privacy Policy
-                  </a>
-                </p>
 
                 <button
                   type="button"
