@@ -126,54 +126,20 @@ function createInvoiceEmail(bid:any, index:number) {
 
   const subject = `Rechnung ${invoiceNumber} - Kondschafter Auktioun 2026`
 
-  const body = `
+const body = `
 Moien ${bid.name},
 
-Du hues dat héchst Gebot bei der Kondschafter Auktioun 2026 ofginn.
-
---------------------------------------------------
-
-RECHNUNG / INVOICE
-Rechnungsnummer / Invoice Number:
-${invoiceNumber}
-
-Datum / Date:
-${new Date().toLocaleDateString('de-LU')}
-
-Keefer / Buyer:
-${bid.name}
-${bid.address}
-${bid.email}
-
---------------------------------------------------
-
-Beschreiwung / Description:
-Konschtwierk - Kondschafter Auktioun 2026
+am Anhang fënns du deng Rechnung fir d'Kondschafter Auktioun 2026.
 
 Betrag / Amount:
 ${amount} €
 
---------------------------------------------------
-
-Bezuelung / Payment
-
-Mir bieden dech de Betrag bannent 7 Deeg op dëse Konto ze iwwerweisen:
-
-Kontoinhaber / Account Holder:
-Kondschafter - association sans but lucratif
-
-IBAN:
-LU15 0099 7800 0034 9316
-
-BIC:
-CCRALULLXXX
-
-Verwendungszweck / Payment Reference:
-${invoiceNumber} - ${bid.name}
-
---------------------------------------------------
+Rechnungsnummer / Invoice Number:
+${invoiceNumber}
 
 Merci villmools fir deng Ënnerstëtzung.
+
+Please find attached your invoice for the Kondschafter Auction 2026.
 
 Thank you very much for your support.
 
