@@ -787,9 +787,16 @@ export default function Home() {
 
             {' · '}
 
-            <a href="/stream" style={footerLink}>
-              Stream
-            </a>
+            <a
+  href="/stream"
+  style={{
+    color:'rgba(255,255,255,0.18)',
+    textDecoration:'none',
+    fontSize:'11px'
+  }}
+>
+  Stream
+</a>
           </p>
 
           <p style={{
