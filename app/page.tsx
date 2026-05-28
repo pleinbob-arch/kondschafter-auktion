@@ -35,7 +35,7 @@ export default function Home() {
   const [bidderProfile, setBidderProfile] = useState<BidderProfile | null>(null)
 
   const [loginEmail, setLoginEmail] = useState('')
-  const [highestBid, setHighestBid] = useState(50)
+  const [highestBid, setHighestBid] = useState<number | null>(null)
   const [lastBid, setLastBid] = useState<any>(null)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
@@ -424,7 +424,9 @@ export default function Home() {
                 fontWeight:'bold',
                 color:'#0f3d91'
               }}>
-                {highestBid.toLocaleString('de-LU')} €
+                {highestBid !== null
+  ? `${highestBid.toLocaleString('de-LU')} €`
+  : '...'}
               </p>
 
               <div style={{
