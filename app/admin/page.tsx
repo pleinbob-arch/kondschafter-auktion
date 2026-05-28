@@ -249,68 +249,94 @@ Kondschafter ASBL
     reader.onloadend = () => {
       const logoBase64 = reader.result as string
 
+      // Header
       doc.setFillColor(15, 61, 145)
-      doc.rect(0, 0, 210, 38, 'F')
+      doc.rect(0, 0, 210, 40, 'F')
 
-      doc.addImage(logoBase64, 'PNG', 16, 8, 22, 22)
+      doc.addImage(logoBase64, 'PNG', 16, 8, 24, 24)
 
       doc.setTextColor(255, 255, 255)
       doc.setFontSize(22)
-      doc.text('Kondschafter ASBL', 45, 18)
+      doc.text('Kondschafter ASBL', 48, 18)
 
       doc.setFontSize(12)
-      doc.text('Rechnung / Invoice', 45, 28)
+      doc.text('Rechnung / Invoice', 48, 29)
 
+      // Verein links
       doc.setTextColor(0, 0, 0)
-
       doc.setFontSize(11)
-      doc.text('Kondschafter – association sans but lucratif', 20, 55)
-      doc.text('R.C.S.L. F10056', 20, 62)
-      doc.text('1A, Rue Kummert', 20, 69)
-      doc.text('6743 Grevenmacher, Luxembourg', 20, 76)
+      doc.text('Kondschafter – association sans but lucratif', 20, 58)
+      doc.text('R.C.S.L. F10056', 20, 65)
+      doc.text('1A, Rue Kummert', 20, 72)
+      doc.text('6743 Grevenmacher', 20, 79)
+      doc.text('Luxembourg', 20, 86)
 
-      doc.setFontSize(13)
-      doc.text(`Rechnungsnummer / Invoice Number: ${invoiceNumber}`, 120, 55)
-      doc.text(`Datum / Date: ${today}`, 120, 64)
+      // Rechnung rechts – weiter links gesetzt
+      doc.setFontSize(11)
+      doc.text('Rechnungsnummer / Invoice Number:', 115, 58)
+      doc.text(invoiceNumber, 115, 65)
+      doc.text('Datum / Date:', 115, 77)
+      doc.text(today, 115, 84)
 
       doc.setDrawColor(15, 61, 145)
-      doc.line(20, 88, 190, 88)
+      doc.line(20, 98, 190, 98)
 
+      // Käufer
       doc.setFontSize(13)
-      doc.text('Keefer / Buyer', 20, 102)
-
-      doc.setFontSize(11)
-      doc.text(bid.name || '', 20, 112)
-      doc.text(bid.address || '', 20, 120)
-      doc.text(bid.email || '', 20, 128)
-
-      doc.setFontSize(13)
-      doc.text('Beschreiwung / Description', 20, 148)
-
-      doc.setFontSize(11)
-      doc.text('Konschtwierk – Kondschafter Auktioun 2026', 20, 158)
-      doc.text('Artwork – Kondschafter Auction 2026', 20, 166)
-
-      doc.setFillColor(238, 246, 255)
-      doc.roundedRect(20, 182, 170, 28, 4, 4, 'F')
-
-      doc.setFontSize(16)
       doc.setTextColor(15, 61, 145)
-      doc.text(`Total / Amount: ${amount} EUR`, 28, 200)
+      doc.text('Keefer / Buyer', 20, 113)
 
       doc.setTextColor(0, 0, 0)
-      doc.setFontSize(13)
-      doc.text('Bezuelung / Payment', 20, 228)
-
       doc.setFontSize(11)
-      doc.text('Kontoinhaber / Account Holder: Kondschafter ASBL', 20, 238)
-      doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 246)
-      doc.text('BIC: CCRALULLXXX', 20, 254)
-      doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber} - ${bid.name}`, 20, 262)
+      doc.text(bid.name || '', 20, 123)
+      doc.text(bid.address || '', 20, 131)
+      doc.text(bid.email || '', 20, 139)
 
-      doc.setFontSize(10)
-      doc.setTextColor(90, 90, 90)
-      doc.text('Merci villmools fir deng Ënnerstëtzung. Thank you very much for your support.', 20, 282)
+      // Beschreibung
+      doc.setFontSize(13)
+      doc.setTextColor(15, 61, 145)
+      doc.text('Beschreiwung / Description', 20, 160)
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(11)
+      doc.text('Konschtwierk – Kondschafter Auktioun 2026', 20, 170)
+      doc.text('Artwork – Kondschafter Auction 2026', 20, 178)
+
+      // Betrag mittig
+      doc.setFillColor(238, 246, 255)
+      doc.roundedRect(35, 194, 140, 32, 5, 5, 'F')
+
+      doc.setTextColor(15, 61, 145)
+      doc.setFontSize(13)
+      doc.text('Total / Amount', 105, 205, { align: 'center' })
+
+      doc.setFontSize(24)
+      doc.text(`${amount} EUR`, 105, 218, { align: 'center' })
+
+      // Zahlung
+      doc.setTextColor(15, 61, 145)
+      doc.setFontSize(13)
+      doc.text('Bezuelung / Payment', 20, 244)
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(11)
+      doc.text('Kontoinhaber / Account Holder: Kondschafter - association sans but lucratif', 20, 254)
+      doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 262)
+      doc.text('BIC: CCRALULLXXX', 20, 270)
+      doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber}, 20, 278)
+
+      // Footer
+      doc.setFillColor(15, 61, 145)
+      doc.rect(0, 287, 210, 10, 'F')
+
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(7)
+      doc.text(
+        'Kondschafter - association sans but lucratif · R.C.S.L. F10056 · 1A, Rue Kummert · 6743 Grevenmacher · Luxembourg',
+        105,
+        293,
+        { align: 'center' }
+      )
 
       doc.save(`${invoiceNumber}-${bid.name}.pdf`)
     }
