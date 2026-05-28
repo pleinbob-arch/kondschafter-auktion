@@ -395,15 +395,41 @@ export default function Home() {
               }}
             />
             <p style={{
-              marginTop:'10px',
-              marginBottom:'20px',
-              fontSize:'13px',
-              color:'#666',
-              textAlign:'center',
-              fontStyle:'italic'
-            }}>
-              © Konschtwierk: André Scholtes
-            </p>
+  marginTop:'10px',
+  marginBottom:'20px',
+  fontSize:'13px',
+  color:'#666',
+  textAlign:'center',
+  fontStyle:'italic'
+}}>
+  © Konschtwierk: André Scholtes
+
+  <a
+    href="https://https://www.instagram.com/itwasnotme_scholtes/"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      marginLeft:'10px',
+      textDecoration:'none',
+      fontStyle:'normal'
+    }}
+  >
+    📸
+  </a>
+
+  <a
+    href="https://https://www.itwasnotme.lu/home"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      marginLeft:'8px',
+      textDecoration:'none',
+      fontStyle:'normal'
+    }}
+  >
+    🌐
+  </a>
+</p>
           </div>
 
           <div>
