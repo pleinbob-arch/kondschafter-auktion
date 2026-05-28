@@ -405,7 +405,7 @@ export default function Home() {
   © Konschtwierk: André Scholtes
 
   <a
-    href="https://https://www.instagram.com/itwasnotme_scholtes/"
+    href="https://www.instagram.com/itwasnotme_scholtes/"
     target="_blank"
     rel="noopener noreferrer"
     style={{
@@ -418,7 +418,7 @@ export default function Home() {
   </a>
 
   <a
-    href="https://https://www.itwasnotme.lu/home"
+    href="https://www.itwasnotme.lu/home"
     target="_blank"
     rel="noopener noreferrer"
     style={{
