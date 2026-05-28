@@ -280,6 +280,7 @@ Kondschafter ASBL
 
       doc.setDrawColor(15, 61, 145)
       doc.line(20, 98, 190, 98)
+      doc.setDrawColor(220, 220, 220)
 
       // Käufer
       doc.setFontSize(13)
@@ -291,6 +292,7 @@ Kondschafter ASBL
       doc.text(bid.name || '', 20, 123)
       doc.text(bid.address || '', 20, 131)
       doc.text(bid.email || '', 20, 139)
+      doc.line(20, 146, 190, 146)
 
       // Beschreibung
       doc.setFontSize(13)
@@ -301,17 +303,18 @@ Kondschafter ASBL
       doc.setFontSize(11)
       doc.text('Konschtwierk – Kondschafter Auktioun 2026', 20, 170)
       doc.text('Artwork – Kondschafter Auction 2026', 20, 178)
+      doc.line(20, 184, 190, 184)
 
       // Betrag mittig
       doc.setFillColor(238, 246, 255)
-      doc.roundedRect(35, 194, 140, 32, 5, 5, 'F')
+      doc.roundedRect(45, 194, 120, 30, 4, 4, 'F')
 
       doc.setTextColor(15, 61, 145)
       doc.setFontSize(13)
-      doc.text('Total / Amount', 105, 205, { align: 'center' })
-
+     doc.text('Total / Amount', 105, 204, { align: 'center' })
+      
       doc.setFontSize(24)
-      doc.text(`${amount} EUR`, 105, 218, { align: 'center' })
+      doc.text(`${amount} EUR`, 105, 216, { align: 'center' })
 
       // Zahlung
       doc.setTextColor(15, 61, 145)
@@ -327,14 +330,14 @@ Kondschafter ASBL
 
       // Footer
       doc.setFillColor(15, 61, 145)
-      doc.rect(0, 287, 210, 10, 'F')
+      doc.rect(0, 283, 210, 14, 'F')
 
       doc.setTextColor(255, 255, 255)
       doc.setFontSize(7)
       doc.text(
         'Kondschafter - association sans but lucratif · R.C.S.L. F10056 · 1A, Rue Kummert · 6743 Grevenmacher · Luxembourg',
         105,
-        293,
+        291,
         { align: 'center' }
       )
 
