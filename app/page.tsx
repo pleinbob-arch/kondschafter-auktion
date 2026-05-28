@@ -689,7 +689,7 @@ export default function Home() {
                 >
                   {auctionClosed
                     ? 'Auktioun beendet / Auction ended'
-                    : 'Gebot späicheren / Submit Bid *'}
+                    : 'Gebot ofginn / Submit Bid *'}
                 </button>
 
                 <p style={{
