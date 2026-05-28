@@ -464,6 +464,20 @@ Kondschafter ASBL
   Rechnung
 </button>
                 <button
+  onClick={() => createInvoicePDF(bid, index)}
+  style={{
+    padding:'9px 13px',
+    border:'none',
+    borderRadius:'10px',
+    background:'#1f7a1f',
+    color:'white',
+    cursor:'pointer',
+    height:'fit-content'
+  }}
+>
+  PDF Rechnung
+</button>
+                <button
                   onClick={() => deleteBid(bid.id)}
                   style={{
                     padding:'9px 13px',
