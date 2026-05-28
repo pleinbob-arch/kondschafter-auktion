@@ -11,7 +11,7 @@ const supabase = createClient(
 const AUCTION_END = new Date('2026-09-13T19:00:00')
 
 export default function StreamPage() {
-  const [highestBid, setHighestBid] = useState(0)
+  const [highestBid, setHighestBid] = useState<number | null>(null)
   const [previousBid, setPreviousBid] = useState(0)
   const [viewerCount, setViewerCount] = useState(1)
   const [timeLeft, setTimeLeft] = useState('')
@@ -280,7 +280,9 @@ export default function StreamPage() {
                 color:'#0f3d91',
                 transition:'all 0.4s ease'
               }}>
-                {highestBid.toLocaleString('de-LU')} €
+                {highestBid !== null
+  ? `${highestBid.toLocaleString('de-LU')} €`
+  : '...'}
               </p>
 
               <div style={{
