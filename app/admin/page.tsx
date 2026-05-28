@@ -200,7 +200,7 @@ Kondschafter ASBL
     loadBids()
   }
 
-  function exportExcel() {
+    function exportExcel() {
     const rows = bids.map((bid, index) => ({
       Rang: index + 1,
       Gebot: Number(bid.amount),
@@ -214,44 +214,64 @@ Kondschafter ASBL
         ? new Date(bid.created_at).toLocaleString('de-LU')
         : ''
     }))
-function createInvoicePDF(bid:any, index:number) {
-  const doc = new jsPDF()
-  const invoiceNumber = `KA-2026-${String(index + 1).padStart(3, '0')}`
-  const amount = Number(bid.amount).toLocaleString('de-LU')
 
-  doc.setFontSize(22)
-  doc.text('Kondschafter ASBL', 20, 20)
+    const worksheet = XLSX.utils.json_to_sheet(rows)
 
-  doc.setFontSize(14)
-  doc.text('Rechnung / Invoice', 20, 35)
+    worksheet['!cols'] = [
+      { wch: 8 },
+      { wch: 12 },
+      { wch: 25 },
+      { wch: 35 },
+      { wch: 30 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 60 },
+      { wch: 22 }
+    ]
 
-  doc.setFontSize(11)
-  doc.text(`Rechnungsnummer / Invoice Number: ${invoiceNumber}`, 20, 50)
-  doc.text(`Datum / Date: ${new Date().toLocaleDateString('de-LU')}`, 20, 58)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Gebote')
+    XLSX.writeFile(workbook, 'kondschafter-gebote.xlsx')
+  }
 
-  doc.text('Keefer / Buyer:', 20, 75)
-  doc.text(bid.name || '', 20, 83)
-  doc.text(bid.address || '', 20, 91)
-  doc.text(bid.email || '', 20, 99)
+  function createInvoicePDF(bid:any, index:number) {
+    const doc = new jsPDF()
+    const invoiceNumber = `KA-2026-${String(index + 1).padStart(3, '0')}`
+    const amount = Number(bid.amount).toLocaleString('de-LU')
 
-  doc.text('Beschreiwung / Description:', 20, 120)
-  doc.text('Konschtwierk - Kondschafter Auktioun 2026', 20, 128)
+    doc.setFontSize(22)
+    doc.text('Kondschafter ASBL', 20, 20)
 
-  doc.setFontSize(16)
-  doc.text(`Betrag / Amount: ${amount} EUR`, 20, 145)
+    doc.setFontSize(14)
+    doc.text('Rechnung / Invoice', 20, 35)
 
-  doc.setFontSize(11)
-  doc.text('Bezuelung / Payment:', 20, 165)
-  doc.text('Kontoinhaber / Account Holder: Kondschafter ASBL', 20, 173)
-  doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 181)
-  doc.text('BIC: CCRALULLXXX', 20, 189)
-  doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber} - ${bid.name}`, 20, 197)
+    doc.setFontSize(11)
+    doc.text(`Rechnungsnummer / Invoice Number: ${invoiceNumber}`, 20, 50)
+    doc.text(`Datum / Date: ${new Date().toLocaleDateString('de-LU')}`, 20, 58)
 
-  doc.text('Merci villmools fir deng Ënnerstëtzung.', 20, 220)
-  doc.text('Thank you very much for your support.', 20, 228)
+    doc.text('Keefer / Buyer:', 20, 75)
+    doc.text(bid.name || '', 20, 83)
+    doc.text(bid.address || '', 20, 91)
+    doc.text(bid.email || '', 20, 99)
 
-  doc.save(`${invoiceNumber}-${bid.name}.pdf`)
-}
+    doc.text('Beschreiwung / Description:', 20, 120)
+    doc.text('Konschtwierk - Kondschafter Auktioun 2026', 20, 128)
+
+    doc.setFontSize(16)
+    doc.text(`Betrag / Amount: ${amount} EUR`, 20, 145)
+
+    doc.setFontSize(11)
+    doc.text('Bezuelung / Payment:', 20, 165)
+    doc.text('Kontoinhaber / Account Holder: Kondschafter ASBL', 20, 173)
+    doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 181)
+    doc.text('BIC: CCRALULLXXX', 20, 189)
+    doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber} - ${bid.name}`, 20, 197)
+
+    doc.text('Merci villmools fir deng Ënnerstëtzung.', 20, 220)
+    doc.text('Thank you very much for your support.', 20, 228)
+
+    doc.save(`${invoiceNumber}-${bid.name}.pdf`)
+  }
     const worksheet = XLSX.utils.json_to_sheet(rows)
 
     worksheet['!cols'] = [
