@@ -721,7 +721,26 @@ export default function Home() {
                   Ausloggen / Sign out
                 </button>
 
-                {message && <p><strong>{message}</strong></p>}
+                {message && (
+  <div style={{
+    marginTop:'14px',
+    padding:'14px',
+    borderRadius:'14px',
+    background: message.includes('Merci')
+      ? '#e8fff0'
+      : '#fff0f0',
+    border: message.includes('Merci')
+      ? '1px solid #4caf50'
+      : '1px solid #d9534f',
+    color: message.includes('Merci')
+      ? '#1b5e20'
+      : '#8b0000',
+    fontWeight:'bold',
+    textAlign:'center'
+  }}>
+    {message}
+  </div>
+)}
               </form>
             )}
           </div>
