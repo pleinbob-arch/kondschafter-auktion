@@ -234,44 +234,92 @@ Kondschafter ASBL
     XLSX.writeFile(workbook, 'kondschafter-gebote.xlsx')
   }
 
-  function createInvoicePDF(bid:any, index:number) {
-    const doc = new jsPDF()
-    const invoiceNumber = `KA-2026-${String(index + 1).padStart(3, '0')}`
-    const amount = Number(bid.amount).toLocaleString('de-LU')
+  async function createInvoicePDF(bid:any, index:number) {
+  const doc = new jsPDF()
+  const invoiceNumber = `KA-2026-${String(index + 1).padStart(3, '0')}`
+  const amount = Number(bid.amount).toLocaleString('de-LU')
+  const today = new Date().toLocaleDateString('de-LU')
 
-    doc.setFontSize(22)
-    doc.text('Kondschafter ASBL', 20, 20)
+  try {
+    const logoUrl = 'https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png'
+    const response = await fetch(logoUrl)
+    const blob = await response.blob()
 
-    doc.setFontSize(14)
-    doc.text('Rechnung / Invoice', 20, 35)
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const logoBase64 = reader.result as string
 
-    doc.setFontSize(11)
-    doc.text(`Rechnungsnummer / Invoice Number: ${invoiceNumber}`, 20, 50)
-    doc.text(`Datum / Date: ${new Date().toLocaleDateString('de-LU')}`, 20, 58)
+      doc.setFillColor(15, 61, 145)
+      doc.rect(0, 0, 210, 38, 'F')
 
-    doc.text('Keefer / Buyer:', 20, 75)
-    doc.text(bid.name || '', 20, 83)
-    doc.text(bid.address || '', 20, 91)
-    doc.text(bid.email || '', 20, 99)
+      doc.addImage(logoBase64, 'PNG', 16, 8, 22, 22)
 
-    doc.text('Beschreiwung / Description:', 20, 120)
-    doc.text('Konschtwierk - Kondschafter Auktioun 2026', 20, 128)
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(22)
+      doc.text('Kondschafter ASBL', 45, 18)
 
-    doc.setFontSize(16)
-    doc.text(`Betrag / Amount: ${amount} EUR`, 20, 145)
+      doc.setFontSize(12)
+      doc.text('Rechnung / Invoice', 45, 28)
 
-    doc.setFontSize(11)
-    doc.text('Bezuelung / Payment:', 20, 165)
-    doc.text('Kontoinhaber / Account Holder: Kondschafter ASBL', 20, 173)
-    doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 181)
-    doc.text('BIC: CCRALULLXXX', 20, 189)
-    doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber} - ${bid.name}`, 20, 197)
+      doc.setTextColor(0, 0, 0)
 
-    doc.text('Merci villmools fir deng Ënnerstëtzung.', 20, 220)
-    doc.text('Thank you very much for your support.', 20, 228)
+      doc.setFontSize(11)
+      doc.text('Kondschafter – association sans but lucratif', 20, 55)
+      doc.text('R.C.S.L. F10056', 20, 62)
+      doc.text('1A, Rue Kummert', 20, 69)
+      doc.text('6743 Grevenmacher, Luxembourg', 20, 76)
 
-    doc.save(`${invoiceNumber}-${bid.name}.pdf`)
+      doc.setFontSize(13)
+      doc.text(`Rechnungsnummer / Invoice Number: ${invoiceNumber}`, 120, 55)
+      doc.text(`Datum / Date: ${today}`, 120, 64)
+
+      doc.setDrawColor(15, 61, 145)
+      doc.line(20, 88, 190, 88)
+
+      doc.setFontSize(13)
+      doc.text('Keefer / Buyer', 20, 102)
+
+      doc.setFontSize(11)
+      doc.text(bid.name || '', 20, 112)
+      doc.text(bid.address || '', 20, 120)
+      doc.text(bid.email || '', 20, 128)
+
+      doc.setFontSize(13)
+      doc.text('Beschreiwung / Description', 20, 148)
+
+      doc.setFontSize(11)
+      doc.text('Konschtwierk – Kondschafter Auktioun 2026', 20, 158)
+      doc.text('Artwork – Kondschafter Auction 2026', 20, 166)
+
+      doc.setFillColor(238, 246, 255)
+      doc.roundedRect(20, 182, 170, 28, 4, 4, 'F')
+
+      doc.setFontSize(16)
+      doc.setTextColor(15, 61, 145)
+      doc.text(`Total / Amount: ${amount} EUR`, 28, 200)
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(13)
+      doc.text('Bezuelung / Payment', 20, 228)
+
+      doc.setFontSize(11)
+      doc.text('Kontoinhaber / Account Holder: Kondschafter ASBL', 20, 238)
+      doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 246)
+      doc.text('BIC: CCRALULLXXX', 20, 254)
+      doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber} - ${bid.name}`, 20, 262)
+
+      doc.setFontSize(10)
+      doc.setTextColor(90, 90, 90)
+      doc.text('Merci villmools fir deng Ënnerstëtzung. Thank you very much for your support.', 20, 282)
+
+      doc.save(`${invoiceNumber}-${bid.name}.pdf`)
+    }
+
+    reader.readAsDataURL(blob)
+  } catch {
+    alert('PDF konnte nicht erstellt werden.')
   }
+}
    
   if (loading) {
     return (
