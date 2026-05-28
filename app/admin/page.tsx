@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient, Session } from '@supabase/supabase-js'
 import * as XLSX from 'xlsx'
+import jsPDF from 'jspdf'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
