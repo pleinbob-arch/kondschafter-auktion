@@ -787,16 +787,6 @@ export default function Home() {
 
             {' · '}
 
-            <a
-  href="/stream"
-  style={{
-    color:'rgba(255,255,255,0.18)',
-    textDecoration:'none',
-    fontSize:'11px'
-  }}
->
-  Stream
-</a>
           </p>
 
           <p style={{
@@ -807,6 +797,22 @@ export default function Home() {
           }}>
             © 2026 Kondschafter - association sans but lucratif - Grevenmacher - All rights reserved.
           </p>
+          <div style={{
+  textAlign:'right',
+  marginTop:'6px'
+}}>
+  <a
+    href="/stream"
+    style={{
+      color:'rgba(255,255,255,0.22)',
+      textDecoration:'none',
+      fontSize:'11px',
+      letterSpacing:'0.5px'
+    }}
+  >
+    Stream
+  </a>
+</div>
         </footer>
       </div>
     </main>
