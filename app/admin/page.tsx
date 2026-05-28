@@ -323,7 +323,7 @@ Kondschafter ASBL
       doc.text('Kontoinhaber / Account Holder: Kondschafter - association sans but lucratif', 20, 254)
       doc.text('IBAN: LU15 0099 7800 0034 9316', 20, 262)
       doc.text('BIC: CCRALULLXXX', 20, 270)
-      doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber}, 20, 278)
+      doc.text(`Verwendungszweck / Payment Reference: ${invoiceNumber}`, 20, 278)
 
       // Footer
       doc.setFillColor(15, 61, 145)
