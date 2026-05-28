@@ -131,15 +131,25 @@ Moien ${bid.name},
 
 am Anhang fënns du deng Rechnung fir d'Kondschafter Auktioun 2026.
 
-Betrag / Amount:
+Betrag:
 ${amount} €
 
-Rechnungsnummer / Invoice Number:
+Rechnungsnummer:
 ${invoiceNumber}
 
 Merci villmools fir deng Ënnerstëtzung.
 
-Please find attached your invoice for the Kondschafter Auction 2026.
+--------------------------------------------------
+
+Hello ${bid.name},
+
+please find attached your invoice for the Kondschafter Auction 2026.
+
+Amount:
+${amount} €
+
+Invoice Number:
+${invoiceNumber}
 
 Thank you very much for your support.
 
