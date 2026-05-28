@@ -272,25 +272,7 @@ Kondschafter ASBL
 
     doc.save(`${invoiceNumber}-${bid.name}.pdf`)
   }
-    const worksheet = XLSX.utils.json_to_sheet(rows)
-
-    worksheet['!cols'] = [
-      { wch: 8 },
-      { wch: 12 },
-      { wch: 25 },
-      { wch: 35 },
-      { wch: 30 },
-      { wch: 18 },
-      { wch: 18 },
-      { wch: 60 },
-      { wch: 22 }
-    ]
-
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Gebote')
-    XLSX.writeFile(workbook, 'kondschafter-gebote.xlsx')
-  }
-
+   
   if (loading) {
     return (
       <main style={pageCenterStyle}>
