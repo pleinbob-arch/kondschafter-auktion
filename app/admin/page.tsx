@@ -119,7 +119,69 @@ export default function AdminPage() {
       supabase.removeChannel(viewerChannel)
     }
   }, [isAdmin])
+function createInvoiceEmail(bid:any, index:number) {
+  const invoiceNumber = `KA-2026-${String(index + 1).padStart(3, '0')}`
+  const amount = Number(bid.amount).toLocaleString('de-LU')
 
+  const subject = `Rechnung ${invoiceNumber} - Kondschafter Auktioun 2026`
+
+  const body = `
+Moien ${bid.name},
+
+Du hues dat héchst Gebot bei der Kondschafter Auktioun 2026 ofginn.
+
+--------------------------------------------------
+
+RECHNUNG / INVOICE
+Rechnungsnummer / Invoice Number:
+${invoiceNumber}
+
+Datum / Date:
+${new Date().toLocaleDateString('de-LU')}
+
+Keefer / Buyer:
+${bid.name}
+${bid.address}
+${bid.email}
+
+--------------------------------------------------
+
+Beschreiwung / Description:
+Konschtwierk - Kondschafter Auktioun 2026
+
+Betrag / Amount:
+${amount} €
+
+--------------------------------------------------
+
+Bezuelung / Payment
+
+Mir bieden dech de Betrag bannent 7 Deeg op dëse Konto ze iwwerweisen:
+
+Kontoinhaber / Account Holder:
+Kondschafter ASBL
+
+IBAN:
+LU15 0099 7800 0034 9316
+
+BIC:
+CCRALULLXXX
+
+Verwendungszweck / Payment Reference:
+${invoiceNumber} - ${bid.name}
+
+--------------------------------------------------
+
+Merci villmools fir deng Ënnerstëtzung.
+
+Thank you very much for your support.
+
+Kondschafter ASBL
+`.trim()
+
+  window.location.href =
+    `mailto:${bid.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
   async function deleteBid(id:number) {
     const confirmed = confirm('Wëlls du dëst Gebot wierklech läschen?')
     if (!confirmed) return
@@ -347,7 +409,20 @@ export default function AdminPage() {
                     {Number(bid.amount).toLocaleString('de-LU')} €
                   </h2>
                 </div>
-
+<button
+  onClick={() => createInvoiceEmail(bid, index)}
+  style={{
+    padding:'9px 13px',
+    border:'none',
+    borderRadius:'10px',
+    background:'#0f3d91',
+    color:'white',
+    cursor:'pointer',
+    height:'fit-content'
+  }}
+>
+  Rechnung
+</button>
                 <button
                   onClick={() => deleteBid(bid.id)}
                   style={{
