@@ -160,7 +160,7 @@ Bezuelung / Payment
 Mir bieden dech de Betrag bannent 7 Deeg op dëse Konto ze iwwerweisen:
 
 Kontoinhaber / Account Holder:
-Kondschafter ASBL
+Kondschafter - association sans but lucratif
 
 IBAN:
 LU15 0099 7800 0034 9316
