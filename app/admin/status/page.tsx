@@ -159,7 +159,11 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
           border: systemOk ? '2px solid #4caf50' : '2px solid #ff9800'
         }}>
           <h2 style={{margin:'0 0 8px'}}>
-            {systemOk ? '✅ System leeft normal' : '⚠️ System kontrolléieren'}
+            systemLevel === 'green'
+  ? '🟢 System leeft normal'
+  : systemLevel === 'yellow'
+  ? '🟡 Héich Aktivitéit - iwwerwaachen'
+  : '🔴 Problem erkannt'
           </h2>
           <p style={{margin:0}}>
             Leschten Check: <strong>{lastRefresh || '—'}</strong>
