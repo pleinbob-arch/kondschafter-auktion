@@ -417,17 +417,21 @@ Kondschafter ASBL
           </div>
 
           <div style={{display:'flex', gap:'10px', flexWrap:'wrap'}}>
-            <button onClick={exportExcel} style={buttonStyle}>
-              Excel Export
-            </button>
+  <button onClick={exportExcel} style={buttonStyle}>
+    Excel Export
+  </button>
 
-            <button
-              onClick={() => supabase.auth.signOut()}
-              style={{...buttonStyle, background:'#777'}}
-            >
-              Ausloggen
-            </button>
-          </div>
+  <a href="/admin/status" style={buttonStyle}>
+    Systemstatus
+  </a>
+
+  <button
+    onClick={() => supabase.auth.signOut()}
+    style={{...buttonStyle, background:'#777'}}
+  >
+    Ausloggen
+  </button>
+</div>
         </div>
 
         <div style={{
