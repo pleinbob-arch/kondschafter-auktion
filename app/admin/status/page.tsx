@@ -32,6 +32,12 @@ export default function StatusPage() {
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       )[0]
     : null
+  const auctionEnd = new Date('2026-09-13T19:00:00')
+const now = new Date()
+
+const diff = auctionEnd.getTime() - now.getTime()
+
+const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
   async function runChecks() {
     setDbStatus('checking')
@@ -254,18 +260,12 @@ Monitoring aktiv:
             detail="Einzigartige E-Mail-Adressen"
           />
 
-          <StatusCard
-            title="Live Zuschauer"
-            value={String(viewerCount)}
-            detail="Aktive Realtime-Verbindungen"
-          />
-
-          <StatusCard
-            title="Letztes Gebot"
-            value={lastBid ? `${Number(lastBid.amount).toLocaleString('de-LU')} €` : '—'}
-            detail={lastBid?.created_at ? new Date(lastBid.created_at).toLocaleString('de-LU') : 'Noch kein Gebot'}
-          />
-
+<StatusCard
+  title="Auktiounsstatus"
+  value="Aktiv ✅"
+  detail={`Enn an ${days} Deeg`}
+/>
+          
           <StatusCard
             title="Magic Link / Brevo"
             value="Extern prüfen"
