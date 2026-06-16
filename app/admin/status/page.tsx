@@ -279,6 +279,8 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
           <p><strong>Wenn Gebote nicht erscheinen:</strong> Supabase Database + Realtime prüfen.</p>
           <p><strong>Wenn die Seite langsam lädt:</strong> Vercel Observability prüfen.</p>
           <p><strong>Wenn nur einzelne Nutzer Probleme haben:</strong> Spam-Ordner, Mobilfunk, Browser prüfen.</p>
+          <p><strong>Wenn Supabase Connections nahe 60 sind:</strong> Supabase Pro aktivieren.</p>
+          <p><strong>Wenn viele Login-Mails verzögert sind:</strong> Brevo Logs prüfen und Brevo Pro aktiv lassen.</p>
         </div>
 
         <div style={quickLinksStyle}>
