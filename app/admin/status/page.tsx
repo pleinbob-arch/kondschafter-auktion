@@ -154,21 +154,32 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
         </div>
 
         <div style={{
-          ...bigStatusStyle,
-          background: systemOk ? '#e8fff0' : '#fff3e0',
-          border: systemOk ? '2px solid #4caf50' : '2px solid #ff9800'
-        }}>
-          <h2 style={{margin:'0 0 8px'}}>
-            systemLevel === 'green'
-  ? '🟢 System leeft normal'
-  : systemLevel === 'yellow'
-  ? '🟡 Héich Aktivitéit - iwwerwaachen'
-  : '🔴 Problem erkannt'
-          </h2>
-          <p style={{margin:0}}>
-            Leschten Check: <strong>{lastRefresh || '—'}</strong>
-          </p>
-        </div>
+  ...bigStatusStyle,
+  background:
+    systemLevel === 'green'
+      ? '#e8fff0'
+      : systemLevel === 'yellow'
+      ? '#fff8e1'
+      : '#fff0f0',
+  border:
+    systemLevel === 'green'
+      ? '2px solid #4caf50'
+      : systemLevel === 'yellow'
+      ? '2px solid #ffb300'
+      : '2px solid #d9534f'
+}}>
+  <h2 style={{margin:'0 0 8px'}}>
+    {systemLevel === 'green'
+      ? '🟢 System leeft normal'
+      : systemLevel === 'yellow'
+      ? '🟡 Héich Aktivitéit - iwwerwaachen'
+      : '🔴 Problem erkannt'}
+  </h2>
+
+  <p style={{margin:0}}>
+    Leschten Check: <strong>{lastRefresh || '—'}</strong>
+  </p>
+</div>
 
         <div style={gridStyle}>
           <StatusCard
