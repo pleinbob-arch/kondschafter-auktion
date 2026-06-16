@@ -21,6 +21,7 @@ export default function StatusPage() {
   const [bids, setBids] = useState<any[]>([])
   const [viewerCount, setViewerCount] = useState(0)
   const [lastRefresh, setLastRefresh] = useState('')
+  const [heartbeat, setHeartbeat] = useState('')
 
   const isAdmin = ADMIN_EMAILS.includes(session?.user?.email || '')
   const highestBid = bids[0] || null
@@ -35,6 +36,7 @@ export default function StatusPage() {
   async function runChecks() {
     setDbStatus('checking')
     setLastRefresh(new Date().toLocaleString('de-LU'))
+    setHeartbeat(new Date().toLocaleString('de-LU'))
 
     const { data, error } = await supabase
       .from('bids')
@@ -201,16 +203,19 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
     </div>
 
     <div>
-      <strong>Letztes Gebot</strong><br />
-      {lastBid?.created_at
-        ? new Date(lastBid.created_at).toLocaleString('de-LU')
-        : '—'}
-    </div>
+  <strong>Legende</strong><br />
+  🟢 Normalbetrieb
+</div>
 
-    <div>
-      <strong>Live Zuschauer</strong><br />
-      {viewerCount}
-    </div>
+<div>
+  <strong>&nbsp;</strong><br />
+  🟡 Beobachten
+</div>
+
+<div>
+  <strong>&nbsp;</strong><br />
+  🔴 Eingreifen
+</div>
 
   </div>
 
@@ -220,6 +225,10 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
     color:'#555'
   }}>
     Leschten Check: <strong>{lastRefresh || '—'}</strong>
+    <br />
+
+Monitoring aktiv:
+<strong> {heartbeat || '—'} </strong>
   </p>
 </div>
         <div style={gridStyle}>
