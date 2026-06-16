@@ -168,19 +168,60 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
       ? '2px solid #ffb300'
       : '2px solid #d9534f'
 }}>
-  <h2 style={{margin:'0 0 8px'}}>
-    {systemLevel === 'green'
-      ? '🟢 System leeft normal'
-      : systemLevel === 'yellow'
-      ? '🟡 Héich Aktivitéit - iwwerwaachen'
-      : '🔴 Problem erkannt'}
+  <h2 style={{
+    margin:'0 0 16px',
+    color:'#0f3d91'
+  }}>
+    KONDSCHAFTER AUKTION STATUS
   </h2>
 
-  <p style={{margin:0}}>
+  <div style={{
+    display:'grid',
+    gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))',
+    gap:'14px'
+  }}>
+
+    <div>
+      <strong>System</strong><br />
+      {systemLevel === 'green'
+        ? '🟢 Online'
+        : systemLevel === 'yellow'
+        ? '🟡 Beobachten'
+        : '🔴 Problem'}
+    </div>
+
+    <div>
+      <strong>Datenbank</strong><br />
+      {dbStatus === 'ok' ? '🟢 Verbunden' : '🔴 Fehler'}
+    </div>
+
+    <div>
+      <strong>Realtime</strong><br />
+      {realtimeStatus === 'ok' ? '🟢 Verbunden' : '🔴 Fehler'}
+    </div>
+
+    <div>
+      <strong>Letztes Gebot</strong><br />
+      {lastBid?.created_at
+        ? new Date(lastBid.created_at).toLocaleString('de-LU')
+        : '—'}
+    </div>
+
+    <div>
+      <strong>Live Zuschauer</strong><br />
+      {viewerCount}
+    </div>
+
+  </div>
+
+  <p style={{
+    margin:'16px 0 0',
+    fontSize:'13px',
+    color:'#555'
+  }}>
     Leschten Check: <strong>{lastRefresh || '—'}</strong>
   </p>
 </div>
-
         <div style={gridStyle}>
           <StatusCard
             title="Supabase Database"
