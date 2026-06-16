@@ -118,7 +118,18 @@ export default function StatusPage() {
   }
 
   const systemOk = dbStatus === 'ok' && realtimeStatus === 'ok'
+const connectionWarning = viewerCount > 40
+const bidWarning = totalBids === 0
 
+let systemLevel = 'green'
+
+if (connectionWarning) {
+  systemLevel = 'yellow'
+}
+
+if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
+  systemLevel = 'red'
+}
   return (
     <main style={pageStyle}>
       <div style={{maxWidth:'1300px', margin:'0 auto'}}>
