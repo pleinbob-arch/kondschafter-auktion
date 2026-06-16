@@ -179,7 +179,7 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
 
   <div style={{
     display:'grid',
-    gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))',
+    gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))',
     gap:'14px'
   }}>
 
@@ -203,17 +203,9 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
     </div>
 
     <div>
-  <strong>Legende</strong><br />
-  🟢 Normalbetrieb
-</div>
-
-<div>
-  <strong>&nbsp;</strong><br />
-  🟡 Beobachten
-</div>
-
-<div>
-  <strong>&nbsp;</strong><br />
+  <strong>Status-Legende</strong><br />
+  🟢 Normalbetrieb<br />
+  🟡 Beobachten<br />
   🔴 Eingreifen
 </div>
 
@@ -234,13 +226,13 @@ Monitoring aktiv:
         <div style={gridStyle}>
           <StatusCard
             title="Supabase Database"
-            value={dbStatus === 'ok' ? 'Verbunden ✅' : dbStatus === 'checking' ? 'Prüfen...' : 'Fehler ❌'}
+            value={dbStatus === 'ok' ? 'Verbunden' : dbStatus === 'checking' ? 'Prüfen...' : 'Fehler ❌'}
             detail="Liest Gebote aus der Datenbank"
           />
 
           <StatusCard
             title="Realtime"
-            value={realtimeStatus === 'ok' ? 'Verbunden ✅' : realtimeStatus === 'checking' ? 'Prüfen...' : 'Fehler ❌'}
+            value={realtimeStatus === 'ok' ? 'Verbunden' : realtimeStatus === 'checking' ? 'Prüfen...' : 'Fehler ❌'}
             detail="Live Updates für neue Gebote"
           />
 
