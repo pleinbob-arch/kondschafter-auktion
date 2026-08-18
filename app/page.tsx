@@ -202,16 +202,11 @@ if (amount > highestBid + 50) {
       ipAddress = 'unknown'
     }
 
-    const { error } = await supabase.from('bids').insert([{
-      name: `${bidderProfile.first_name} ${bidderProfile.last_name}`,
-      address: `${bidderProfile.street}, ${bidderProfile.city}`,
-      email: bidderProfile.email,
-      phone: bidderProfile.phone,
-      amount,
-      language: bidderProfile.language || 'lb',
-      ip_address: ipAddress,
-      user_agent: navigator.userAgent
-    }])
+    const { error } = await supabase.rpc('place_bid', {
+  p_amount: amount,
+  p_ip_address: 'unknown',
+  p_user_agent: navigator.userAgent
+})
 
     if (error) {
       setMessage('Fehler: ' + error.message)
