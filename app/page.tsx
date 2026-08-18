@@ -706,7 +706,8 @@ if (amount < minBid || amount > maxBid) {
       ? '#1b5e20'
       : '#8b0000',
     fontWeight:'bold',
-    textAlign:'center'
+    textAlign:'center',
+    whiteSpace:'pre-line'
   }}>
     {message}
   </div>
