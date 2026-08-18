@@ -501,20 +501,27 @@ if (amount > highestBid + 50) {
                 color:'#555'
               }}>
                 <div>
-                  Nächst méiglecht Gebot / Next Possible Bid:{' '}
-                  <strong style={{color:'#0f3d91'}}>
-                    {(highestBid + 5).toLocaleString('de-LU')} €
-                  </strong>
-                </div>
+  Nächst méiglecht Gebot / Next Possible Bid:{' '}
+  <strong style={{color:'#0f3d91'}}>
+    {(highestBid + 5).toLocaleString('de-LU')} €
+  </strong>
+</div>
 
-                {lastBid && (
-                  <div>
-                    Viregt Gebot / Previous Bid:{' '}
-                    <strong style={{color:'#0f3d91'}}>
-                      {Number(lastBid.amount).toLocaleString('de-LU')} €
-                    </strong>
-                  </div>
-                )}
+<div style={{marginTop:'6px'}}>
+  Max. Gebot / Maximum Bid:{' '}
+  <strong style={{color:'#0f3d91'}}>
+    {(highestBid + 50).toLocaleString('de-LU')} €
+  </strong>
+</div>
+
+{lastBid && (
+  <div style={{marginTop:'6px'}}>
+    Viregt Gebot / Previous Bid:{' '}
+    <strong style={{color:'#0f3d91'}}>
+      {Number(lastBid.amount).toLocaleString('de-LU')} €
+    </strong>
+  </div>
+)}
               </div>
             </div>
 
