@@ -328,7 +328,52 @@ Kondschafter ASBL
     alert('PDF konnte nicht erstellt werden.')
   }
 }
-   
+  async function deleteAllBids() {
+  setDeleteMessage('')
+
+  if (!deleteCode.trim()) {
+    setDeleteMessage('Bitte Sicherheitscode eingeben.')
+    return
+  }
+
+  const confirmed = confirm(
+    'Wirklich ALLE Gebote löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
+  )
+
+  if (!confirmed) return
+
+  setDeleteLoading(true)
+
+  try {
+    const response = await fetch('/api/admin/delete-bids', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        code: deleteCode
+      })
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      setDeleteMessage(
+        result?.error || 'Fehler beim Löschen der Gebote.'
+      )
+      return
+    }
+
+    setDeleteMessage('Alle Gebote wurden gelöscht.')
+    setDeleteCode('')
+    await loadBids()
+
+  } catch {
+    setDeleteMessage('Serverfehler beim Löschen der Gebote.')
+  } finally {
+    setDeleteLoading(false)
+  }
+} 
   if (loading) {
     return (
       <main style={pageCenterStyle}>
