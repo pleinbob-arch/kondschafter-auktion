@@ -174,11 +174,24 @@ export default function Home() {
       return
     }
 
-    if (amount < highestBid + 5) {
-      setMessage(`Däi Gebot muss mindestens ${highestBid + 5} € sinn.`)
-      return
-    }
+    if (highestBid === null) {
+  setMessage('D’Héichstgebot gëtt nach gelueden. Probéier w.e.g. nach eng Kéier.')
+  return
+}
 
+if (amount < highestBid + 5) {
+  setMessage(
+    `Däi Gebot muss mindestens ${(highestBid + 5).toLocaleString('de-LU')} € sinn.`
+  )
+  return
+}
+
+if (amount > highestBid + 50) {
+  setMessage(
+    `Däi Gebot däerf maximal ${(highestBid + 50).toLocaleString('de-LU')} € sinn.`
+  )
+  return
+}
     let ipAddress = ''
 
     try {
@@ -680,7 +693,7 @@ export default function Home() {
               </form>
             ) : (
               <form onSubmit={submitBid} style={formBoxStyle}>
-                <h2 style={{marginTop:0}}>3. Gebot ofginn / Submit Bid</h2>
+                <h2 style={{marginTop:0}}>Gebot ofginn / Submit Bid</h2>
 
                 <p style={{
                   padding:'10px',
@@ -697,13 +710,16 @@ export default function Home() {
                 </p>
 
                 <input
-                  placeholder="Gebot an Euro / Bid amount in Euro *"
-                  type="number"
-                  value={bidAmount}
-                  onChange={e => setBidAmount(e.target.value)}
-                  style={inputStyle}
-                  required
-                />
+  placeholder="Gebot an Euro / Bid amount in Euro *"
+  type="number"
+  min={highestBid !== null ? highestBid + 5 : undefined}
+  max={highestBid !== null ? highestBid + 50 : undefined}
+  step="1"
+  value={bidAmount}
+  onChange={e => setBidAmount(e.target.value)}
+  style={inputStyle}
+  required
+/>
 
                 <button
                   disabled={auctionClosed}
