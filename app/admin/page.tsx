@@ -22,6 +22,9 @@ export default function AdminPage() {
   const [bids, setBids] = useState<any[]>([])
   const [message, setMessage] = useState('')
   const [viewerCount, setViewerCount] = useState(0)
+  const [deleteCode, setDeleteCode] = useState('')
+const [deleteMessage, setDeleteMessage] = useState('')
+const [deleteLoading, setDeleteLoading] = useState(false)
 
   const isAdmin = ADMIN_EMAILS.includes(session?.user?.email || '')
 
