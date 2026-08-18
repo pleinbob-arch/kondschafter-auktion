@@ -336,13 +336,24 @@ Kondschafter ASBL
     return
   }
 
-  const confirmed = confirm(
-    'Wirklich ALLE Gebote löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
+ const confirmed = confirm(
+  'Wirklich ALLE Gebote löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
+)
+
+if (!confirmed) return
+
+const confirmationText = prompt(
+  'Zur zusätzlichen Bestätigung bitte LÄSCHEN eingeben:'
+)
+
+if (confirmationText !== 'LÄSCHEN') {
+  setDeleteMessage(
+    'Löschen abgebrochen. Bestätigung "LÄSCHEN" wurde nicht korrekt eingegeben.'
   )
+  return
+}
 
-  if (!confirmed) return
-
-  setDeleteLoading(true)
+setDeleteLoading(true)
 
   try {
     const response = await fetch('/api/admin/delete-bids', {
