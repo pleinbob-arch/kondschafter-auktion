@@ -330,7 +330,29 @@ if (amount > highestBid + 50) {
       backgroundPosition:'center',
       backgroundAttachment:'fixed'
     }}>
+      
+<style jsx global>{`
+  .auction-button {
+    transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
+    box-shadow: 0 4px 0 #082b69;
+    cursor: pointer;
+  }
 
+  .auction-button:hover {
+    filter: brightness(1.06);
+  }
+
+  .auction-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #082b69;
+  }
+
+  .auction-button:disabled {
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+`}</style>
       <div style={{
         maxWidth:'1100px',
         margin:'0 auto',
@@ -722,8 +744,9 @@ if (amount > highestBid + 50) {
 />
 
                 <button
-                  disabled={auctionClosed}
-                  style={{
+  className="auction-button"
+  disabled={auctionClosed}
+  style={{
                     ...buttonStyle,
                     background: auctionClosed ? '#777' : '#0f3d91',
                     cursor: auctionClosed ? 'not-allowed' : 'pointer'
