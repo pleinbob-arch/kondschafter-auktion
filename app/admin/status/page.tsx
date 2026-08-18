@@ -40,23 +40,22 @@ const diff = auctionEnd.getTime() - now.getTime()
 const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
   async function runChecks() {
-    setDbStatus('checking')
-    setLastRefresh(new Date().toLocaleString('de-LU'))
-    setHeartbeat(new Date().toLocaleString('de-LU'))
+  setDbStatus('checking')
 
-    const { data, error } = await supabase
-      .from('bids')
-      .select('*')
-      .order('amount', { ascending: false })
+  const { data, error } = await supabase
+    .from('bids')
+    .select('*')
+    .order('amount', { ascending: false })
 
-    if (error) {
-      setDbStatus('error')
-      return
-    }
-
-    setBids(data || [])
-    setDbStatus('ok')
+  if (error) {
+    setDbStatus('error')
+    return
   }
+
+  setBids(data || [])
+  setDbStatus('ok')
+  setLastRefresh(new Date().toLocaleString('de-LU'))
+}
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
