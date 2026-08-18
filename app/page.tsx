@@ -793,7 +793,16 @@ if (amount < minBid || amount > maxBid) {
     fontWeight:'bold',
     textAlign:'center'
   }}>
-    {message}
+    {message.includes('|') ? (
+      <>
+        <div>{message.split('|')[0]}</div>
+        <div style={{marginTop:'6px'}}>
+          {message.split('|')[1]}
+        </div>
+      </>
+    ) : (
+      message
+    )}
   </div>
 )}
               </form>
