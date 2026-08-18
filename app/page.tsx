@@ -179,16 +179,13 @@ export default function Home() {
   return
 }
 
-if (amount < highestBid + 5) {
-  setMessage(
-    `Däi Gebot muss mindestens ${(highestBid + 5).toLocaleString('de-LU')} € sinn.`
-  )
-  return
-}
+const minBid = highestBid + 5
+const maxBid = highestBid + 50
 
-if (amount > highestBid + 50) {
+if (amount < minBid || amount > maxBid) {
   setMessage(
-    `Däi Gebot däerf maximal ${(highestBid + 50).toLocaleString('de-LU')} € sinn.`
+    `Däi Gebot muss tëscht ${minBid.toLocaleString('de-LU')} € an ${maxBid.toLocaleString('de-LU')} € leien.\n` +
+    `Your bid must be between ${minBid.toLocaleString('de-LU')} € and ${maxBid.toLocaleString('de-LU')} €.`
   )
   return
 }
@@ -736,8 +733,6 @@ if (amount > highestBid + 50) {
                 <input
   placeholder="Gebot an Euro / Bid amount in Euro *"
   type="number"
-  min={highestBid !== null ? highestBid + 5 : undefined}
-  max={highestBid !== null ? highestBid + 50 : undefined}
   step="1"
   value={bidAmount}
   onChange={e => setBidAmount(e.target.value)}
