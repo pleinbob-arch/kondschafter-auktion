@@ -184,9 +184,9 @@ const maxBid = highestBid + 50
 
 if (amount < minBid || amount > maxBid) {
   setMessage(
-    `Däi Gebot muss tëscht ${minBid.toLocaleString('de-LU')} € an ${maxBid.toLocaleString('de-LU')} € leien.\n` +
-    `Your bid must be between ${minBid.toLocaleString('de-LU')} € and ${maxBid.toLocaleString('de-LU')} €.`
-  )
+  `Däi Gebot muss tëscht ${minBid.toLocaleString('de-LU')} € an ${maxBid.toLocaleString('de-LU')} € leien.\n\n` +
+  `Your bid must be between ${minBid.toLocaleString('de-LU')} € and ${maxBid.toLocaleString('de-LU')} €.`
+)
   return
 }
     let ipAddress = ''
