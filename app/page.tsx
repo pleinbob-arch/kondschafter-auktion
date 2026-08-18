@@ -603,9 +603,12 @@ if (amount < minBid || amount > maxBid) {
                   required
                 />
 
-                <button style={buttonStyle}>
-                  Bestätegungslink schécken / Send confirmation link
-                </button>
+                <button
+  className="auction-button"
+  style={buttonStyle}
+>
+  Bestätegungslink schécken / Send confirmation link
+</button>
 
                 <p style={{
                   fontSize:'13px',
@@ -679,9 +682,12 @@ if (amount < minBid || amount > maxBid) {
                   required
                 />
 
-                <button style={buttonStyle}>
-                  Donnéeë späicheren / Save details
-                </button>
+                <button
+  className="auction-button"
+  style={buttonStyle}
+>
+  Donnéeë späicheren / Save details
+</button>
 
                 <button
                   type="button"
