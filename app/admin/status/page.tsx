@@ -21,7 +21,6 @@ export default function StatusPage() {
   const [bids, setBids] = useState<any[]>([])
   const [viewerCount, setViewerCount] = useState(0)
   const [lastRefresh, setLastRefresh] = useState('')
-  const [heartbeat, setHeartbeat] = useState('')
 
   const isAdmin = ADMIN_EMAILS.includes(session?.user?.email || '')
   const highestBid = bids[0] || null
@@ -221,11 +220,11 @@ if (dbStatus !== 'ok' || realtimeStatus !== 'ok') {
     fontSize:'13px',
     color:'#555'
   }}>
-    Leschten Check: <strong>{lastRefresh || '—'}</strong>
-    <br />
-
-Monitoring aktiv:
-<strong> {heartbeat || '—'} </strong>
+    Leschten erfollegräichen DB-Check:{' '}
+<strong>{lastRefresh || '—'}</strong>
+<br />
+Monitoring:{' '}
+<strong>🟢 Aktiv</strong> · automatesch all 30 Sekonnen / every 30 seconds
   </p>
 </div>
         <div style={gridStyle}>
