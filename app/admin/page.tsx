@@ -644,6 +644,76 @@ Kondschafter ASBL
             </div>
           ))}
         </div>
+                <div style={{
+          marginTop:'32px',
+          padding:'22px',
+          border:'2px solid #d62828',
+          borderRadius:'18px',
+          background:'#fff5f5'
+        }}>
+          <h2 style={{
+            marginTop:0,
+            color:'#b00020'
+          }}>
+            Gefahrenzone
+          </h2>
+
+          <p style={{
+            marginTop:0,
+            color:'#555'
+          }}>
+            Hei kënnen all Geboter gläichzäiteg geläscht ginn.
+            Dës Aktioun kann net réckgängeg gemaach ginn.
+          </p>
+
+          <input
+            type="password"
+            placeholder="Sécherheetscode"
+            value={deleteCode}
+            onChange={(e) => setDeleteCode(e.target.value)}
+            style={{
+              width:'100%',
+              maxWidth:'420px',
+              padding:'12px',
+              borderRadius:'10px',
+              border:'1px solid #d62828',
+              marginBottom:'12px',
+              boxSizing:'border-box'
+            }}
+          />
+
+          <div>
+            <button
+              onClick={deleteAllBids}
+              disabled={deleteLoading}
+              style={{
+                padding:'12px 18px',
+                border:'none',
+                borderRadius:'12px',
+                background:deleteLoading ? '#999' : '#d62828',
+                color:'white',
+                fontWeight:'bold',
+                cursor:deleteLoading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {deleteLoading
+                ? 'Geboter ginn geläscht...'
+                : 'All Geboter läschen'}
+            </button>
+          </div>
+
+          {deleteMessage && (
+            <p style={{
+              marginTop:'14px',
+              fontWeight:'bold',
+              color:deleteMessage.includes('gelöscht')
+                ? '#1b5e20'
+                : '#8b0000'
+            }}>
+              {deleteMessage}
+            </p>
+          )}
+        </div>
       </div>
     </main>
   )
