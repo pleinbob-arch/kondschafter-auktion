@@ -332,6 +332,70 @@ Kondschafter ASBL
     alert('PDF konnte nicht erstellt werden.')
   }
 }
+  async function submitLiveBid() {
+  setLiveBidMessage('')
+
+  if (!liveBidderNumber.trim()) {
+    setLiveBidMessage('Bitte Bieternummer eingeben.')
+    return
+  }
+
+  if (!liveBidAmount.trim()) {
+    setLiveBidMessage('Bitte Gebotsbetrag eingeben.')
+    return
+  }
+
+  const amount = Number(liveBidAmount)
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    setLiveBidMessage('Bitte einen gültigen Gebotsbetrag eingeben.')
+    return
+  }
+
+  const confirmed = confirm(
+    `Live-Gebot wirklich eintragen?\n\nBieter #${liveBidderNumber}\nGebot: ${amount.toLocaleString('de-LU')} €`
+  )
+
+  if (!confirmed) return
+
+  setLiveBidLoading(true)
+
+  try {
+    const response = await fetch('/api/admin/live-bid', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        bidderNumber: liveBidderNumber.trim(),
+        amount
+      })
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      setLiveBidMessage(
+        result?.error || 'Live-Gebot konnte nicht gespeichert werden.'
+      )
+      return
+    }
+
+    setLiveBidMessage(
+      `Live-Gebot von Bieter #${liveBidderNumber} über ${amount.toLocaleString('de-LU')} € wurde gespeichert.`
+    )
+
+    setLiveBidderNumber('')
+    setLiveBidAmount('')
+
+    await loadBids()
+
+  } catch {
+    setLiveBidMessage('Serverfehler beim Speichern des Live-Gebots.')
+  } finally {
+    setLiveBidLoading(false)
+  }
+}
   async function deleteAllBids() {
   setDeleteMessage('')
 
