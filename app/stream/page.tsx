@@ -335,7 +335,8 @@ export default function StreamPage() {
                 fontWeight:'bold',
                 color:'#315f9c'
               }}>
-                Auktioun Enn: 13 September 2026 · 19:26
+                Auktioun Enn / Auction closing:
+                13 September 2026 · 19:26
               </p>
 
               <p style={{
