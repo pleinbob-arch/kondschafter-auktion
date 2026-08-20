@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const AUCTION_END = new Date('2026-09-13T19:00:00')
+const AUCTION_END = new Date('2026-09-13T19:26:00')
 
 export default function StreamPage() {
   const [highestBid, setHighestBid] = useState<number | null>(null)
@@ -328,7 +328,7 @@ export default function StreamPage() {
                 fontWeight:'bold',
                 color:'#315f9c'
               }}>
-                Auktioun Enn: 13 September 2026 · 19:00
+                Auktioun Enn: 13 September 2026 · 19:26
               </p>
 
               <p style={{
