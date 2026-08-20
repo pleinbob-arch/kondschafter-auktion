@@ -33,7 +33,7 @@ export default function StreamPage() {
 
   async function loadHighestBid() {
     const { data } = await supabase
-      .from('bids')
+      .from('public_bids')
       .select('amount')
       .order('amount', { ascending: false })
       .limit(2)
