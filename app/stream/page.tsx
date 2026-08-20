@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const AUCTION_END = new Date('2026-09-13T19:26:00')
+const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
 
 export default function StreamPage() {
   const [highestBid, setHighestBid] = useState<number | null>(null)
@@ -294,19 +294,26 @@ export default function StreamPage() {
                 color:'#444'
               }}>
 
-                <div>
-                  Nächst méiglecht Gebot / Next Possible Bid:{' '}
-                  <strong style={{color:'#0f3d91'}}>
-                    {(highestBid + 5).toLocaleString('de-LU')} €
-                  </strong>
-                </div>
+               <div>
+  Nächst méiglecht Gebot / Next Possible Bid:{' '}
+  <strong style={{color:'#0f3d91'}}>
+    {(highestBid + 50).toLocaleString('de-LU')} €
+  </strong>
+</div>
 
-                <div>
-                  Viregt Gebot / Previous Bid:{' '}
-                  <strong style={{color:'#0f3d91'}}>
-                    {previousBid.toLocaleString('de-LU')} €
-                  </strong>
-                </div>
+<div>
+  Max. Gebot / Maximum Bid:{' '}
+  <strong style={{color:'#0f3d91'}}>
+    {(highestBid + 500).toLocaleString('de-LU')} €
+  </strong>
+</div>
+
+<div>
+  Viregt Gebot / Previous Bid:{' '}
+  <strong style={{color:'#0f3d91'}}>
+    {previousBid.toLocaleString('de-LU')} €
+  </strong>
+</div>
 
               </div>
 
