@@ -55,20 +55,9 @@ export default function StreamPage() {
   useEffect(() => {
     loadHighestBid()
 
-    const bidsChannel = supabase
-      .channel('stream-bids')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'bids'
-        },
-        () => {
-          loadHighestBid()
-        }
-      )
-      .subscribe()
+    const bidRefreshInterval = setInterval(() => {
+      loadHighestBid()
+    }, 2000)
 
     const viewerChannel = supabase.channel('auction-viewers')
 
@@ -86,7 +75,7 @@ export default function StreamPage() {
       .subscribe()
 
     return () => {
-      supabase.removeChannel(bidsChannel)
+      clearInterval(bidRefreshInterval)
       supabase.removeChannel(viewerChannel)
     }
   }, [])
