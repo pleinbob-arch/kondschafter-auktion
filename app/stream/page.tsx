@@ -333,13 +333,6 @@ setAuctionClosed(false)
     color:'#444'
   }}>
 
-    <div>
-      Nächst méiglecht Gebot / Next Possible Bid:{' '}
-      <strong style={{color:'#0f3d91'}}>
-        {(highestBid + 50).toLocaleString('de-LU')} €
-      </strong>
-    </div>
-
   </div>
 )}
 
