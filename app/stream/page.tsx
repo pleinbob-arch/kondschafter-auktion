@@ -64,17 +64,17 @@ export default function StreamPage() {
   }, [])
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const updateCountdown = () => {
       const now = new Date().getTime()
       const distance = AUCTION_END.getTime() - now
 
-     if (distance <= 0) {
-  setTimeLeft('Auktioun eriwwer / Auction ended')
-  setAuctionClosed(true)
-  return
-}
+      if (distance <= 0) {
+        setTimeLeft('Auktioun eriwwer / Auction ended')
+        setAuctionClosed(true)
+        return
+      }
 
-setAuctionClosed(false)
+      setAuctionClosed(false)
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24))
       const hours = Math.floor((distance / (1000 * 60 * 60)) % 24)
@@ -84,7 +84,13 @@ setAuctionClosed(false)
       setTimeLeft(
         `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
       )
-    }, 1000)
+    }
+
+    // Direkt beim Laden berechnen
+    updateCountdown()
+
+    // Danach jede Sekunde aktualisieren
+    const timer = setInterval(updateCountdown, 1000)
 
     return () => clearInterval(timer)
   }, [])
@@ -115,7 +121,7 @@ setAuctionClosed(false)
         gap:'24px'
       }}>
 
-        {/* Header */}
+        {/* HEADER */}
         <div style={{
           background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
           borderRadius:'26px',
@@ -163,7 +169,7 @@ setAuctionClosed(false)
           </div>
         </div>
 
-        {/* Content */}
+        {/* CONTENT */}
         <div style={{
           display:'grid',
           gridTemplateColumns:'52% 48%',
@@ -210,6 +216,7 @@ setAuctionClosed(false)
               color:'#555'
             }}>
               Konschtwierk: 160 cm x 120 cm
+              <br />
               © Kënschtler: André Scholtes
             </p>
 
@@ -246,9 +253,7 @@ setAuctionClosed(false)
                 />
 
               </div>
-
             </div>
-
           </div>
 
           {/* RIGHT */}
@@ -278,110 +283,126 @@ setAuctionClosed(false)
               </p>
 
               {auctionClosed ? (
-  <div style={{
-    marginTop:'28px',
-    padding:'24px',
-    background:'#e8fff0',
-    border:'2px solid #4caf50',
-    borderRadius:'20px',
-    textAlign:'center'
-  }}>
-    <p style={{
-      margin:'0 0 10px',
-      fontSize:'34px',
-      fontWeight:'bold',
-      color:'#1b5e20'
-    }}>
-      Auktioun eriwwer / Auction ended
-    </p>
 
-    <p style={{
-      margin:0,
-      fontSize:'24px',
-      color:'#315f9c'
-    }}>
-      Finalt Gebot / Final Bid
-    </p>
+                /* NACH AUKTIONSENDE */
+                <div style={{
+                  marginTop:'28px',
+                  padding:'24px',
+                  background:'#e8fff0',
+                  border:'2px solid #4caf50',
+                  borderRadius:'20px',
+                  textAlign:'center'
+                }}>
 
-    <p style={{
-      margin:'10px 0 0',
-      fontSize:'54px',
-      fontWeight:'bold',
-      color:'#0f3d91'
-    }}>
-      {highestBid !== null
-        ? `${highestBid.toLocaleString('de-LU')} €`
-        : '—'}
-    </p>
+                  <p style={{
+                    margin:'0 0 10px',
+                    fontSize:'34px',
+                    fontWeight:'bold',
+                    color:'#1b5e20'
+                  }}>
+                    Auktioun eriwwer / Auction ended
+                  </p>
 
-    <p style={{
-      margin:'18px 0 0',
-      fontSize:'24px',
-      fontWeight:'bold',
-      color:'#315f9c'
-    }}>
-      Merci fir Är Ënnerstëtzung · Thank you for your support
-    </p>
-  </div>
-) : (
-  <>
-    <p style={{
-      margin:0,
-      fontSize:'118px',
-      lineHeight:'1',
-      fontWeight:'bold',
-      color:'#0f3d91',
-      transition:'all 0.4s ease'
-    }}>
-      {highestBid !== null
-        ? `${highestBid.toLocaleString('de-LU')} €`
-        : '...'}
-    </p>
+                  <p style={{
+                    margin:0,
+                    fontSize:'24px',
+                    color:'#315f9c'
+                  }}>
+                    Finalt Gebot / Final Bid
+                  </p>
 
-    <div style={{
-      marginTop:'26px',
-      paddingTop:'22px',
-      borderTop:'2px solid #d9e8ff',
-      fontSize:'28px',
-      lineHeight:'1.6',
-      color:'#444'
-    }}>
-      <div>
-        Nächst méiglecht Gebot / Next Possible Bid:{' '}
-        <strong style={{color:'#0f3d91'}}>
-          {(highestBid + 50).toLocaleString('de-LU')} €
-        </strong>
-      </div>
+                  <p style={{
+                    margin:'10px 0 0',
+                    fontSize:'54px',
+                    fontWeight:'bold',
+                    color:'#0f3d91'
+                  }}>
+                    {highestBid !== null
+                      ? `${highestBid.toLocaleString('de-LU')} €`
+                      : '—'}
+                  </p>
 
-      <div>
-        Max. Gebot / Maximum Bid:{' '}
-        <strong style={{color:'#0f3d91'}}>
-          {(highestBid + 500).toLocaleString('de-LU')} €
-        </strong>
-      </div>
+                  <p style={{
+                    margin:'18px 0 0',
+                    fontSize:'24px',
+                    fontWeight:'bold',
+                    color:'#315f9c'
+                  }}>
+                    Merci fir Är Ënnerstëtzung · Thank you for your support
+                  </p>
 
-      <div style={{
-        marginTop:'10px',
-        marginBottom:'10px',
-        padding:'9px 12px',
-        background:'#eef6ff',
-        borderRadius:'10px',
-        fontSize:'22px',
-        color:'#315f9c'
-      }}>
-        Erhéijung pro Gebot / Bid increase:{' '}
-        <strong>min. 50 € · max. 500 €</strong>
-      </div>
+                </div>
 
-      <div>
-        Viregt Gebot / Previous Bid:{' '}
-        <strong style={{color:'#0f3d91'}}>
-          {previousBid.toLocaleString('de-LU')} €
-        </strong>
-      </div>
-    </div>
-  </>
-)}
+              ) : (
+
+                /* WÄHREND DER AUKTION */
+                <>
+                  <p style={{
+                    margin:0,
+                    fontSize:'118px',
+                    lineHeight:'1',
+                    fontWeight:'bold',
+                    color:'#0f3d91',
+                    transition:'all 0.4s ease'
+                  }}>
+                    {highestBid !== null
+                      ? `${highestBid.toLocaleString('de-LU')} €`
+                      : '...'}
+                  </p>
+
+                  <div style={{
+                    marginTop:'26px',
+                    paddingTop:'22px',
+                    borderTop:'2px solid #d9e8ff',
+                    fontSize:'28px',
+                    lineHeight:'1.6',
+                    color:'#444'
+                  }}>
+
+                    <div>
+                      Nächst méiglecht Gebot / Next Possible Bid:{' '}
+                      <strong style={{color:'#0f3d91'}}>
+                        {highestBid !== null
+                          ? `${(highestBid + 50).toLocaleString('de-LU')} €`
+                          : '—'}
+                      </strong>
+                    </div>
+
+                    <div>
+                      Max. Gebot / Maximum Bid:{' '}
+                      <strong style={{color:'#0f3d91'}}>
+                        {highestBid !== null
+                          ? `${(highestBid + 500).toLocaleString('de-LU')} €`
+                          : '—'}
+                      </strong>
+                    </div>
+
+                    <div style={{
+                      marginTop:'10px',
+                      marginBottom:'10px',
+                      padding:'9px 12px',
+                      background:'#eef6ff',
+                      borderRadius:'10px',
+                      fontSize:'22px',
+                      color:'#315f9c'
+                    }}>
+                      Erhéijung pro Gebot / Bid increase:{' '}
+                      <strong>min. 50 € · max. 500 €</strong>
+                    </div>
+
+                    <div>
+                      Viregt Gebot / Previous Bid:{' '}
+                      <strong style={{color:'#0f3d91'}}>
+                        {previousBid.toLocaleString('de-LU')} €
+                      </strong>
+                    </div>
+
+                  </div>
+                </>
+
+              )}
+
+            </div>
 
             {/* COUNTDOWN */}
             <div style={{
@@ -394,23 +415,25 @@ setAuctionClosed(false)
             }}>
 
               <div style={{
-  margin:'0 0 16px',
-  fontSize:'30px',
-  fontWeight:'bold',
-  color:'#315f9c',
-  lineHeight:'1.25'
-}}>
-  <div>
-    Auktioun Enn / Auction closing:
-  </div>
+                margin:'0 0 16px',
+                fontSize:'30px',
+                fontWeight:'bold',
+                color:'#315f9c',
+                lineHeight:'1.25'
+              }}>
 
-  <div style={{
-    marginTop:'6px',
-    color:'#0f3d91'
-  }}>
-    13 September 2026 · 19:26
-  </div>
-</div>
+                <div>
+                  Auktioun Enn / Auction closing:
+                </div>
+
+                <div style={{
+                  marginTop:'6px',
+                  color:'#0f3d91'
+                }}>
+                  13 September 2026 · 19:26
+                </div>
+
+              </div>
 
               <p style={{
                 margin:0,
@@ -454,11 +477,8 @@ setAuctionClosed(false)
             </div>
 
           </div>
-
         </div>
-
       </div>
-
     </main>
   )
 }
