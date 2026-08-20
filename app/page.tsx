@@ -495,7 +495,7 @@ if (amount < minBid || amount > maxBid) {
                 <div>
   Nächst méiglecht Gebot / Next Possible Bid:{' '}
   <strong style={{color:'#0f3d91'}}>
-    {(highestBid + 5).toLocaleString('de-LU')} €
+    {(highestBid + 50).toLocaleString('de-LU')} €
   </strong>
 </div>
 
