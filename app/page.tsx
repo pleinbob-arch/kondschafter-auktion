@@ -502,7 +502,7 @@ if (amount < minBid || amount > maxBid) {
 <div style={{marginTop:'6px'}}>
   Max. Gebot / Maximum Bid:{' '}
   <strong style={{color:'#0f3d91'}}>
-    {(highestBid + 50).toLocaleString('de-LU')} €
+    {(highestBid + 500).toLocaleString('de-LU')} €
   </strong>
 </div>
 
