@@ -923,16 +923,15 @@ const footerLink = {
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState('')
 
-  const targetDate = new Date('2026-09-13T19:26:00+02:00')
-
   useEffect(() => {
-    const interval = setInterval(() => {
+    const targetDate = new Date('2026-09-13T19:26:00+02:00')
+
+    const updateCountdown = () => {
       const now = new Date()
       const difference = targetDate.getTime() - now.getTime()
 
       if (difference <= 0) {
         setTimeLeft('Auktioun beendet / Auction ended')
-        clearInterval(interval)
         return
       }
 
@@ -941,8 +940,16 @@ function Countdown() {
       const minutes = Math.floor((difference / (1000 * 60)) % 60)
       const seconds = Math.floor((difference / 1000) % 60)
 
-      setTimeLeft(`${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`)
-    }, 1000)
+      setTimeLeft(
+        `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
+      )
+    }
+
+    // Sofort beim Laden berechnen
+    updateCountdown()
+
+    // Danach jede Sekunde aktualisieren
+    const interval = setInterval(updateCountdown, 1000)
 
     return () => clearInterval(interval)
   }, [])
