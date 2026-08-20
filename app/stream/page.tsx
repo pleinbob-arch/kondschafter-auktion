@@ -346,7 +346,6 @@ setAuctionClosed(false)
       lineHeight:'1.6',
       color:'#444'
     }}>
-
       <div>
         Nächst méiglecht Gebot / Next Possible Bid:{' '}
         <strong style={{color:'#0f3d91'}}>
@@ -380,14 +379,9 @@ setAuctionClosed(false)
           {previousBid.toLocaleString('de-LU')} €
         </strong>
       </div>
-
     </div>
   </>
 )}
-
-              </div>
-
-            </div>
 
             {/* COUNTDOWN */}
             <div style={{
