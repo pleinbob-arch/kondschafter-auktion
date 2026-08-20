@@ -105,16 +105,12 @@ export default function AdminPage() {
   async function loadBids() {
     const { data, error } =
       await supabase
-        .from('bids')
-        .select('*')
-        .order(
-          'amount',
-          { ascending:false }
-        )
+        .rpc('admin_get_bids')
 
     if (error) {
+      console.error('Admin bids load failed:', error)
       setMessage(
-        'Fehler: ' + error.message
+        'Fehler beim Laden der Gebote: ' + error.message
       )
       return
     }
@@ -173,20 +169,10 @@ export default function AdminPage() {
 
     loadBids()
 
-    const channel = supabase
-      .channel('admin-bids-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event:'*',
-          schema:'public',
-          table:'bids'
-        },
-        () => {
-          loadBids()
-        }
-      )
-      .subscribe()
+    const bidRefreshInterval =
+      setInterval(() => {
+        loadBids()
+      }, 2000)
 
     const viewerChannel =
       supabase.channel(
@@ -212,7 +198,7 @@ export default function AdminPage() {
       .subscribe()
 
     return () => {
-      supabase.removeChannel(channel)
+      clearInterval(bidRefreshInterval)
       supabase.removeChannel(
         viewerChannel
       )
@@ -280,18 +266,18 @@ Kondschafter ASBL
 
     const { error } =
       await supabase
-        .from('bids')
-        .delete()
-        .eq('id', id)
+        .rpc('admin_delete_bid', {
+          p_id: id
+        })
 
     if (error) {
       setMessage(
-        'Fehler: ' + error.message
+        'Fehler beim Löschen: ' + error.message
       )
       return
     }
 
-    loadBids()
+    await loadBids()
   }
 
   function exportExcel() {
