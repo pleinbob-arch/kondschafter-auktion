@@ -86,21 +86,25 @@ export default function Home() {
     )
   }
 
-  async function loadHighestBid() {
-    const { data } = await supabase
-      .from('public_bids')
-      .select('*')
-      .order('amount', { ascending: false })
-      .limit(2)
+ async function loadHighestBid() {
+  const { data, error } = await supabase
+    .rpc('get_public_bids')
 
-    if (data && data.length > 0) {
-      setHighestBid(Number(data[0].amount))
-      setLastBid(data[1] || null)
-    } else {
-      setHighestBid(null)
-      setLastBid(null)
-    }
+  if (error) {
+    console.error('Public bids konnten nicht geladen werden:', error)
+    return
   }
+
+  const topBids = data?.slice(0, 2) || []
+
+  if (topBids.length > 0) {
+    setHighestBid(Number(topBids[0].amount))
+    setLastBid(topBids[1] || null)
+  } else {
+    setHighestBid(null)
+    setLastBid(null)
+  }
+}
 
   async function loadBidderProfile(userId: string) {
     setProfileLoading(true)
