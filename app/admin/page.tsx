@@ -724,6 +724,139 @@ setDeleteLoading(true)
               {liveBidMessage}
             </div>
           )}
+                </div>
+
+        {/* LIVE-AUKTION */}
+        <div style={{
+          marginBottom:'28px',
+          padding:'22px',
+          border:'2px solid #0f3d91',
+          borderRadius:'18px',
+          background:'#eef6ff'
+        }}>
+          <h2 style={{
+            margin:'0 0 8px',
+            color:'#0f3d91'
+          }}>
+            Live-Auktioun / Live Auction
+          </h2>
+
+          <p style={{
+            margin:'0 0 18px',
+            color:'#555'
+          }}>
+            Gebot vum Auktionator manuell erfaassen.
+          </p>
+
+          <div style={{
+            display:'flex',
+            gap:'12px',
+            flexWrap:'wrap',
+            alignItems:'end'
+          }}>
+
+            <div style={{flex:'1 1 180px'}}>
+              <label style={{
+                display:'block',
+                marginBottom:'6px',
+                fontWeight:'bold'
+              }}>
+                Bieternummer
+              </label>
+
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="z. B. 17"
+                value={liveBidderNumber}
+                onChange={(e) => setLiveBidderNumber(e.target.value)}
+                disabled={liveBidLoading}
+                style={{
+                  width:'100%',
+                  padding:'12px',
+                  border:'1px solid #9bbce8',
+                  borderRadius:'10px',
+                  boxSizing:'border-box',
+                  fontSize:'16px'
+                }}
+              />
+            </div>
+
+            <div style={{flex:'1 1 220px'}}>
+              <label style={{
+                display:'block',
+                marginBottom:'6px',
+                fontWeight:'bold'
+              }}>
+                Gebot / Bid (€)
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                step="50"
+                placeholder="z. B. 9500"
+                value={liveBidAmount}
+                onChange={(e) => setLiveBidAmount(e.target.value)}
+                disabled={liveBidLoading}
+                style={{
+                  width:'100%',
+                  padding:'12px',
+                  border:'1px solid #9bbce8',
+                  borderRadius:'10px',
+                  boxSizing:'border-box',
+                  fontSize:'16px'
+                }}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={submitLiveBid}
+              disabled={liveBidLoading}
+              style={{
+                padding:'13px 20px',
+                border:'none',
+                borderRadius:'12px',
+                background:liveBidLoading ? '#999' : '#0f3d91',
+                color:'white',
+                fontWeight:'bold',
+                fontSize:'16px',
+                cursor:liveBidLoading ? 'not-allowed' : 'pointer',
+                minHeight:'46px'
+              }}
+            >
+              {liveBidLoading
+                ? 'Gëtt gespäichert...'
+                : 'LIVE-GEBOT EINTRAGEN'}
+            </button>
+
+          </div>
+
+          <p style={{
+            margin:'14px 0 0',
+            fontSize:'14px',
+            color:'#555'
+          }}>
+            Erlaabt Erhéijung: min. 50 € · max. 500 €
+          </p>
+
+          {liveBidMessage && (
+            <div style={{
+              marginTop:'14px',
+              padding:'12px',
+              borderRadius:'10px',
+              background:liveBidMessage.includes('wurde gespeichert')
+                ? '#e8fff0'
+                : '#fff0f0',
+              color:liveBidMessage.includes('wurde gespeichert')
+                ? '#1b5e20'
+                : '#8b0000',
+              fontWeight:'bold'
+            }}>
+              {liveBidMessage}
+            </div>
+          )}
         </div>
 
         {message && <p><strong>{message}</strong></p>}
