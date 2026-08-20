@@ -32,25 +32,32 @@ export default function StreamPage() {
       : highestBid + MAX_INCREASE
 
   async function loadHighestBid() {
-    const { data } = await supabase
-      .from('public_bids')
-      .select('amount')
-      .order('amount', { ascending: false })
-      .limit(2)
+  const { data, error } = await supabase
+    .rpc('get_public_bids')
 
-    if (data && data.length > 0) {
-      setHighestBid(Number(data[0].amount))
+  if (error) {
+    console.error(
+      'Public bids konnten nicht geladen werden:',
+      error
+    )
+    return
+  }
 
-      if (data.length > 1) {
-        setPreviousBid(Number(data[1].amount))
-      } else {
-        setPreviousBid(null)
-      }
+  const topBids = data?.slice(0, 2) || []
+
+  if (topBids.length > 0) {
+    setHighestBid(Number(topBids[0].amount))
+
+    if (topBids.length > 1) {
+      setPreviousBid(Number(topBids[1].amount))
     } else {
-      setHighestBid(null)
       setPreviousBid(null)
     }
+  } else {
+    setHighestBid(null)
+    setPreviousBid(null)
   }
+}
 
   useEffect(() => {
     loadHighestBid()
