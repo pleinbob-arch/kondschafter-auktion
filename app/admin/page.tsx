@@ -950,24 +950,26 @@ Kondschafter ASBL
             </strong>
           </p>
 
-          {highestBid && (
-            <p style={{
-              margin:'8px 0 0',
-              fontSize:'14px',
-              color:'#315f9c'
-            }}>
-              Aktuell erlaabt:{' '}
-              <strong>
-                {(Number(highestBid.amount) + 50)
-                  .toLocaleString('de-LU')} €
-              </strong>
-              {' '}bis{' '}
-              <strong>
-                {(Number(highestBid.amount) + 500)
-                  .toLocaleString('de-LU')} €
-              </strong>
-            </p>
-          )}
+          <p style={{
+  margin:'8px 0 0',
+  fontSize:'14px',
+  color:'#315f9c'
+}}>
+  Aktuell erlaabt:{' '}
+  <strong>
+    {(highestBid
+      ? Number(highestBid.amount) + 50
+      : 2500
+    ).toLocaleString('de-LU')} €
+  </strong>
+  {' '}bis{' '}
+  <strong>
+    {(highestBid
+      ? Number(highestBid.amount) + 500
+      : 3000
+    ).toLocaleString('de-LU')} €
+  </strong>
+</p>
 
           {liveBidMessage && (
             <div style={{
