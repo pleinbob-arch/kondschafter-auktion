@@ -429,7 +429,9 @@ if (amount < minBid || amount > maxBid) {
   textAlign:'center',
   fontStyle:'italic'
 }}>
-  © Konschtwierk: André Scholtes
+  
+Konschtwierk: 160 cm x 120 cm
+© Kënschtler: André Scholtes
 
   <a
     href="https://www.instagram.com/itwasnotme_scholtes/"
@@ -444,18 +446,6 @@ if (amount < minBid || amount > maxBid) {
     📸
   </a>
 
-  <a
-    href="https://www.itwasnotme.lu/home"
-    target="_blank"
-    rel="noopener noreferrer"
-    style={{
-      marginLeft:'8px',
-      textDecoration:'none',
-      fontStyle:'normal'
-    }}
-  >
-    🌐
-  </a>
 </p>
           </div>
 
