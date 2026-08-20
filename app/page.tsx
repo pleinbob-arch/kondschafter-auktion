@@ -924,7 +924,7 @@ function Countdown() {
   const [timeLeft, setTimeLeft] = useState('')
 
   useEffect(() => {
-    const targetDate = new Date('2026-09-13T19:26:00')
+    const auctionEnd = new Date('2026-09-13T19:26:00+02:00')
 
     const interval = setInterval(() => {
       const now = new Date()
