@@ -505,7 +505,17 @@ if (amount < minBid || amount > maxBid) {
     {(highestBid + 500).toLocaleString('de-LU')} €
   </strong>
 </div>
-
+<div style={{
+  marginTop:'10px',
+  padding:'9px 12px',
+  background:'#eef6ff',
+  borderRadius:'10px',
+  fontSize:'13px',
+  color:'#315f9c'
+}}>
+  Erhéijung pro Gebot / Bid increase:{' '}
+  <strong>min. 50 € · max. 500 €</strong>
+</div>
 {lastBid && (
   <div style={{marginTop:'6px'}}>
     Viregt Gebot / Previous Bid:{' '}
