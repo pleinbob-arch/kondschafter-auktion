@@ -102,6 +102,26 @@ export default function Home() {
     }
   }
 
+  async function loadBidderProfile(userId: string) {
+    setProfileLoading(true)
+
+    const { data, error } = await supabase
+      .from('bidders')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (error) {
+      setMessage('Fehler beim Laden der Bieterdaten: ' + error.message)
+      setBidderProfile(null)
+      setProfileLoading(false)
+      return
+    }
+
+    setBidderProfile(data || null)
+    setProfileLoading(false)
+  }
+
   async function saveBidderProfile(e: React.FormEvent) {
   e.preventDefault()
   setMessage('')
