@@ -339,25 +339,14 @@ export default function Home() {
         }
       })
 
-    const channel = supabase
-      .channel('bids-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event:'*',
-          schema:'public',
-          table:'bids'
-        },
-        () => {
-          loadHighestBid()
-        }
-      )
-      .subscribe()
+    const bidRefreshInterval = setInterval(() => {
+      loadHighestBid()
+    }, 2000)
 
     return () => {
       authListener.data.subscription.unsubscribe()
-      supabase.removeChannel(channel)
       supabase.removeChannel(viewerChannel)
+      clearInterval(bidRefreshInterval)
       clearInterval(closeInterval)
     }
   }, [])
