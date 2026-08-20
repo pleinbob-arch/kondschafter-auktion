@@ -10,12 +10,26 @@ const supabase = createClient(
 
 const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
 
+const START_BID = 2500
+const MIN_INCREASE = 50
+const MAX_INCREASE = 500
+
 export default function StreamPage() {
   const [highestBid, setHighestBid] = useState<number | null>(null)
-  const [previousBid, setPreviousBid] = useState(0)
+  const [previousBid, setPreviousBid] = useState<number | null>(null)
   const [viewerCount, setViewerCount] = useState(1)
   const [timeLeft, setTimeLeft] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
+
+  const minBid =
+    highestBid === null
+      ? START_BID
+      : highestBid + MIN_INCREASE
+
+  const maxBid =
+    highestBid === null
+      ? START_BID + MAX_INCREASE
+      : highestBid + MAX_INCREASE
 
   async function loadHighestBid() {
     const { data } = await supabase
@@ -29,7 +43,12 @@ export default function StreamPage() {
 
       if (data.length > 1) {
         setPreviousBid(Number(data[1].amount))
+      } else {
+        setPreviousBid(null)
       }
+    } else {
+      setHighestBid(null)
+      setPreviousBid(null)
     }
   }
 
@@ -40,7 +59,11 @@ export default function StreamPage() {
       .channel('stream-bids')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'bids' },
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bids'
+        },
         () => {
           loadHighestBid()
         }
@@ -52,7 +75,12 @@ export default function StreamPage() {
     viewerChannel
       .on('presence', { event: 'sync' }, () => {
         const state = viewerChannel.presenceState()
-        const count = Object.values(state).flat().length
+
+        const count =
+          Object.values(state)
+            .flat()
+            .length
+
         setViewerCount(count || 1)
       })
       .subscribe()
@@ -66,41 +94,78 @@ export default function StreamPage() {
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date().getTime()
-      const distance = AUCTION_END.getTime() - now
+
+      const distance =
+        AUCTION_END.getTime() - now
 
       if (distance <= 0) {
-        setTimeLeft('Auktioun eriwwer / Auction ended')
+        setTimeLeft(
+          'Auktioun eriwwer / Auction ended'
+        )
+
         setAuctionClosed(true)
         return
       }
 
       setAuctionClosed(false)
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24)
-      const minutes = Math.floor((distance / (1000 * 60)) % 60)
-      const seconds = Math.floor((distance / 1000) % 60)
+      const days =
+        Math.floor(
+          distance /
+          (1000 * 60 * 60 * 24)
+        )
+
+      const hours =
+        Math.floor(
+          (
+            distance /
+            (1000 * 60 * 60)
+          ) % 24
+        )
+
+      const minutes =
+        Math.floor(
+          (
+            distance /
+            (1000 * 60)
+          ) % 60
+        )
+
+      const seconds =
+        Math.floor(
+          (
+            distance /
+            1000
+          ) % 60
+        )
 
       setTimeLeft(
         `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
       )
     }
 
-    // Direkt beim Laden berechnen
     updateCountdown()
 
-    // Danach jede Sekunde aktualisieren
-    const timer = setInterval(updateCountdown, 1000)
+    const timer =
+      setInterval(
+        updateCountdown,
+        1000
+      )
 
-    return () => clearInterval(timer)
+    return () =>
+      clearInterval(timer)
+
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      window.location.reload()
-    }, 1000 * 60 * 5)
+    const interval =
+      setInterval(() => {
+        window.location.reload()
+      }, 1000 * 60 * 5)
 
-    return () => clearInterval(interval)
+    return () =>
+      clearInterval(interval)
+
   }, [])
 
   return (
@@ -111,7 +176,8 @@ export default function StreamPage() {
       padding:'28px',
       boxSizing:'border-box',
       fontFamily:'Arial, sans-serif',
-      background:'linear-gradient(135deg, #dcefff 0%, #ffffff 100%)'
+      background:
+        'linear-gradient(135deg, #dcefff 0%, #ffffff 100%)'
     }}>
 
       <div style={{
@@ -123,7 +189,8 @@ export default function StreamPage() {
 
         {/* HEADER */}
         <div style={{
-          background:'linear-gradient(135deg, #0f3d91, #5fa8ff)',
+          background:
+            'linear-gradient(135deg, #0f3d91, #5fa8ff)',
           borderRadius:'26px',
           color:'white',
           display:'flex',
@@ -131,7 +198,8 @@ export default function StreamPage() {
           justifyContent:'center',
           gap:'24px',
           textAlign:'center',
-          boxShadow:'0 10px 35px rgba(0,0,0,0.18)'
+          boxShadow:
+            '0 10px 35px rgba(0,0,0,0.18)'
         }}>
 
           <img
@@ -147,7 +215,9 @@ export default function StreamPage() {
             }}
           />
 
-          <div style={{textAlign:'center'}}>
+          <div style={{
+            textAlign:'center'
+          }}>
 
             <p style={{
               margin:'0 0 6px',
@@ -167,6 +237,7 @@ export default function StreamPage() {
             </h1>
 
           </div>
+
         </div>
 
         {/* CONTENT */}
@@ -182,7 +253,8 @@ export default function StreamPage() {
             background:'white',
             borderRadius:'26px',
             padding:'18px',
-            boxShadow:'0 10px 30px rgba(0,0,0,0.12)',
+            boxShadow:
+              '0 10px 30px rgba(0,0,0,0.12)',
             display:'flex',
             flexDirection:'column',
             justifyContent:'space-between'
@@ -254,6 +326,7 @@ export default function StreamPage() {
 
               </div>
             </div>
+
           </div>
 
           {/* RIGHT */}
@@ -270,7 +343,8 @@ export default function StreamPage() {
               border:'1px solid #cfe5ff',
               borderRadius:'26px',
               padding:'34px',
-              boxShadow:'0 10px 30px rgba(0,0,0,0.1)'
+              boxShadow:
+                '0 10px 30px rgba(0,0,0,0.1)'
             }}>
 
               <p style={{
@@ -279,7 +353,9 @@ export default function StreamPage() {
                 fontWeight:'bold',
                 color:'#315f9c'
               }}>
-                Aktuellt Héichstgebot / Current Highest Bid
+                {highestBid === null
+                  ? 'Startgebot / Starting Bid'
+                  : 'Aktuellt Héichstgebot / Current Highest Bid'}
               </p>
 
               {auctionClosed ? (
@@ -347,7 +423,7 @@ export default function StreamPage() {
                   }}>
                     {highestBid !== null
                       ? `${highestBid.toLocaleString('de-LU')} €`
-                      : '...'}
+                      : `${START_BID.toLocaleString('de-LU')} €`}
                   </p>
 
                   <div style={{
@@ -361,19 +437,19 @@ export default function StreamPage() {
 
                     <div>
                       Nächst méiglecht Gebot / Next Possible Bid:{' '}
-                      <strong style={{color:'#0f3d91'}}>
-                        {highestBid !== null
-                          ? `${(highestBid + 50).toLocaleString('de-LU')} €`
-                          : '—'}
+                      <strong style={{
+                        color:'#0f3d91'
+                      }}>
+                        {minBid.toLocaleString('de-LU')} €
                       </strong>
                     </div>
 
                     <div>
                       Max. Gebot / Maximum Bid:{' '}
-                      <strong style={{color:'#0f3d91'}}>
-                        {highestBid !== null
-                          ? `${(highestBid + 500).toLocaleString('de-LU')} €`
-                          : '—'}
+                      <strong style={{
+                        color:'#0f3d91'
+                      }}>
+                        {maxBid.toLocaleString('de-LU')} €
                       </strong>
                     </div>
 
@@ -386,18 +462,38 @@ export default function StreamPage() {
                       fontSize:'22px',
                       color:'#315f9c'
                     }}>
-                      Erhéijung pro Gebot / Bid increase:{' '}
-                      <strong>min. 50 € · max. 500 €</strong>
+
+                      {highestBid === null ? (
+                        <>
+                          Startgebot / Starting Bid:{' '}
+                          <strong>
+                            2.500 €
+                          </strong>
+                        </>
+                      ) : (
+                        <>
+                          Erhéijung pro Gebot / Bid increase:{' '}
+                          <strong>
+                            min. 50 € · max. 500 €
+                          </strong>
+                        </>
+                      )}
+
                     </div>
 
                     <div>
                       Viregt Gebot / Previous Bid:{' '}
-                      <strong style={{color:'#0f3d91'}}>
-                        {previousBid.toLocaleString('de-LU')} €
+                      <strong style={{
+                        color:'#0f3d91'
+                      }}>
+                        {previousBid !== null
+                          ? `${previousBid.toLocaleString('de-LU')} €`
+                          : '—'}
                       </strong>
                     </div>
 
                   </div>
+
                 </>
 
               )}
@@ -411,7 +507,8 @@ export default function StreamPage() {
               borderRadius:'26px',
               padding:'28px',
               textAlign:'center',
-              boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
+              boxShadow:
+                '0 10px 30px rgba(0,0,0,0.08)'
             }}>
 
               <div style={{
@@ -453,7 +550,8 @@ export default function StreamPage() {
               borderRadius:'26px',
               padding:'28px',
               textAlign:'center',
-              boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
+              boxShadow:
+                '0 10px 30px rgba(0,0,0,0.08)'
             }}>
 
               <p style={{
@@ -477,8 +575,11 @@ export default function StreamPage() {
             </div>
 
           </div>
+
         </div>
+
       </div>
+
     </main>
   )
 }
