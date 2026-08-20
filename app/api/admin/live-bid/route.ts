@@ -55,13 +55,20 @@ export async function POST(request: Request) {
       )
     }
 
-    const highestBid =
-      currentBids && currentBids.length > 0
-        ? Number(currentBids[0].amount)
-        : 0
+    const hasBids =
+  currentBids && currentBids.length > 0
 
-    const minBid = highestBid + 50
-    const maxBid = highestBid + 500
+const highestBid = hasBids
+  ? Number(currentBids[0].amount)
+  : null
+
+const minBid = highestBid === null
+  ? 2500
+  : highestBid + 50
+
+const maxBid = highestBid === null
+  ? 3000
+  : highestBid + 500
 
     if (numericAmount < minBid || numericAmount > maxBid) {
       return NextResponse.json(
