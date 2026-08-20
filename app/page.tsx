@@ -923,9 +923,9 @@ const footerLink = {
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState('')
 
-  useEffect(() => {
-    const auctionEnd = new Date('2026-09-13T19:26:00+02:00')
+  const targetDate = new Date('2026-09-13T19:26:00+02:00')
 
+  useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date()
       const difference = targetDate.getTime() - now.getTime()
