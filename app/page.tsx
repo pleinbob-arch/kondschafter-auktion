@@ -88,7 +88,7 @@ export default function Home() {
 
   async function loadHighestBid() {
     const { data } = await supabase
-      .from('bids')
+      .from('public_bids')
       .select('*')
       .order('amount', { ascending: false })
       .limit(2)
