@@ -15,6 +15,10 @@ const ADMIN_EMAILS = [
   'kondschafter@gmail.com'
 ]
 
+const START_BID = 2500
+const MIN_INCREASE = 50
+const MAX_INCREASE = 500
+
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null)
   const [emailInput, setEmailInput] = useState('')
@@ -32,51 +36,86 @@ export default function AdminPage() {
   const [liveBidMessage, setLiveBidMessage] = useState('')
   const [liveBidLoading, setLiveBidLoading] = useState(false)
 
-  const isAdmin = ADMIN_EMAILS.includes(session?.user?.email || '')
+  const isAdmin =
+    ADMIN_EMAILS.includes(session?.user?.email || '')
 
   const highestBid = bids[0] || null
   const totalBids = bids.length
 
+  const minBid = highestBid
+    ? Number(highestBid.amount) + MIN_INCREASE
+    : START_BID
+
+  const maxBid = highestBid
+    ? Number(highestBid.amount) + MAX_INCREASE
+    : START_BID + MAX_INCREASE
+
   const onlineBidders = bids
-    .filter(bid => bid.source !== 'live' && bid.email)
-    .map(bid => `online:${bid.email}`)
+    .filter(
+      bid =>
+        bid.source !== 'live' &&
+        bid.email
+    )
+    .map(
+      bid => `online:${bid.email}`
+    )
 
   const liveBidders = bids
-    .filter(bid => bid.source === 'live' && bid.bidder_number)
-    .map(bid => `live:${bid.bidder_number}`)
+    .filter(
+      bid =>
+        bid.source === 'live' &&
+        bid.bidder_number
+    )
+    .map(
+      bid => `live:${bid.bidder_number}`
+    )
 
   const uniqueBidders = new Set([
     ...onlineBidders,
     ...liveBidders
   ]).size
 
-  async function sendMagicLink(e: React.FormEvent) {
+  async function sendMagicLink(
+    e: React.FormEvent
+  ) {
     e.preventDefault()
     setMessage('')
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email: emailInput,
-      options: {
-        emailRedirectTo: 'https://kondschafter-auktion.vercel.app/admin'
-      }
-    })
+    const { error } =
+      await supabase.auth.signInWithOtp({
+        email: emailInput,
+        options: {
+          emailRedirectTo:
+            'https://kondschafter-auktion.vercel.app/admin'
+        }
+      })
 
     if (error) {
-      setMessage('Fehler: ' + error.message)
+      setMessage(
+        'Fehler: ' + error.message
+      )
       return
     }
 
-    setMessage('Magic Link geschéckt. Kuck w.e.g. deng E-Mail.')
+    setMessage(
+      'Magic Link geschéckt. Kuck w.e.g. deng E-Mail.'
+    )
   }
 
   async function loadBids() {
-    const { data, error } = await supabase
-      .from('bids')
-      .select('*')
-      .order('amount', { ascending: false })
+    const { data, error } =
+      await supabase
+        .from('bids')
+        .select('*')
+        .order(
+          'amount',
+          { ascending:false }
+        )
 
     if (error) {
-      setMessage('Fehler: ' + error.message)
+      setMessage(
+        'Fehler: ' + error.message
+      )
       return
     }
 
@@ -84,32 +123,48 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code')
+    const code =
+      new URLSearchParams(
+        window.location.search
+      ).get('code')
 
     if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
-        if (!error) {
-          setSession(data.session)
-          window.history.replaceState({}, document.title, '/admin')
-        }
+      supabase.auth
+        .exchangeCodeForSession(code)
+        .then(({ data, error }) => {
+          if (!error) {
+            setSession(data.session)
 
-        setLoading(false)
-      })
+            window.history.replaceState(
+              {},
+              document.title,
+              '/admin'
+            )
+          }
+
+          setLoading(false)
+        })
     } else {
-      supabase.auth.getSession().then(({ data }) => {
-        setSession(data.session)
-        setLoading(false)
-      })
+      supabase.auth
+        .getSession()
+        .then(({ data }) => {
+          setSession(data.session)
+          setLoading(false)
+        })
     }
 
-    const authListener = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session)
-      }
-    )
+    const authListener =
+      supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          setSession(session)
+        }
+      )
 
     return () => {
-      authListener.data.subscription.unsubscribe()
+      authListener
+        .data
+        .subscription
+        .unsubscribe()
     }
   }, [])
 
@@ -123,9 +178,9 @@ export default function AdminPage() {
       .on(
         'postgres_changes',
         {
-          event: '*',
-          schema: 'public',
-          table: 'bids'
+          event:'*',
+          schema:'public',
+          table:'bids'
         },
         () => {
           loadBids()
@@ -133,28 +188,48 @@ export default function AdminPage() {
       )
       .subscribe()
 
-    const viewerChannel = supabase.channel('auction-viewers')
+    const viewerChannel =
+      supabase.channel(
+        'auction-viewers'
+      )
 
     viewerChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = viewerChannel.presenceState()
-        const count = Object.values(state).flat().length
-        setViewerCount(count)
-      })
+      .on(
+        'presence',
+        { event:'sync' },
+        () => {
+          const state =
+            viewerChannel.presenceState()
+
+          const count =
+            Object.values(state)
+              .flat()
+              .length
+
+          setViewerCount(count)
+        }
+      )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
-      supabase.removeChannel(viewerChannel)
+      supabase.removeChannel(
+        viewerChannel
+      )
     }
   }, [isAdmin])
 
-  function createInvoiceEmail(bid:any, index:number) {
+  function createInvoiceEmail(
+    bid:any,
+    index:number
+  ) {
     const invoiceNumber =
       `KA-2026-${String(index + 1).padStart(3, '0')}`
 
     const amount =
-      Number(bid.amount).toLocaleString('de-LU')
+      Number(
+        bid.amount
+      ).toLocaleString('de-LU')
 
     const subject =
       `Rechnung ${invoiceNumber} - Kondschafter Auktioun 2026`
@@ -193,19 +268,26 @@ Kondschafter ASBL
       `mailto:${bid.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
   }
 
-  async function deleteBid(id:number) {
+  async function deleteBid(
+    id:number
+  ) {
     const confirmed =
-      confirm('Wëlls du dëst Gebot wierklech läschen?')
+      confirm(
+        'Wëlls du dëst Gebot wierklech läschen?'
+      )
 
     if (!confirmed) return
 
-    const { error } = await supabase
-      .from('bids')
-      .delete()
-      .eq('id', id)
+    const { error } =
+      await supabase
+        .from('bids')
+        .delete()
+        .eq('id', id)
 
     if (error) {
-      setMessage('Fehler: ' + error.message)
+      setMessage(
+        'Fehler: ' + error.message
+      )
       return
     }
 
@@ -213,39 +295,53 @@ Kondschafter ASBL
   }
 
   function exportExcel() {
-    const rows = bids.map((bid, index) => ({
-      Rang: index + 1,
-      Gebot: Number(bid.amount),
-      Quelle: bid.source || 'online',
-      Bieternummer: bid.bidder_number || '',
-      Name: bid.name,
-      Adresse: bid.address,
-      Email: bid.email,
-      Telefon: bid.phone || '',
-      IP: bid.ip_address || '',
-      Browser: bid.user_agent || '',
-      Datum: bid.created_at
-        ? new Date(bid.created_at).toLocaleString('de-LU')
-        : ''
-    }))
+    const rows =
+      bids.map(
+        (bid, index) => ({
+          Rang:index + 1,
+          Gebot:Number(bid.amount),
+          Quelle:
+            bid.source || 'online',
+          Bieternummer:
+            bid.bidder_number || '',
+          Name:bid.name,
+          Adresse:bid.address,
+          Email:bid.email,
+          Telefon:bid.phone || '',
+          IP:bid.ip_address || '',
+          Browser:
+            bid.user_agent || '',
+          Datum:bid.created_at
+            ? new Date(
+                bid.created_at
+              ).toLocaleString(
+                'de-LU'
+              )
+            : ''
+        })
+      )
 
-    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const worksheet =
+      XLSX.utils.json_to_sheet(
+        rows
+      )
 
     worksheet['!cols'] = [
-      { wch: 8 },
-      { wch: 12 },
-      { wch: 12 },
-      { wch: 14 },
-      { wch: 25 },
-      { wch: 35 },
-      { wch: 30 },
-      { wch: 18 },
-      { wch: 18 },
-      { wch: 60 },
-      { wch: 22 }
+      { wch:8 },
+      { wch:12 },
+      { wch:12 },
+      { wch:14 },
+      { wch:25 },
+      { wch:35 },
+      { wch:30 },
+      { wch:18 },
+      { wch:18 },
+      { wch:60 },
+      { wch:22 }
     ]
 
-    const workbook = XLSX.utils.book_new()
+    const workbook =
+      XLSX.utils.book_new()
 
     XLSX.utils.book_append_sheet(
       workbook,
@@ -259,32 +355,54 @@ Kondschafter ASBL
     )
   }
 
-  async function createInvoicePDF(bid:any, index:number) {
+  async function createInvoicePDF(
+    bid:any,
+    index:number
+  ) {
     const doc = new jsPDF()
 
     const invoiceNumber =
       `KA-2026-${String(index + 1).padStart(3, '0')}`
 
     const amount =
-      Number(bid.amount).toLocaleString('de-LU')
+      Number(
+        bid.amount
+      ).toLocaleString('de-LU')
 
     const today =
-      new Date().toLocaleDateString('de-LU')
+      new Date()
+        .toLocaleDateString('de-LU')
 
     try {
       const logoUrl =
         'https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png'
 
-      const response = await fetch(logoUrl)
-      const blob = await response.blob()
+      const response =
+        await fetch(logoUrl)
 
-      const reader = new FileReader()
+      const blob =
+        await response.blob()
+
+      const reader =
+        new FileReader()
 
       reader.onloadend = () => {
-        const logoBase64 = reader.result as string
+        const logoBase64 =
+          reader.result as string
 
-        doc.setFillColor(15, 61, 145)
-        doc.rect(0, 0, 210, 40, 'F')
+        doc.setFillColor(
+          15,
+          61,
+          145
+        )
+
+        doc.rect(
+          0,
+          0,
+          210,
+          40,
+          'F'
+        )
 
         doc.addImage(
           logoBase64,
@@ -295,14 +413,34 @@ Kondschafter ASBL
           24
         )
 
-        doc.setTextColor(255, 255, 255)
+        doc.setTextColor(
+          255,
+          255,
+          255
+        )
+
         doc.setFontSize(22)
-        doc.text('Kondschafter ASBL', 48, 18)
+
+        doc.text(
+          'Kondschafter ASBL',
+          48,
+          18
+        )
 
         doc.setFontSize(12)
-        doc.text('Rechnung / Invoice', 48, 29)
 
-        doc.setTextColor(0, 0, 0)
+        doc.text(
+          'Rechnung / Invoice',
+          48,
+          29
+        )
+
+        doc.setTextColor(
+          0,
+          0,
+          0
+        )
+
         doc.setFontSize(11)
 
         doc.text(
@@ -311,10 +449,29 @@ Kondschafter ASBL
           58
         )
 
-        doc.text('R.C.S.L. F10056', 20, 65)
-        doc.text('1A, Rue Kummert', 20, 72)
-        doc.text('6743 Grevenmacher', 20, 79)
-        doc.text('Luxembourg', 20, 86)
+        doc.text(
+          'R.C.S.L. F10056',
+          20,
+          65
+        )
+
+        doc.text(
+          '1A, Rue Kummert',
+          20,
+          72
+        )
+
+        doc.text(
+          '6743 Grevenmacher',
+          20,
+          79
+        )
+
+        doc.text(
+          'Luxembourg',
+          20,
+          86
+        )
 
         doc.text(
           'Rechnungsnummer / Invoice Number:',
@@ -322,28 +479,91 @@ Kondschafter ASBL
           58
         )
 
-        doc.text(invoiceNumber, 115, 65)
-        doc.text('Datum / Date:', 115, 77)
-        doc.text(today, 115, 84)
+        doc.text(
+          invoiceNumber,
+          115,
+          65
+        )
 
-        doc.setDrawColor(15, 61, 145)
-        doc.line(20, 98, 190, 98)
+        doc.text(
+          'Datum / Date:',
+          115,
+          77
+        )
 
-        doc.setTextColor(15, 61, 145)
+        doc.text(
+          today,
+          115,
+          84
+        )
+
+        doc.setDrawColor(
+          15,
+          61,
+          145
+        )
+
+        doc.line(
+          20,
+          98,
+          190,
+          98
+        )
+
+        doc.setTextColor(
+          15,
+          61,
+          145
+        )
+
         doc.setFontSize(13)
-        doc.text('Keefer / Buyer', 20, 113)
 
-        doc.setTextColor(0, 0, 0)
+        doc.text(
+          'Keefer / Buyer',
+          20,
+          113
+        )
+
+        doc.setTextColor(
+          0,
+          0,
+          0
+        )
+
         doc.setFontSize(11)
 
-        doc.text(bid.name || '', 20, 123)
-        doc.text(bid.address || '', 20, 131)
-        doc.text(bid.email || '', 20, 139)
+        doc.text(
+          bid.name || '',
+          20,
+          123
+        )
 
-        doc.line(20, 146, 190, 146)
+        doc.text(
+          bid.address || '',
+          20,
+          131
+        )
+
+        doc.text(
+          bid.email || '',
+          20,
+          139
+        )
+
+        doc.line(
+          20,
+          146,
+          190,
+          146
+        )
 
         doc.setFontSize(13)
-        doc.setTextColor(15, 61, 145)
+
+        doc.setTextColor(
+          15,
+          61,
+          145
+        )
 
         doc.text(
           'Beschreiwung / Description',
@@ -351,7 +571,12 @@ Kondschafter ASBL
           160
         )
 
-        doc.setTextColor(0, 0, 0)
+        doc.setTextColor(
+          0,
+          0,
+          0
+        )
+
         doc.setFontSize(11)
 
         doc.text(
@@ -366,9 +591,18 @@ Kondschafter ASBL
           178
         )
 
-        doc.line(20, 184, 190, 184)
+        doc.line(
+          20,
+          184,
+          190,
+          184
+        )
 
-        doc.setFillColor(238, 246, 255)
+        doc.setFillColor(
+          238,
+          246,
+          255
+        )
 
         doc.roundedRect(
           45,
@@ -380,14 +614,21 @@ Kondschafter ASBL
           'F'
         )
 
-        doc.setTextColor(15, 61, 145)
+        doc.setTextColor(
+          15,
+          61,
+          145
+        )
+
         doc.setFontSize(13)
 
         doc.text(
           'Total / Amount',
           105,
           204,
-          { align:'center' }
+          {
+            align:'center'
+          }
         )
 
         doc.setFontSize(24)
@@ -396,10 +637,17 @@ Kondschafter ASBL
           `${amount} EUR`,
           105,
           216,
-          { align:'center' }
+          {
+            align:'center'
+          }
         )
 
-        doc.setTextColor(15, 61, 145)
+        doc.setTextColor(
+          15,
+          61,
+          145
+        )
+
         doc.setFontSize(13)
 
         doc.text(
@@ -408,7 +656,12 @@ Kondschafter ASBL
           244
         )
 
-        doc.setTextColor(0, 0, 0)
+        doc.setTextColor(
+          0,
+          0,
+          0
+        )
+
         doc.setFontSize(11)
 
         doc.text(
@@ -435,17 +688,35 @@ Kondschafter ASBL
           278
         )
 
-        doc.setFillColor(15, 61, 145)
-        doc.rect(0, 283, 210, 14, 'F')
+        doc.setFillColor(
+          15,
+          61,
+          145
+        )
 
-        doc.setTextColor(255, 255, 255)
+        doc.rect(
+          0,
+          283,
+          210,
+          14,
+          'F'
+        )
+
+        doc.setTextColor(
+          255,
+          255,
+          255
+        )
+
         doc.setFontSize(7)
 
         doc.text(
           'Kondschafter - association sans but lucratif · R.C.S.L. F10056 · 1A, Rue Kummert · 6743 Grevenmacher · Luxembourg',
           105,
           291,
-          { align:'center' }
+          {
+            align:'center'
+          }
         )
 
         doc.save(
@@ -456,28 +727,35 @@ Kondschafter ASBL
       reader.readAsDataURL(blob)
 
     } catch {
-      alert('PDF konnte nicht erstellt werden.')
+      alert(
+        'PDF konnte nicht erstellt werden.'
+      )
     }
   }
 
   async function submitLiveBid() {
     setLiveBidMessage('')
 
-    if (!liveBidderNumber.trim()) {
+    if (
+      !liveBidderNumber.trim()
+    ) {
       setLiveBidMessage(
         'Bitte Bieternummer eingeben.'
       )
       return
     }
 
-    if (!liveBidAmount.trim()) {
+    if (
+      !liveBidAmount.trim()
+    ) {
       setLiveBidMessage(
         'Bitte Gebotsbetrag eingeben.'
       )
       return
     }
 
-    const amount = Number(liveBidAmount)
+    const amount =
+      Number(liveBidAmount)
 
     if (
       !Number.isFinite(amount) ||
@@ -489,9 +767,10 @@ Kondschafter ASBL
       return
     }
 
-    const confirmed = confirm(
-      `Live-Gebot wirklich eintragen?\n\nBieter #${liveBidderNumber}\nGebot: ${amount.toLocaleString('de-LU')} €`
-    )
+    const confirmed =
+      confirm(
+        `Live-Gebot wirklich eintragen?\n\nBieter #${liveBidderNumber}\nGebot: ${amount.toLocaleString('de-LU')} €`
+      )
 
     if (!confirmed) return
 
@@ -499,18 +778,24 @@ Kondschafter ASBL
 
     try {
       const response =
-        await fetch('/api/admin/live-bid', {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({
-            bidderNumber:liveBidderNumber.trim(),
-            amount
-          })
-        })
+        await fetch(
+          '/api/admin/live-bid',
+          {
+            method:'POST',
+            headers:{
+              'Content-Type':
+                'application/json'
+            },
+            body:JSON.stringify({
+              bidderNumber:
+                liveBidderNumber.trim(),
+              amount
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
         setLiveBidMessage(
@@ -548,17 +833,21 @@ Kondschafter ASBL
       return
     }
 
-    const confirmed = confirm(
-      'Wirklich ALLE Gebote löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
-    )
+    const confirmed =
+      confirm(
+        'Wirklich ALLE Gebote löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
+      )
 
     if (!confirmed) return
 
-    const confirmationText = prompt(
-      'Zur zusätzlichen Bestätigung bitte LÄSCHEN eingeben:'
-    )
+    const confirmationText =
+      prompt(
+        'Zur zusätzlichen Bestätigung bitte LÄSCHEN eingeben:'
+      )
 
-    if (confirmationText !== 'LÄSCHEN') {
+    if (
+      confirmationText !== 'LÄSCHEN'
+    ) {
       setDeleteMessage(
         'Löschen abgebrochen. Bestätigung "LÄSCHEN" wurde nicht korrekt eingegeben.'
       )
@@ -569,17 +858,22 @@ Kondschafter ASBL
 
     try {
       const response =
-        await fetch('/api/admin/delete-bids', {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({
-            code:deleteCode
-          })
-        })
+        await fetch(
+          '/api/admin/delete-bids',
+          {
+            method:'POST',
+            headers:{
+              'Content-Type':
+                'application/json'
+            },
+            body:JSON.stringify({
+              code:deleteCode
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
         setDeleteMessage(
@@ -610,10 +904,13 @@ Kondschafter ASBL
     return (
       <main style={pageCenterStyle}>
         <div style={loginBoxStyle}>
+
           <h1 style={titleStyle}>
             Adminbereich
           </h1>
+
           <p>Lueden...</p>
+
         </div>
       </main>
     )
@@ -622,26 +919,31 @@ Kondschafter ASBL
   if (!session) {
     return (
       <main style={pageCenterStyle}>
+
         <form
           onSubmit={sendMagicLink}
           style={loginBoxStyle}
         >
+
           <h1 style={titleStyle}>
             Admin Login
           </h1>
 
           <p>
             Login per Magic Link.
-            Nëmmen autoriséiert Admin-E-Mailen
-            kréien Zougang.
+            Nëmmen autoriséiert
+            Admin-E-Mailen kréien Zougang.
           </p>
 
           <input
             type="email"
             placeholder="Admin E-Mail"
             value={emailInput}
-            onChange={(e) =>
-              setEmailInput(e.target.value)
+            onChange={
+              e =>
+                setEmailInput(
+                  e.target.value
+                )
             }
             style={inputStyle}
             required
@@ -656,10 +958,14 @@ Kondschafter ASBL
 
           {message && (
             <p>
-              <strong>{message}</strong>
+              <strong>
+                {message}
+              </strong>
             </p>
           )}
+
         </form>
+
       </main>
     )
   }
@@ -667,7 +973,9 @@ Kondschafter ASBL
   if (!isAdmin) {
     return (
       <main style={pageCenterStyle}>
+
         <div style={loginBoxStyle}>
+
           <h1 style={titleStyle}>
             Kee Zougang
           </h1>
@@ -691,7 +999,9 @@ Kondschafter ASBL
           >
             Ausloggen
           </button>
+
         </div>
+
       </main>
     )
   }
@@ -720,6 +1030,7 @@ Kondschafter ASBL
         }}>
 
           <div>
+
             <h1 style={{
               margin:0,
               color:'#0f3d91'
@@ -727,12 +1038,15 @@ Kondschafter ASBL
               Kondschafter Adminbereich
             </h1>
 
-            <p style={{marginBottom:0}}>
+            <p style={{
+              marginBottom:0
+            }}>
               Ageloggt als:{' '}
               <strong>
                 {session.user.email}
               </strong>
             </p>
+
           </div>
 
           <div style={{
@@ -768,6 +1082,7 @@ Kondschafter ASBL
             </button>
 
           </div>
+
         </div>
 
         {/* DASHBOARD */}
@@ -780,11 +1095,15 @@ Kondschafter ASBL
         }}>
 
           <DashboardCard
-            title="Héichstgebot"
+            title={
+              highestBid
+                ? 'Héichstgebot'
+                : 'Startgebot'
+            }
             value={
               highestBid
                 ? `${Number(highestBid.amount).toLocaleString('de-LU')} €`
-                : '—'
+                : `${START_BID.toLocaleString('de-LU')} €`
             }
             detail={
               highestBid
@@ -833,7 +1152,8 @@ Kondschafter ASBL
             margin:'0 0 18px',
             color:'#555'
           }}>
-            Gebot vum Auktionator manuell erfaassen.
+            Gebot vum Auktionator
+            manuell erfaassen.
           </p>
 
           <div style={{
@@ -846,6 +1166,7 @@ Kondschafter ASBL
             <div style={{
               flex:'1 1 180px'
             }}>
+
               <label style={{
                 display:'block',
                 marginBottom:'6px',
@@ -859,26 +1180,30 @@ Kondschafter ASBL
                 inputMode="numeric"
                 placeholder="z. B. 17"
                 value={liveBidderNumber}
-                onChange={(e) =>
-                  setLiveBidderNumber(
-                    e.target.value
-                  )
+                onChange={
+                  e =>
+                    setLiveBidderNumber(
+                      e.target.value
+                    )
                 }
                 disabled={liveBidLoading}
                 style={{
                   width:'100%',
                   padding:'12px',
-                  border:'1px solid #9bbce8',
+                  border:
+                    '1px solid #9bbce8',
                   borderRadius:'10px',
                   boxSizing:'border-box',
                   fontSize:'16px'
                 }}
               />
+
             </div>
 
             <div style={{
               flex:'1 1 220px'
             }}>
+
               <label style={{
                 display:'block',
                 marginBottom:'6px',
@@ -893,21 +1218,24 @@ Kondschafter ASBL
                 step="50"
                 placeholder="z. B. 9500"
                 value={liveBidAmount}
-                onChange={(e) =>
-                  setLiveBidAmount(
-                    e.target.value
-                  )
+                onChange={
+                  e =>
+                    setLiveBidAmount(
+                      e.target.value
+                    )
                 }
                 disabled={liveBidLoading}
                 style={{
                   width:'100%',
                   padding:'12px',
-                  border:'1px solid #9bbce8',
+                  border:
+                    '1px solid #9bbce8',
                   borderRadius:'10px',
                   boxSizing:'border-box',
                   fontSize:'16px'
                 }}
               />
+
             </div>
 
             <button
@@ -944,32 +1272,48 @@ Kondschafter ASBL
             fontSize:'14px',
             color:'#555'
           }}>
-            Erlaabt Erhéijung:{' '}
-            <strong>
-              min. 50 € · max. 500 €
-            </strong>
+
+            {highestBid ? (
+              <>
+                Erlaabt Erhéijung:{' '}
+                <strong>
+                  min. 50 € · max. 500 €
+                </strong>
+              </>
+            ) : (
+              <>
+                Startgebot:{' '}
+                <strong>
+                  2.500 €
+                </strong>
+              </>
+            )}
+
           </p>
 
           <p style={{
-  margin:'8px 0 0',
-  fontSize:'14px',
-  color:'#315f9c'
-}}>
-  Aktuell erlaabt:{' '}
-  <strong>
-    {(highestBid
-      ? Number(highestBid.amount) + 50
-      : 2500
-    ).toLocaleString('de-LU')} €
-  </strong>
-  {' '}bis{' '}
-  <strong>
-    {(highestBid
-      ? Number(highestBid.amount) + 500
-      : 3000
-    ).toLocaleString('de-LU')} €
-  </strong>
-</p>
+            margin:'8px 0 0',
+            fontSize:'14px',
+            color:'#315f9c'
+          }}>
+
+            Aktuell erlaabt:{' '}
+
+            <strong>
+              {minBid.toLocaleString(
+                'de-LU'
+              )} €
+            </strong>
+
+            {' '}bis{' '}
+
+            <strong>
+              {maxBid.toLocaleString(
+                'de-LU'
+              )} €
+            </strong>
+
+          </p>
 
           {liveBidMessage && (
             <div style={{
@@ -998,7 +1342,9 @@ Kondschafter ASBL
 
         {message && (
           <p>
-            <strong>{message}</strong>
+            <strong>
+              {message}
+            </strong>
           </p>
         )}
 
@@ -1008,211 +1354,258 @@ Kondschafter ASBL
           gap:'16px'
         }}>
 
-          {bids.map((bid, index) => (
+          {bids.map(
+            (bid, index) => (
 
-            <div
-              key={bid.id}
-              style={{
-                background:
-                  index === 0
-                    ? '#fff7d6'
-                    : 'white',
-                border:
-                  index === 0
-                    ? '2px solid #e6b800'
-                    : '1px solid #cfe5ff',
-                borderRadius:'18px',
-                padding:'18px',
-                boxShadow:
-                  '0 6px 18px rgba(0,0,0,0.06)'
-              }}
-            >
+              <div
+                key={bid.id}
+                style={{
+                  background:
+                    index === 0
+                      ? '#fff7d6'
+                      : 'white',
+                  border:
+                    index === 0
+                      ? '2px solid #e6b800'
+                      : '1px solid #cfe5ff',
+                  borderRadius:'18px',
+                  padding:'18px',
+                  boxShadow:
+                    '0 6px 18px rgba(0,0,0,0.06)'
+                }}
+              >
 
-              <div style={{
-                display:'flex',
-                justifyContent:'space-between',
-                gap:'12px',
-                flexWrap:'wrap',
-                marginBottom:'12px'
-              }}>
+                <div style={{
+                  display:'flex',
+                  justifyContent:
+                    'space-between',
+                  gap:'12px',
+                  flexWrap:'wrap',
+                  marginBottom:'12px'
+                }}>
 
-                <div>
-                  <p style={{
-                    margin:'0 0 4px',
-                    color:'#0f3d91',
-                    fontWeight:'bold'
-                  }}>
-                    #{index + 1}
-                    {index === 0
-                      ? ' · Aktuell führend'
-                      : ''}
-                  </p>
+                  <div>
 
-                  <h2 style={{
-                    margin:0,
-                    fontSize:'28px',
-                    color:'#0f3d91'
-                  }}>
-                    {Number(bid.amount)
-                      .toLocaleString('de-LU')} €
-                  </h2>
-
-                  {bid.source === 'live' && (
                     <p style={{
-                      margin:'6px 0 0',
-                      color:'#b05a00',
-                      fontWeight:'bold',
-                      fontSize:'13px'
+                      margin:'0 0 4px',
+                      color:'#0f3d91',
+                      fontWeight:'bold'
                     }}>
-                      LIVE · Bieter #{bid.bidder_number}
+                      #{index + 1}
+                      {index === 0
+                        ? ' · Aktuell führend'
+                        : ''}
                     </p>
+
+                    <h2 style={{
+                      margin:0,
+                      fontSize:'28px',
+                      color:'#0f3d91'
+                    }}>
+                      {Number(
+                        bid.amount
+                      ).toLocaleString(
+                        'de-LU'
+                      )} €
+                    </h2>
+
+                    {bid.source ===
+                      'live' && (
+                      <p style={{
+                        margin:'6px 0 0',
+                        color:'#b05a00',
+                        fontWeight:'bold',
+                        fontSize:'13px'
+                      }}>
+                        LIVE · Bieter #
+                        {bid.bidder_number}
+                      </p>
+                    )}
+
+                  </div>
+
+                  {index < 3 &&
+                    bid.source !==
+                    'live' && (
+                    <>
+
+                      <button
+                        onClick={() =>
+                          createInvoiceEmail(
+                            bid,
+                            index
+                          )
+                        }
+                        style={{
+                          padding:
+                            '9px 13px',
+                          border:'none',
+                          borderRadius:
+                            '10px',
+                          background:
+                            '#0f3d91',
+                          color:'white',
+                          cursor:'pointer',
+                          height:
+                            'fit-content'
+                        }}
+                      >
+                        Email Rechnung
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          createInvoicePDF(
+                            bid,
+                            index
+                          )
+                        }
+                        style={{
+                          padding:
+                            '9px 13px',
+                          border:'none',
+                          borderRadius:
+                            '10px',
+                          background:
+                            '#1f7a1f',
+                          color:'white',
+                          cursor:'pointer',
+                          height:
+                            'fit-content'
+                        }}
+                      >
+                        PDF Rechnung
+                      </button>
+
+                    </>
                   )}
+
+                  <button
+                    onClick={() =>
+                      deleteBid(
+                        bid.id
+                      )
+                    }
+                    style={{
+                      padding:
+                        '9px 13px',
+                      border:'none',
+                      borderRadius:
+                        '10px',
+                      background:
+                        '#d62828',
+                      color:'white',
+                      cursor:'pointer',
+                      height:
+                        'fit-content'
+                    }}
+                  >
+                    Läschen
+                  </button>
 
                 </div>
 
-                {index < 3 &&
-                  bid.source !== 'live' && (
-                  <>
-                    <button
-                      onClick={() =>
-                        createInvoiceEmail(
-                          bid,
-                          index
-                        )
-                      }
-                      style={{
-                        padding:'9px 13px',
-                        border:'none',
-                        borderRadius:'10px',
-                        background:'#0f3d91',
-                        color:'white',
-                        cursor:'pointer',
-                        height:'fit-content'
-                      }}
-                    >
-                      Email Rechnung
-                    </button>
+                <div style={{
+                  display:'grid',
+                  gridTemplateColumns:
+                    'repeat(auto-fit, minmax(220px, 1fr))',
+                  gap:'12px',
+                  fontSize:'14px'
+                }}>
 
-                    <button
-                      onClick={() =>
-                        createInvoicePDF(
-                          bid,
-                          index
-                        )
-                      }
-                      style={{
-                        padding:'9px 13px',
-                        border:'none',
-                        borderRadius:'10px',
-                        background:'#1f7a1f',
-                        color:'white',
-                        cursor:'pointer',
-                        height:'fit-content'
-                      }}
-                    >
-                      PDF Rechnung
-                    </button>
-                  </>
-                )}
+                  <Info
+                    label="Typ"
+                    value={
+                      bid.source ===
+                      'live'
+                        ? `Live · Bieter #${bid.bidder_number || '—'}`
+                        : 'Online'
+                    }
+                  />
 
-                <button
-                  onClick={() =>
-                    deleteBid(bid.id)
-                  }
-                  style={{
-                    padding:'9px 13px',
-                    border:'none',
-                    borderRadius:'10px',
-                    background:'#d62828',
-                    color:'white',
+                  <Info
+                    label="Name"
+                    value={
+                      bid.name || '—'
+                    }
+                  />
+
+                  <Info
+                    label="Adress"
+                    value={
+                      bid.address || '—'
+                    }
+                  />
+
+                  <Info
+                    label="Email"
+                    value={
+                      bid.email || '—'
+                    }
+                  />
+
+                  <Info
+                    label="Telefon"
+                    value={
+                      bid.phone || '—'
+                    }
+                  />
+
+                  <Info
+                    label="IP"
+                    value={
+                      bid.ip_address ||
+                      '—'
+                    }
+                  />
+
+                  <Info
+                    label="Datum"
+                    value={
+                      bid.created_at
+                        ? new Date(
+                            bid.created_at
+                          ).toLocaleString(
+                            'de-LU'
+                          )
+                        : '—'
+                    }
+                  />
+
+                </div>
+
+                <details style={{
+                  marginTop:'12px'
+                }}>
+
+                  <summary style={{
                     cursor:'pointer',
-                    height:'fit-content'
-                  }}
-                >
-                  Läschen
-                </button>
+                    color:'#0f3d91',
+                    fontWeight:'bold'
+                  }}>
+                    Browser /
+                    User Agent
+                  </summary>
+
+                  <p style={{
+                    fontSize:'12px',
+                    overflowWrap:
+                      'anywhere',
+                    background:
+                      '#f7fbff',
+                    padding:'10px',
+                    borderRadius:
+                      '10px'
+                  }}>
+                    {bid.user_agent ||
+                      '—'}
+                  </p>
+
+                </details>
 
               </div>
-
-              <div style={{
-                display:'grid',
-                gridTemplateColumns:
-                  'repeat(auto-fit, minmax(220px, 1fr))',
-                gap:'12px',
-                fontSize:'14px'
-              }}>
-
-                <Info
-                  label="Typ"
-                  value={
-                    bid.source === 'live'
-                      ? `Live · Bieter #${bid.bidder_number || '—'}`
-                      : 'Online'
-                  }
-                />
-
-                <Info
-                  label="Name"
-                  value={bid.name || '—'}
-                />
-
-                <Info
-                  label="Adress"
-                  value={bid.address || '—'}
-                />
-
-                <Info
-                  label="Email"
-                  value={bid.email || '—'}
-                />
-
-                <Info
-                  label="Telefon"
-                  value={bid.phone || '—'}
-                />
-
-                <Info
-                  label="IP"
-                  value={bid.ip_address || '—'}
-                />
-
-                <Info
-                  label="Datum"
-                  value={
-                    bid.created_at
-                      ? new Date(
-                          bid.created_at
-                        ).toLocaleString('de-LU')
-                      : '—'
-                  }
-                />
-
-              </div>
-
-              <details style={{
-                marginTop:'12px'
-              }}>
-                <summary style={{
-                  cursor:'pointer',
-                  color:'#0f3d91',
-                  fontWeight:'bold'
-                }}>
-                  Browser / User Agent
-                </summary>
-
-                <p style={{
-                  fontSize:'12px',
-                  overflowWrap:'anywhere',
-                  background:'#f7fbff',
-                  padding:'10px',
-                  borderRadius:'10px'
-                }}>
-                  {bid.user_agent || '—'}
-                </p>
-              </details>
-
-            </div>
-          ))}
+            )
+          )}
 
         </div>
 
@@ -1236,8 +1629,9 @@ Kondschafter ASBL
             marginTop:0,
             color:'#555'
           }}>
-            Hei kënnen all Geboter gläichzäiteg
-            geläscht ginn. Dës Aktioun kann net
+            Hei kënnen all Geboter
+            gläichzäiteg geläscht ginn.
+            Dës Aktioun kann net
             réckgängeg gemaach ginn.
           </p>
 
@@ -1245,21 +1639,26 @@ Kondschafter ASBL
             type="password"
             placeholder="Sécherheetscode"
             value={deleteCode}
-            onChange={(e) =>
-              setDeleteCode(e.target.value)
+            onChange={
+              e =>
+                setDeleteCode(
+                  e.target.value
+                )
             }
             style={{
               width:'100%',
               maxWidth:'420px',
               padding:'12px',
               borderRadius:'10px',
-              border:'1px solid #d62828',
+              border:
+                '1px solid #d62828',
               marginBottom:'12px',
               boxSizing:'border-box'
             }}
           />
 
           <div>
+
             <button
               onClick={deleteAllBids}
               disabled={deleteLoading}
@@ -1283,6 +1682,7 @@ Kondschafter ASBL
                 ? 'Geboter ginn geläscht...'
                 : 'All Geboter läschen'}
             </button>
+
           </div>
 
           {deleteMessage && (
@@ -1303,6 +1703,7 @@ Kondschafter ASBL
         </div>
 
       </div>
+
     </main>
   )
 }
@@ -1319,12 +1720,14 @@ function DashboardCard({
   return (
     <div style={{
       background:'white',
-      border:'1px solid #cfe5ff',
+      border:
+        '1px solid #cfe5ff',
       borderRadius:'18px',
       padding:'20px',
       boxShadow:
         '0 6px 18px rgba(0,0,0,0.06)'
     }}>
+
       <p style={{
         margin:'0 0 8px',
         color:'#315f9c',
@@ -1349,6 +1752,7 @@ function DashboardCard({
       }}>
         {detail}
       </p>
+
     </div>
   )
 }
@@ -1362,6 +1766,7 @@ function Info({
 }) {
   return (
     <div>
+
       <p style={{
         margin:'0 0 3px',
         fontSize:'12px',
@@ -1377,6 +1782,7 @@ function Info({
       }}>
         {value}
       </p>
+
     </div>
   )
 }
@@ -1411,10 +1817,12 @@ const inputStyle = {
   width:'100%',
   padding:'14px',
   borderRadius:'12px',
-  border:'1px solid #b7d8ff',
+  border:
+    '1px solid #b7d8ff',
   marginBottom:'16px',
   fontSize:'16px',
-  boxSizing:'border-box' as const
+  boxSizing:
+    'border-box' as const
 }
 
 const buttonStyle = {
