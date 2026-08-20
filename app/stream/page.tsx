@@ -205,7 +205,8 @@ export default function StreamPage() {
               fontStyle:'italic',
               color:'#555'
             }}>
-              © Konschtwierk: André Scholtes
+              Konschtwierk: 160 cm x 120 cm
+              © Kënschtler: André Scholtes
             </p>
 
             {/* QR */}
@@ -308,6 +309,19 @@ export default function StreamPage() {
   </strong>
 </div>
 
+<div style={{
+  marginTop:'10px',
+  marginBottom:'10px',
+  padding:'9px 12px',
+  background:'#eef6ff',
+  borderRadius:'10px',
+  fontSize:'22px',
+  color:'#315f9c'
+}}>
+  Erhéijung pro Gebot / Bid increase:{' '}
+  <strong>min. 50 € · max. 500 €</strong>
+</div>
+
 <div>
   Viregt Gebot / Previous Bid:{' '}
   <strong style={{color:'#0f3d91'}}>
@@ -329,15 +343,24 @@ export default function StreamPage() {
               boxShadow:'0 10px 30px rgba(0,0,0,0.08)'
             }}>
 
-              <p style={{
-                margin:'0 0 12px',
-                fontSize:'30px',
-                fontWeight:'bold',
-                color:'#315f9c'
-              }}>
-                Auktioun Enn / Auction closing:
-                13 September 2026 · 19:26
-              </p>
+              <div style={{
+  margin:'0 0 16px',
+  fontSize:'30px',
+  fontWeight:'bold',
+  color:'#315f9c',
+  lineHeight:'1.25'
+}}>
+  <div>
+    Auktioun Enn / Auction closing:
+  </div>
+
+  <div style={{
+    marginTop:'6px',
+    color:'#0f3d91'
+  }}>
+    13 September 2026 · 19:26
+  </div>
+</div>
 
               <p style={{
                 margin:0,
