@@ -340,33 +340,6 @@ setAuctionClosed(false)
       </strong>
     </div>
 
-    <div>
-      Max. Gebot / Maximum Bid:{' '}
-      <strong style={{color:'#0f3d91'}}>
-        {(highestBid + 500).toLocaleString('de-LU')} €
-      </strong>
-    </div>
-
-    <div style={{
-      marginTop:'10px',
-      marginBottom:'10px',
-      padding:'9px 12px',
-      background:'#eef6ff',
-      borderRadius:'10px',
-      fontSize:'22px',
-      color:'#315f9c'
-    }}>
-      Erhéijung pro Gebot / Bid increase:{' '}
-      <strong>min. 50 € · max. 500 €</strong>
-    </div>
-
-    <div>
-      Viregt Gebot / Previous Bid:{' '}
-      <strong style={{color:'#0f3d91'}}>
-        {previousBid.toLocaleString('de-LU')} €
-      </strong>
-    </div>
-
   </div>
 )}
 
