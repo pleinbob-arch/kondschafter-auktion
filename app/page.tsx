@@ -15,7 +15,7 @@ const supabase = createClient(
   }
 )
 
-const AUCTION_END = new Date('2026-09-13T19:00:00+02:00')
+const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
 
 type BidderProfile = {
   id: string
@@ -179,8 +179,8 @@ export default function Home() {
   return
 }
 
-const minBid = highestBid + 5
-const maxBid = highestBid + 50
+const minBid = highestBid + 50
+const maxBid = highestBid + 500
 
 if (amount < minBid || amount > maxBid) {
   setMessage(
@@ -523,7 +523,7 @@ if (amount < minBid || amount > maxBid) {
               textAlign:'center'
             }}>
               <p style={{margin:'0 0 8px'}}>
-                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:00
+                <strong>Auktioun Enn:</strong> 13 September 2026 - 19:26
               </p>
               <Countdown />
             </div>
@@ -924,7 +924,7 @@ function Countdown() {
   const [timeLeft, setTimeLeft] = useState('')
 
   useEffect(() => {
-    const targetDate = new Date('2026-09-13T19:00:00')
+    const targetDate = new Date('2026-09-13T19:26:00')
 
     const interval = setInterval(() => {
       const now = new Date()
