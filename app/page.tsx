@@ -102,73 +102,63 @@ export default function Home() {
     }
   }
 
-  async function loadBidderProfile(userId: string) {
-    setProfileLoading(true)
-
-    const { data, error } = await supabase
-      .from('bidders')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle()
-
-    if (error) {
-      setMessage(
-        'Fehler beim Laden der Bieterdaten: ' + error.message
-      )
-      setBidderProfile(null)
-      setProfileLoading(false)
-      return
-    }
-
-    setBidderProfile(data || null)
-    setProfileLoading(false)
-  }
-
   async function saveBidderProfile(e: React.FormEvent) {
-    e.preventDefault()
-    setMessage('')
+  e.preventDefault()
+  setMessage('')
 
-    if (!session?.user?.id || !session?.user?.email) {
-      setMessage('Bitte zuerst per E-Mail bestätigen.')
-      return
-    }
+  const { data: sessionData, error: sessionError } =
+    await supabase.auth.getSession()
 
-    if (
-      !profileForm.firstName ||
-      !profileForm.lastName ||
-      !profileForm.street ||
-      !profileForm.city ||
-      !profileForm.phone
-    ) {
-      setMessage('Bitte alle Pflichtfelder ausfüllen.')
-      return
-    }
+  const currentSession = sessionData.session
 
-    const { data, error } = await supabase
-      .from('bidders')
-      .insert([{
-        user_id: session.user.id,
-        email: session.user.email,
-        first_name: profileForm.firstName,
-        last_name: profileForm.lastName,
-        street: profileForm.street,
-        city: profileForm.city,
-        phone: profileForm.phone,
-        language: profileForm.language
-      }])
-      .select('*')
-      .single()
-
-    if (error) {
-      setMessage('Fehler: ' + error.message)
-      return
-    }
-
-    setBidderProfile(data)
+  if (sessionError || !currentSession?.user?.id || !currentSession.user.email) {
     setMessage(
-      'Merci! Deng Donnéeë goufe gespäichert. Du kanns elo bidden.'
+      'Deng Sessioun ass net méi aktiv. Logg dech w.e.g. nach eng Kéier an. / Your session is no longer active. Please sign in again.'
     )
+    return
   }
+
+  if (
+    !profileForm.firstName ||
+    !profileForm.lastName ||
+    !profileForm.street ||
+    !profileForm.city ||
+    !profileForm.phone
+  ) {
+    setMessage('Bitte alle Pflichtfelder ausfüllen.')
+    return
+  }
+
+  const { data, error } = await supabase
+    .from('bidders')
+    .insert([{
+      user_id: currentSession.user.id,
+      email: currentSession.user.email,
+      first_name: profileForm.firstName,
+      last_name: profileForm.lastName,
+      street: profileForm.street,
+      city: profileForm.city,
+      phone: profileForm.phone,
+      language: profileForm.language
+    }])
+    .select('*')
+    .single()
+
+  if (error) {
+    console.error('Bidder profile insert failed:', error)
+
+    setMessage(
+      'Fehler beim Speichern der Bieterdaten: ' + error.message
+    )
+    return
+  }
+
+  setBidderProfile(data)
+
+  setMessage(
+    'Merci! Deng Donnéeë goufe gespäichert. Du kanns elo bidden.'
+  )
+}
 
   async function submitBid(e: React.FormEvent) {
     e.preventDefault()
