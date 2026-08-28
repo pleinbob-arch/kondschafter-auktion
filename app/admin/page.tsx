@@ -763,22 +763,38 @@ Kondschafter ASBL
     setLiveBidLoading(true)
 
     try {
-      const response =
-        await fetch(
-          '/api/admin/live-bid',
-          {
-            method:'POST',
-            headers:{
-              'Content-Type':
-                'application/json'
-            },
-            body:JSON.stringify({
-              bidderNumber:
-                liveBidderNumber.trim(),
-              amount
-            })
-          }
-        )
+      const {
+  data: sessionData
+} = await supabase.auth.getSession()
+
+const accessToken =
+  sessionData.session?.access_token
+
+if (!accessToken) {
+  setLiveBidMessage(
+    'Admin-Sessioun ass net méi aktiv. Logg dech w.e.g. nei an.'
+  )
+  return
+}
+
+const response =
+  await fetch(
+    '/api/admin/live-bid',
+    {
+      method:'POST',
+      headers:{
+        'Content-Type':
+          'application/json',
+        'Authorization':
+          `Bearer ${accessToken}`
+      },
+      body:JSON.stringify({
+        bidderNumber:
+          liveBidderNumber.trim(),
+        amount
+      })
+    }
+  )
 
       const result =
         await response.json()
