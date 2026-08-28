@@ -15,11 +15,6 @@ const supabase = createClient(
   }
 )
 
-const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
-const START_BID = 2500
-const MIN_INCREASE = 50
-const MAX_INCREASE = 500
-
 type BidderProfile = {
   id: string
   user_id: string
@@ -38,14 +33,23 @@ type PublicBid = {
   source: string
 }
 
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
+}
+
 type AuctionClientProps = {
   initialHighestBid: number | null
   initialLastBid: PublicBid | null
+  initialAuctionSettings?: AuctionSettings | null
 }
 
 export default function AuctionClient({
   initialHighestBid,
-  initialLastBid
+  initialLastBid,
+  initialAuctionSettings = null
 }: AuctionClientProps) {
   const [session, setSession] = useState<Session | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
@@ -57,6 +61,8 @@ export default function AuctionClient({
     useState<number | null>(initialHighestBid)
   const [lastBid, setLastBid] =
     useState<PublicBid | null>(initialLastBid)
+  const [auctionSettings, setAuctionSettings] =
+    useState<AuctionSettings | null>(initialAuctionSettings)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
@@ -72,15 +78,37 @@ export default function AuctionClient({
 
   const [bidAmount, setBidAmount] = useState('')
 
+  const startBid = auctionSettings
+    ? Number(auctionSettings.start_bid)
+    : null
+
+  const minIncrease = auctionSettings
+    ? Number(auctionSettings.min_increase)
+    : null
+
+  const maxIncrease = auctionSettings
+    ? Number(auctionSettings.max_increase)
+    : null
+
+  const auctionEnd = auctionSettings
+    ? new Date(auctionSettings.auction_end)
+    : null
+
   const minBid =
-    highestBid === null
-      ? START_BID
-      : highestBid + MIN_INCREASE
+    startBid === null ||
+    minIncrease === null
+      ? null
+      : highestBid === null
+        ? startBid
+        : highestBid + minIncrease
 
   const maxBid =
-    highestBid === null
-      ? START_BID + MAX_INCREASE
-      : highestBid + MAX_INCREASE
+    startBid === null ||
+    maxIncrease === null
+      ? null
+      : highestBid === null
+        ? startBid + maxIncrease
+        : highestBid + maxIncrease
 
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault()
@@ -110,6 +138,32 @@ export default function AuctionClient({
       'The confirmation link has been sent. ' +
       'Please check your email.'
     )
+  }
+
+  async function loadAuctionSettings() {
+    const { data, error } = await supabase.rpc(
+      'get_auction_settings'
+    )
+
+    if (error) {
+      console.error(
+        'Auction settings konnten nicht geladen werden:',
+        error
+      )
+      return
+    }
+
+    const settings =
+      (data?.[0] || null) as AuctionSettings | null
+
+    if (!settings) {
+      console.error(
+        'Auction settings fehlen.'
+      )
+      return
+    }
+
+    setAuctionSettings(settings)
   }
 
   async function loadHighestBid() {
@@ -268,7 +322,22 @@ export default function AuctionClient({
       return
     }
 
-    if (new Date() >= AUCTION_END) {
+    if (
+      !auctionSettings ||
+      minBid === null ||
+      maxBid === null ||
+      !auctionEnd
+    ) {
+      setMessage(
+        'D’Auktiounsdonnéeë konnten nach net geluede ginn. ' +
+        'Probéier w.e.g. nach eng Kéier. / ' +
+        'The auction settings have not loaded yet. ' +
+        'Please try again.'
+      )
+      return
+    }
+
+    if (new Date() >= auctionEnd) {
       setMessage(
         'D’Auktioun ass eriwwer. / The auction has ended.'
       )
@@ -351,9 +420,9 @@ export default function AuctionClient({
       if (errorText.includes('BID_TOO_HIGH')) {
         setMessage(
           'Däi Gebot ass ze héich. ' +
-          'Déi maximal Erhéijung pro Gebot ass 500 €. / ' +
+          `Déi maximal Erhéijung pro Gebot ass ${maxIncrease?.toLocaleString('de-LU')} €. / ` +
           'Your bid is too high. ' +
-          'The maximum increase per bid is €500.'
+          `The maximum increase per bid is €${maxIncrease?.toLocaleString('de-LU')}.`
         )
         await loadHighestBid()
         return
@@ -454,18 +523,8 @@ export default function AuctionClient({
       }
     )
 
+    loadAuctionSettings()
     loadHighestBid()
-
-    const checkAuctionClosed = () => {
-      setAuctionClosed(new Date() >= AUCTION_END)
-    }
-
-    checkAuctionClosed()
-
-    const closeInterval = setInterval(
-      checkAuctionClosed,
-      1000
-    )
 
     /*
      * Presence Channel fir Live-Zuschauer.
@@ -541,13 +600,33 @@ export default function AuctionClient({
       supabase.removeChannel(viewerChannel)
 
       clearInterval(bidRefreshInterval)
-      clearInterval(closeInterval)
     }
   }, [])
 
   useEffect(() => {
+    if (!auctionEnd) {
+      setAuctionClosed(false)
+      return
+    }
+
+    const checkAuctionClosed = () => {
+      setAuctionClosed(new Date() >= auctionEnd)
+    }
+
+    checkAuctionClosed()
+
+    const closeInterval = setInterval(
+      checkAuctionClosed,
+      1000
+    )
+
+    return () => clearInterval(closeInterval)
+  }, [auctionSettings])
+
+  useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
+        loadAuctionSettings()
         loadHighestBid()
       }
     }
@@ -740,9 +819,11 @@ export default function AuctionClient({
                   letterSpacing: '0.3px'
                 }}
               >
-                {highestBid === null
-                  ? 'Startgebot / Starting Bid'
-                  : 'Aktuellt Héichstgebot / Current Highest Bid'}
+                {!auctionSettings
+                  ? 'Auktiounsdonnéeë gi gelueden / Loading auction settings'
+                  : highestBid === null
+                    ? 'Startgebot / Starting Bid'
+                    : 'Aktuellt Héichstgebot / Current Highest Bid'}
               </p>
 
               <p
@@ -753,9 +834,11 @@ export default function AuctionClient({
                   color: '#0f3d91'
                 }}
               >
-                {highestBid !== null
-                  ? `${highestBid.toLocaleString('de-LU')} €`
-                  : `${START_BID.toLocaleString('de-LU')} €`}
+                {!auctionSettings
+                  ? '…'
+                  : highestBid !== null
+                    ? `${highestBid.toLocaleString('de-LU')} €`
+                    : `${startBid?.toLocaleString('de-LU')} €`}
               </p>
 
               <div
@@ -774,14 +857,18 @@ export default function AuctionClient({
                   Nächst méiglecht Gebot /
                   Next Possible Bid:{' '}
                   <strong style={{ color: '#0f3d91' }}>
-                    {minBid.toLocaleString('de-LU')} €
+                    {minBid !== null
+                      ? `${minBid.toLocaleString('de-LU')} €`
+                      : '…'}
                   </strong>
                 </div>
 
                 <div style={{ marginTop: '6px' }}>
                   Max. Gebot / Maximum Bid:{' '}
                   <strong style={{ color: '#0f3d91' }}>
-                    {maxBid.toLocaleString('de-LU')} €
+                    {maxBid !== null
+                      ? `${maxBid.toLocaleString('de-LU')} €`
+                      : '…'}
                   </strong>
                 </div>
 
@@ -798,14 +885,19 @@ export default function AuctionClient({
                   {highestBid === null ? (
                     <>
                       Startgebot / Starting Bid:{' '}
-                      <strong>2.500 €</strong>
+                      <strong>
+                        {startBid !== null
+                          ? `${startBid.toLocaleString('de-LU')} €`
+                          : '…'}
+                      </strong>
                     </>
                   ) : (
                     <>
                       Erhéijung pro Gebot /
                       Bid increase:{' '}
                       <strong>
-                        min. 50 € · max. 500 €
+                        min. {minIncrease?.toLocaleString('de-LU')} € ·
+                        {' '}max. {maxIncrease?.toLocaleString('de-LU')} €
                       </strong>
                     </>
                   )}
@@ -834,10 +926,19 @@ export default function AuctionClient({
             >
               <p style={{ margin: '0 0 8px' }}>
                 <strong>Auktiounsenn:</strong>{' '}
-                13. September 2026 – 19:26 Auer
+                {auctionEnd
+                  ? auctionEnd.toLocaleString('lb-LU', {
+                      timeZone: 'Europe/Luxembourg',
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  : '…'}
               </p>
 
-              <Countdown />
+              <Countdown auctionEnd={auctionEnd} />
             </div>
 
             <div
@@ -1130,9 +1231,9 @@ export default function AuctionClient({
                   Erlaabt Gebot / Allowed bid:
                   <br />
                   <strong>
-                    {minBid.toLocaleString('de-LU')} €
-                    {' – '}
-                    {maxBid.toLocaleString('de-LU')} €
+                    {minBid !== null && maxBid !== null
+                      ? `${minBid.toLocaleString('de-LU')} € – ${maxBid.toLocaleString('de-LU')} €`
+                      : '…'}
                   </strong>
                 </div>
 
@@ -1140,8 +1241,8 @@ export default function AuctionClient({
                   placeholder="Gebot an Euro / Bid amount in Euro *"
                   type="number"
                   step="1"
-                  min={minBid}
-                  max={maxBid}
+                  min={minBid ?? undefined}
+                  max={maxBid ?? undefined}
                   value={bidAmount}
                   onChange={e =>
                     setBidAmount(e.target.value)
@@ -1152,20 +1253,24 @@ export default function AuctionClient({
 
                 <button
                   className="auction-button"
-                  disabled={auctionClosed}
+                  disabled={auctionClosed || !auctionSettings}
                   style={{
                     ...buttonStyle,
-                    background: auctionClosed
-                      ? '#777'
-                      : '#0f3d91',
-                    cursor: auctionClosed
-                      ? 'not-allowed'
-                      : 'pointer'
+                    background:
+                      auctionClosed || !auctionSettings
+                        ? '#777'
+                        : '#0f3d91',
+                    cursor:
+                      auctionClosed || !auctionSettings
+                        ? 'not-allowed'
+                        : 'pointer'
                   }}
                 >
                   {auctionClosed
                     ? 'Auktioun eriwwer / Auction ended'
-                    : 'Gebot verbindlech ofginn / Submit binding bid *'}
+                    : !auctionSettings
+                      ? 'Auktiounsdonnéeë gi gelueden / Loading auction settings'
+                      : 'Gebot verbindlech ofginn / Submit binding bid *'}
                 </button>
 
                 <p
@@ -1383,19 +1488,24 @@ const footerLink = {
   textDecoration: 'underline'
 }
 
-function Countdown() {
+function Countdown({
+  auctionEnd
+}: {
+  auctionEnd: Date | null
+}) {
   const [timeLeft, setTimeLeft] = useState('')
 
   useEffect(() => {
-    const targetDate = new Date(
-      '2026-09-13T19:26:00+02:00'
-    )
+    if (!auctionEnd) {
+      setTimeLeft('…')
+      return
+    }
 
     const updateCountdown = () => {
       const now = new Date()
 
       const difference =
-        targetDate.getTime() - now.getTime()
+        auctionEnd.getTime() - now.getTime()
 
       if (difference <= 0) {
         setTimeLeft(
@@ -1438,7 +1548,7 @@ function Countdown() {
     )
 
     return () => clearInterval(interval)
-  }, [])
+  }, [auctionEnd])
 
   return (
     <p
