@@ -127,11 +127,15 @@ export default function AuctionClient({
     })
 
     if (error) {
+      console.error('Magic Link error:', error)
+
       setMessage(
-        'De Bestätegungslink konnt net geschéckt ginn. ' +
-        'Probéier w.e.g. nach eng Kéier. / ' +
-        'The confirmation link could not be sent. ' +
-        'Please try again.'
+        'Et gouf e Problem bei der Ufro. ' +
+        'Falls de Bestätegungslink ukomm ass, benotz w.e.g. deen. ' +
+        'Soss probéier et no e puer Sekonnen nach eng Kéier. / ' +
+        'There was a problem processing the request. ' +
+        'If you received the confirmation link, please use it. ' +
+        'Otherwise, try again after a few seconds.'
       )
       return
     }
