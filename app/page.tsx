@@ -7,27 +7,52 @@ type PublicBid = {
   source: string
 }
 
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    }
   )
 
-  const { data, error } = await supabase.rpc(
-    'get_public_bids'
-  )
+  const [
+    { data: bidData, error: bidError },
+    { data: settingsData, error: settingsError }
+  ] = await Promise.all([
+    supabase.rpc('get_public_bids'),
+    supabase.rpc('get_auction_settings')
+  ])
 
-  if (error) {
+  if (bidError) {
     console.error(
       'Initial public bids konnten nicht geladen werden:',
-      error
+      bidError
+    )
+  }
+
+  if (settingsError) {
+    console.error(
+      'Initial auction settings konnten nicht geladen werden:',
+      settingsError
     )
   }
 
   const topBids =
-    ((data || []) as PublicBid[]).slice(0, 2)
+    ((bidData || []) as PublicBid[]).slice(0, 2)
 
   const initialHighestBid =
     topBids.length > 0
@@ -39,10 +64,16 @@ export default async function Page() {
       ? topBids[1]
       : null
 
+  const initialAuctionSettings =
+    ((settingsData || [])[0] || null) as
+      | AuctionSettings
+      | null
+
   return (
     <AuctionClient
       initialHighestBid={initialHighestBid}
       initialLastBid={initialLastBid}
+      initialAuctionSettings={initialAuctionSettings}
     />
   )
 }
