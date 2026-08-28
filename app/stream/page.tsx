@@ -8,17 +8,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const AUCTION_END =
-  new Date('2026-09-13T19:26:00+02:00')
-
-const START_BID = 2500
-const MIN_INCREASE = 50
-const MAX_INCREASE = 500
-
 type PublicBid = {
   amount: number | string
   created_at: string
   source: string
+}
+
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
 }
 
 export default function StreamPage() {
@@ -40,15 +40,56 @@ export default function StreamPage() {
   const [auctionClosed, setAuctionClosed] =
     useState(false)
 
+  const [auctionSettings, setAuctionSettings] =
+    useState<AuctionSettings | null>(null)
+
+  const startBid = auctionSettings
+    ? Number(auctionSettings.start_bid)
+    : null
+
+  const minIncrease = auctionSettings
+    ? Number(auctionSettings.min_increase)
+    : null
+
+  const maxIncrease = auctionSettings
+    ? Number(auctionSettings.max_increase)
+    : null
+
+  const auctionEnd = auctionSettings
+    ? new Date(auctionSettings.auction_end)
+    : null
+
   const minBid =
-    highestBid === null
-      ? START_BID
-      : highestBid + MIN_INCREASE
+    startBid === null || minIncrease === null
+      ? null
+      : highestBid === null
+        ? startBid
+        : highestBid + minIncrease
 
   const maxBid =
-    highestBid === null
-      ? START_BID + MAX_INCREASE
-      : highestBid + MAX_INCREASE
+    startBid === null || maxIncrease === null
+      ? null
+      : highestBid === null
+        ? startBid + maxIncrease
+        : highestBid + maxIncrease
+
+  async function loadAuctionSettings() {
+    const { data, error } =
+      await supabase.rpc('get_auction_settings')
+
+    if (error) {
+      console.error(
+        'Auction settings konnten nicht geladen werden:',
+        error
+      )
+      return
+    }
+
+    const settings =
+      (data?.[0] || null) as AuctionSettings | null
+
+    setAuctionSettings(settings)
+  }
 
   async function loadHighestBid() {
     const { data, error } =
@@ -89,6 +130,7 @@ export default function StreamPage() {
   }
 
   useEffect(() => {
+    loadAuctionSettings()
     loadHighestBid()
 
     const bidRefreshInterval =
@@ -152,66 +194,43 @@ export default function StreamPage() {
   }, [])
 
   useEffect(() => {
+    if (!auctionEnd) {
+      setTimeLeft('…')
+      setAuctionClosed(false)
+      return
+    }
+
     const updateCountdown = () => {
-      const now =
-        new Date().getTime()
+      const now = new Date().getTime()
 
       const distance =
-        AUCTION_END.getTime() -
-        now
+        auctionEnd.getTime() - now
 
       if (distance <= 0) {
         setTimeLeft(
           'Auktioun eriwwer / Auction ended'
         )
-
         setAuctionClosed(true)
         return
       }
 
       setAuctionClosed(false)
 
-      const days =
-        Math.floor(
-          distance /
-          (
-            1000 *
-            60 *
-            60 *
-            24
-          )
-        )
+      const days = Math.floor(
+        distance / (1000 * 60 * 60 * 24)
+      )
 
-      const hours =
-        Math.floor(
-          (
-            distance /
-            (
-              1000 *
-              60 *
-              60
-            )
-          ) % 24
-        )
+      const hours = Math.floor(
+        (distance / (1000 * 60 * 60)) % 24
+      )
 
-      const minutes =
-        Math.floor(
-          (
-            distance /
-            (
-              1000 *
-              60
-            )
-          ) % 60
-        )
+      const minutes = Math.floor(
+        (distance / (1000 * 60)) % 60
+      )
 
-      const seconds =
-        Math.floor(
-          (
-            distance /
-            1000
-          ) % 60
-        )
+      const seconds = Math.floor(
+        (distance / 1000) % 60
+      )
 
       setTimeLeft(
         `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
@@ -220,15 +239,13 @@ export default function StreamPage() {
 
     updateCountdown()
 
-    const timer =
-      setInterval(
-        updateCountdown,
-        1000
-      )
+    const timer = setInterval(
+      updateCountdown,
+      1000
+    )
 
-    return () =>
-      clearInterval(timer)
-  }, [])
+    return () => clearInterval(timer)
+  }, [auctionSettings])
 
   return (
     <main
@@ -428,7 +445,7 @@ export default function StreamPage() {
                   '0 10px 30px rgba(0,0,0,0.1)'
               }}
             >
-              {isLoading ? (
+              {isLoading || !auctionSettings ? (
                 <>
                   <p
                     style={{
@@ -544,7 +561,9 @@ export default function StreamPage() {
                       >
                         {highestBid !== null
                           ? `${highestBid.toLocaleString('de-LU')} €`
-                          : `${START_BID.toLocaleString('de-LU')} €`}
+                          : startBid !== null
+                            ? `${startBid.toLocaleString('de-LU')} €`
+                            : '—'}
                       </p>
 
                       <div
@@ -567,7 +586,9 @@ export default function StreamPage() {
                               color: '#0f3d91'
                             }}
                           >
-                            {minBid.toLocaleString('de-LU')} €
+                            {minBid !== null
+                              ? `${minBid.toLocaleString('de-LU')} €`
+                              : '—'}
                           </strong>
                         </div>
 
@@ -579,7 +600,9 @@ export default function StreamPage() {
                               color: '#0f3d91'
                             }}
                           >
-                            {maxBid.toLocaleString('de-LU')} €
+                            {maxBid !== null
+                              ? `${maxBid.toLocaleString('de-LU')} €`
+                              : '—'}
                           </strong>
                         </div>
 
@@ -599,7 +622,9 @@ export default function StreamPage() {
                               Startgebot /
                               Starting Bid:{' '}
                               <strong>
-                                2.500 €
+                                {startBid !== null
+                                  ? `${startBid.toLocaleString('de-LU')} €`
+                                  : '—'}
                               </strong>
                             </>
                           ) : (
@@ -608,8 +633,8 @@ export default function StreamPage() {
                               Gebot /
                               Bid increase:{' '}
                               <strong>
-                                min. 50 € ·
-                                max. 500 €
+                                min. {minIncrease?.toLocaleString('de-LU')} € ·
+                                {' '}max. {maxIncrease?.toLocaleString('de-LU')} €
                               </strong>
                             </>
                           )}
@@ -668,8 +693,19 @@ export default function StreamPage() {
                     color: '#0f3d91'
                   }}
                 >
-                  13 September 2026 ·
-                  19:26
+                  {auctionEnd
+                    ? auctionEnd.toLocaleString(
+                        'lb-LU',
+                        {
+                          timeZone: 'Europe/Luxembourg',
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }
+                      )
+                    : '…'}
                 </div>
               </div>
 
