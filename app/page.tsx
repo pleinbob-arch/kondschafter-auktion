@@ -218,24 +218,12 @@ export default function Home() {
       return
     }
 
-    let ipAddress = ''
-
-    try {
-      const ipData = await fetch(
-        'https://api.ipify.org?format=json'
-      )
-
-      const ipJson = await ipData.json()
-      ipAddress = ipJson.ip || ''
-    } catch {
-      ipAddress = 'unknown'
-    }
 
     const { error } = await supabase.rpc('place_bid', {
-      p_amount: amount,
-      p_ip_address: ipAddress || 'unknown',
-      p_user_agent: navigator.userAgent
-    })
+  p_amount: amount,
+  p_ip_address: '',
+  p_user_agent: navigator.userAgent
+})
 
     if (error) {
       setMessage('Fehler: ' + error.message)
