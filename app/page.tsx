@@ -343,16 +343,58 @@ export default function Home() {
         }
       })
 
-    const bidRefreshInterval = setInterval(() => {
-      loadHighestBid()
-    }, 2000)
+    /*
+ * Neue Gebote sofort über
+ * Supabase Realtime Broadcast empfangen.
+ */
+const bidChannel =
+  supabase.channel(
+    'auction-bids'
+  )
 
-    return () => {
-      authListener.data.subscription.unsubscribe()
-      supabase.removeChannel(viewerChannel)
-      clearInterval(bidRefreshInterval)
-      clearInterval(closeInterval)
+bidChannel
+  .on(
+    'broadcast',
+    {
+      event:'new_bid'
+    },
+    () => {
+      loadHighestBid()
     }
+  )
+  .subscribe()
+
+/*
+ * 2-Sekunden-Polling bleibt
+ * als Sicherheitsnetz bestehen.
+ */
+const bidRefreshInterval =
+  setInterval(() => {
+    loadHighestBid()
+  }, 2000)
+
+return () => {
+  authListener
+    .data
+    .subscription
+    .unsubscribe()
+
+  supabase.removeChannel(
+    bidChannel
+  )
+
+  supabase.removeChannel(
+    viewerChannel
+  )
+
+  clearInterval(
+    bidRefreshInterval
+  )
+
+  clearInterval(
+    closeInterval
+  )
+}
   }, [])
 
   useEffect(() => {
