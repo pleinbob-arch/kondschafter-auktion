@@ -734,24 +734,42 @@ export default function AuctionClient({
           <div
             style={{
               width: '100%',
-              maxWidth: '580px',
+              maxWidth: '600px',
               maxHeight: '90vh',
               overflowY: 'auto',
               background: '#fff',
-              borderRadius: '22px',
-              padding: '28px',
+              borderRadius: '26px',
+              padding: '30px',
+              textAlign: 'center',
+              border: '2px solid #d9eaff',
               boxShadow:
-                '0 20px 60px rgba(0,0,0,0.35)'
+                '0 24px 70px rgba(0,0,0,0.38)'
             }}
           >
+            <div
+              style={{
+                display: 'inline-block',
+                padding: '7px 14px',
+                marginBottom: '14px',
+                borderRadius: '999px',
+                background: '#0f3d91',
+                color: 'white',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                letterSpacing: '1px',
+                textTransform: 'uppercase'
+              }}
+            >
+              Live-Auktioun · Final 15 Minutten
+            </div>
+
             <h2
               id="auction-info-title"
               style={{
-                margin: '0 0 20px',
+                margin: '0 0 22px',
                 color: '#0f3d91',
-                fontSize: '26px',
-                lineHeight: '1.2',
-                textAlign: 'center'
+                fontSize: 'clamp(27px, 6vw, 34px)',
+                lineHeight: '1.15'
               }}
             >
               Wichteg Informatioun
@@ -761,12 +779,15 @@ export default function AuctionClient({
 
             <div
               style={{
-                padding: '16px',
-                background: '#eef6ff',
-                borderRadius: '14px',
+                padding: '20px',
+                background:
+                  'linear-gradient(135deg, #eef6ff, #f8fbff)',
+                border: '1px solid #cfe5ff',
+                borderRadius: '18px',
                 marginBottom: '18px',
-                lineHeight: '1.65',
-                color: '#1d3557'
+                lineHeight: '1.7',
+                color: '#1d3557',
+                fontSize: '16px'
               }}
             >
               <strong>
@@ -776,16 +797,37 @@ export default function AuctionClient({
                 duerchgefouert.
               </strong>
               <br />
-              Wien un der Live-Auktioun deelhuele
-              wëll, kann sech um Stand vun de
-              Kondschafter aschreiwen.
+              <br />
+              Fir un der Live-Auktioun deelzehuelen,
+              muss ee sech um Stand vun de
+              Kondschafter aschreiwen. Bei der
+              Aschreiwung kritt all Participant eng
+              <strong> Bieternummer</strong>.
             </div>
 
             <div
               style={{
-                lineHeight: '1.65',
+                padding: '14px 18px',
+                marginBottom: '20px',
+                borderRadius: '16px',
+                background: '#fff4d8',
+                border: '1px solid #f0d58a',
+                color: '#6b4d00',
+                fontSize: '16px',
+                lineHeight: '1.55',
+                fontWeight: 'bold'
+              }}
+            >
+              Ouni Bieternummer ass e Matbidden an
+              der Live-Auktioun net méiglech.
+            </div>
+
+            <div
+              style={{
+                lineHeight: '1.7',
                 color: '#555',
-                marginBottom: '24px'
+                marginBottom: '24px',
+                fontSize: '16px'
               }}
             >
               <strong>
@@ -794,9 +836,17 @@ export default function AuctionClient({
                 at the Kondschafter stand.
               </strong>
               <br />
-              Anyone wishing to participate in the
-              live auction can register at the
-              Kondschafter stand.
+              <br />
+              To participate in the live auction,
+              registration at the Kondschafter stand
+              is required. Each participant will
+              receive a <strong>bidder number</strong>{' '}
+              upon registration.
+              <br />
+              <strong>
+                Participation in the live auction is
+                not possible without a bidder number.
+              </strong>
             </div>
 
             <button
@@ -805,7 +855,9 @@ export default function AuctionClient({
               onClick={closeAuctionInfo}
               style={{
                 ...buttonStyle,
-                width: '100%'
+                width: '100%',
+                fontSize: '17px',
+                padding: '16px'
               }}
             >
               Verstanen / Understood
@@ -814,8 +866,8 @@ export default function AuctionClient({
             <p
               style={{
                 margin: '14px 0 0',
-                textAlign: 'center',
                 fontSize: '12px',
+                lineHeight: '1.45',
                 color: '#777'
               }}
             >
