@@ -69,6 +69,7 @@ export default function AuctionClient({
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
+  const [showAuctionInfo, setShowAuctionInfo] = useState(false)
 
   const [profileForm, setProfileForm] = useState({
     firstName: '',
@@ -648,6 +649,33 @@ export default function AuctionClient({
     }
   }, [])
 
+  useEffect(() => {
+    try {
+      const alreadySeen =
+        sessionStorage.getItem('auction-info-seen')
+
+      if (!alreadySeen) {
+        setShowAuctionInfo(true)
+      }
+    } catch {
+      setShowAuctionInfo(true)
+    }
+  }, [])
+
+  function closeAuctionInfo() {
+    try {
+      sessionStorage.setItem(
+        'auction-info-seen',
+        'true'
+      )
+    } catch {
+      // Falls sessionStorage net verfügbar ass,
+      // gëtt de Popup einfach fir dës Vue zougemaach.
+    }
+
+    setShowAuctionInfo(false)
+  }
+
   return (
     <main
       style={{
@@ -686,6 +714,120 @@ export default function AuctionClient({
           cursor: not-allowed;
         }
       `}</style>
+
+      {showAuctionInfo && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="auction-info-title"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            background: 'rgba(0,0,0,0.58)'
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '580px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              background: '#fff',
+              borderRadius: '22px',
+              padding: '28px',
+              boxShadow:
+                '0 20px 60px rgba(0,0,0,0.35)'
+            }}
+          >
+            <h2
+              id="auction-info-title"
+              style={{
+                margin: '0 0 20px',
+                color: '#0f3d91',
+                fontSize: '26px',
+                lineHeight: '1.2',
+                textAlign: 'center'
+              }}
+            >
+              Wichteg Informatioun
+              <br />
+              Important Information
+            </h2>
+
+            <div
+              style={{
+                padding: '16px',
+                background: '#eef6ff',
+                borderRadius: '14px',
+                marginBottom: '18px',
+                lineHeight: '1.65',
+                color: '#1d3557'
+              }}
+            >
+              <strong>
+                Déi lescht 15 Minutte vun der
+                Auktioun ginn als Live-Auktioun um
+                Stand vun de Kondschafter
+                duerchgefouert.
+              </strong>
+              <br />
+              Wien un der Live-Auktioun deelhuele
+              wëll, kann sech um Stand vun de
+              Kondschafter aschreiwen.
+            </div>
+
+            <div
+              style={{
+                lineHeight: '1.65',
+                color: '#555',
+                marginBottom: '24px'
+              }}
+            >
+              <strong>
+                The final 15 minutes of the auction
+                will be conducted as a live auction
+                at the Kondschafter stand.
+              </strong>
+              <br />
+              Anyone wishing to participate in the
+              live auction can register at the
+              Kondschafter stand.
+            </div>
+
+            <button
+              type="button"
+              className="auction-button"
+              onClick={closeAuctionInfo}
+              style={{
+                ...buttonStyle,
+                width: '100%'
+              }}
+            >
+              Verstanen / Understood
+            </button>
+
+            <p
+              style={{
+                margin: '14px 0 0',
+                textAlign: 'center',
+                fontSize: '12px',
+                color: '#777'
+              }}
+            >
+              Dës Informatioun gëtt pro
+              Browser-Sessioun nëmmen eemol gewisen.
+              <br />
+              This information is shown only once
+              per browser session.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div
         style={{
