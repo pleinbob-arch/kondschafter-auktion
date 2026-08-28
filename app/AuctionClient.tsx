@@ -360,7 +360,7 @@ export default function AuctionClient({
           'de-LU'
         )} € an ${maxBid.toLocaleString(
           'de-LU'
-        )} € leien.|` +
+        )} € leien./ ` +
         `Your bid must be between ${minBid.toLocaleString(
           'de-LU'
         )} € and ${maxBid.toLocaleString(
