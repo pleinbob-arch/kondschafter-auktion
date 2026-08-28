@@ -828,6 +828,8 @@ export default function AuctionClient({
                 <strong>Aschreiwen um Stand → Bieternummer kréien.</strong>
                 <br />
                 Ouni Bieternummer <strong>kee Matbidden.</strong>
+                <br />
+                <strong>Online bidde bleift bis zum Schluss méiglech.</strong>
               </p>
             </div>
 
@@ -852,6 +854,8 @@ export default function AuctionClient({
                 <strong>Register at the stand → receive a bidder number.</strong>
                 <br />
                 No bidder number = <strong>no live bidding.</strong>
+                <br />
+                <strong>Online bidding remains open until the end.</strong>
               </p>
             </div>
 
