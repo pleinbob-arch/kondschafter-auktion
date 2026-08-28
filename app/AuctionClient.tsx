@@ -65,7 +65,7 @@ export default function AuctionClient({
     useState<PublicBid | null>(initialLastBid)
   const [auctionSettings, setAuctionSettings] =
     useState<AuctionSettings | null>(initialAuctionSettings)
-  const [bidsLoaded, setBidsLoaded] = useState(false)
+  const [bidsLoaded, setBidsLoaded] = useState(initialBidsLoaded)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
