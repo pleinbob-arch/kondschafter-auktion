@@ -713,6 +713,67 @@ export default function AuctionClient({
           box-shadow: none;
           cursor: not-allowed;
         }
+
+        @media (max-width: 600px) {
+          .auction-info-overlay {
+            align-items: flex-start !important;
+            padding: 10px !important;
+            overflow-y: auto;
+          }
+
+          .auction-info-bubble {
+            max-width: 430px !important;
+            margin: 10px auto 28px !important;
+            padding: 18px 14px 16px !important;
+            border-width: 3px !important;
+            border-radius: 24px !important;
+          }
+
+          .auction-info-title {
+            font-size: clamp(28px, 10vw, 38px) !important;
+            line-height: 0.98 !important;
+            margin-top: 12px !important;
+          }
+
+          .auction-info-subtitle {
+            font-size: 13px !important;
+            margin-bottom: 12px !important;
+          }
+
+          .auction-info-lang {
+            padding: 12px 12px !important;
+            border-radius: 15px !important;
+            font-size: 14px !important;
+            line-height: 1.35 !important;
+          }
+
+          .auction-info-lang p {
+            margin-top: 6px !important;
+          }
+
+          .auction-info-bubble button {
+            padding: 12px !important;
+            font-size: 16px !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .auction-info-overlay {
+            padding: 6px !important;
+          }
+
+          .auction-info-bubble {
+            padding: 14px 10px !important;
+          }
+
+          .auction-info-title {
+            font-size: 28px !important;
+          }
+
+          .auction-info-lang {
+            font-size: 13px !important;
+          }
+        }
       `}</style>
 
       {showAuctionInfo && (
@@ -720,6 +781,7 @@ export default function AuctionClient({
           role="dialog"
           aria-modal="true"
           aria-labelledby="auction-info-title"
+          className="auction-info-overlay"
           style={{
             position: 'fixed',
             inset: 0,
@@ -732,6 +794,7 @@ export default function AuctionClient({
           }}
         >
           <div
+            className="auction-info-bubble"
             style={{
               position: 'relative',
               width: '100%',
@@ -785,6 +848,7 @@ export default function AuctionClient({
 
             <h2
               id="auction-info-title"
+              className="auction-info-title"
               style={{
                 margin: '14px 0 4px',
                 color: '#0f3d91',
@@ -797,6 +861,7 @@ export default function AuctionClient({
             </h2>
 
             <p
+              className="auction-info-subtitle"
               style={{
                 margin: '0 0 16px',
                 color: '#315f9c',
@@ -808,6 +873,7 @@ export default function AuctionClient({
             </p>
 
             <div
+              className="auction-info-lang"
               style={{
                 padding: '15px 18px',
                 background: '#eaf3ff',
@@ -834,6 +900,7 @@ export default function AuctionClient({
             </div>
 
             <div
+              className="auction-info-lang"
               style={{
                 padding: '15px 18px',
                 background: '#fff3df',
