@@ -859,20 +859,35 @@ const response =
     setDeleteLoading(true)
 
     try {
-      const response =
-        await fetch(
-          '/api/admin/delete-bids',
-          {
-            method:'POST',
-            headers:{
-              'Content-Type':
-                'application/json'
-            },
-            body:JSON.stringify({
-              code:deleteCode
-            })
-          }
-        )
+      const {
+  data: sessionData
+} = await supabase.auth.getSession()
+
+const accessToken =
+  sessionData.session?.access_token
+
+if (!accessToken) {
+  alert(
+    'Admin-Sessioun ass net méi aktiv. Logg dech w.e.g. nei an.'
+  )
+  return
+}
+
+const response = await fetch(
+  '/api/admin/delete-bids',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type':
+        'application/json',
+      'Authorization':
+        `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({
+      code: deleteCode
+    })
+  }
+)
 
       const result =
         await response.json()
