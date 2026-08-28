@@ -97,7 +97,6 @@ export default async function PrivacyPage() {
     : '—'
 
   return (
-  return (
     <main
       style={{
         minHeight: '100vh',
