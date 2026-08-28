@@ -8,18 +8,28 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
+const AUCTION_END =
+  new Date('2026-09-13T19:26:00+02:00')
 
 const START_BID = 2500
 const MIN_INCREASE = 50
 const MAX_INCREASE = 500
 
 export default function StreamPage() {
-  const [highestBid, setHighestBid] = useState<number | null>(null)
-  const [previousBid, setPreviousBid] = useState<number | null>(null)
-  const [viewerCount, setViewerCount] = useState(1)
-  const [timeLeft, setTimeLeft] = useState('')
-  const [auctionClosed, setAuctionClosed] = useState(false)
+  const [highestBid, setHighestBid] =
+    useState<number | null>(null)
+
+  const [previousBid, setPreviousBid] =
+    useState<number | null>(null)
+
+  const [viewerCount, setViewerCount] =
+    useState(1)
+
+  const [timeLeft, setTimeLeft] =
+    useState('')
+
+  const [auctionClosed, setAuctionClosed] =
+    useState(false)
 
   const minBid =
     highestBid === null
@@ -32,67 +42,134 @@ export default function StreamPage() {
       : highestBid + MAX_INCREASE
 
   async function loadHighestBid() {
-  const { data, error } = await supabase
-    .rpc('get_public_bids')
+    const { data, error } =
+      await supabase
+        .rpc('get_public_bids')
 
-  if (error) {
-    console.error(
-      'Public bids konnten nicht geladen werden:',
-      error
-    )
-    return
-  }
+    if (error) {
+      console.error(
+        'Public bids konnten nicht geladen werden:',
+        error
+      )
+      return
+    }
 
-  const topBids = data?.slice(0, 2) || []
+    const topBids =
+      data?.slice(0, 2) || []
 
-  if (topBids.length > 0) {
-    setHighestBid(Number(topBids[0].amount))
+    if (topBids.length > 0) {
+      setHighestBid(
+        Number(topBids[0].amount)
+      )
 
-    if (topBids.length > 1) {
-      setPreviousBid(Number(topBids[1].amount))
+      if (topBids.length > 1) {
+        setPreviousBid(
+          Number(topBids[1].amount)
+        )
+      } else {
+        setPreviousBid(null)
+      }
     } else {
+      setHighestBid(null)
       setPreviousBid(null)
     }
-  } else {
-    setHighestBid(null)
-    setPreviousBid(null)
   }
-}
 
   useEffect(() => {
+    /*
+     * Beim Öffnen sofort aktuellen Stand laden.
+     */
     loadHighestBid()
 
-    const bidRefreshInterval = setInterval(() => {
-      loadHighestBid()
-    }, 2000)
+    /*
+     * Sicherheitsnetz:
+     * weiterhin alle 2 Sekunden DB prüfen.
+     */
+    const bidRefreshInterval =
+      setInterval(() => {
+        loadHighestBid()
+      }, 2000)
 
-    const viewerChannel = supabase.channel('auction-viewers')
+    /*
+     * Sofortige Gebotsmeldung via Realtime Broadcast.
+     */
+    const bidChannel =
+      supabase.channel(
+        'auction-bids'
+      )
+
+    bidChannel
+      .on(
+        'broadcast',
+        {
+          event:'new_bid'
+        },
+        () => {
+          /*
+           * Sobald ein Gebot gemeldet wird,
+           * sofort die beiden höchsten
+           * Gebote aus der sicheren RPC laden.
+           */
+          loadHighestBid()
+        }
+      )
+      .subscribe()
+
+    /*
+     * Live-Zuschauer.
+     */
+    const viewerChannel =
+      supabase.channel(
+        'auction-viewers'
+      )
 
     viewerChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = viewerChannel.presenceState()
+      .on(
+        'presence',
+        {
+          event:'sync'
+        },
+        () => {
+          const state =
+            viewerChannel
+              .presenceState()
 
-        const count =
-          Object.values(state)
-            .flat()
-            .length
+          const count =
+            Object.values(state)
+              .flat()
+              .length
 
-        setViewerCount(count || 1)
-      })
+          setViewerCount(
+            count || 1
+          )
+        }
+      )
       .subscribe()
 
     return () => {
-      clearInterval(bidRefreshInterval)
-      supabase.removeChannel(viewerChannel)
+      clearInterval(
+        bidRefreshInterval
+      )
+
+      supabase.removeChannel(
+        bidChannel
+      )
+
+      supabase.removeChannel(
+        viewerChannel
+      )
     }
+
   }, [])
 
   useEffect(() => {
     const updateCountdown = () => {
-      const now = new Date().getTime()
+      const now =
+        new Date().getTime()
 
       const distance =
-        AUCTION_END.getTime() - now
+        AUCTION_END.getTime() -
+        now
 
       if (distance <= 0) {
         setTimeLeft(
@@ -108,14 +185,23 @@ export default function StreamPage() {
       const days =
         Math.floor(
           distance /
-          (1000 * 60 * 60 * 24)
+          (
+            1000 *
+            60 *
+            60 *
+            24
+          )
         )
 
       const hours =
         Math.floor(
           (
             distance /
-            (1000 * 60 * 60)
+            (
+              1000 *
+              60 *
+              60
+            )
           ) % 24
         )
 
@@ -123,7 +209,10 @@ export default function StreamPage() {
         Math.floor(
           (
             distance /
-            (1000 * 60)
+            (
+              1000 *
+              60
+            )
           ) % 60
         )
 
@@ -153,6 +242,10 @@ export default function StreamPage() {
 
   }, [])
 
+  /*
+   * Zusätzliche Sicherheitsmaßnahme:
+   * Seite alle 5 Minuten neu laden.
+   */
   useEffect(() => {
     const interval =
       setInterval(() => {
@@ -171,7 +264,8 @@ export default function StreamPage() {
       overflow:'hidden',
       padding:'28px',
       boxSizing:'border-box',
-      fontFamily:'Arial, sans-serif',
+      fontFamily:
+        'Arial, sans-serif',
       background:
         'linear-gradient(135deg, #dcefff 0%, #ffffff 100%)'
     }}>
@@ -179,7 +273,8 @@ export default function StreamPage() {
       <div style={{
         height:'100%',
         display:'grid',
-        gridTemplateRows:'150px 1fr',
+        gridTemplateRows:
+          '150px 1fr',
         gap:'24px'
       }}>
 
@@ -219,9 +314,11 @@ export default function StreamPage() {
               margin:'0 0 6px',
               fontSize:'22px',
               letterSpacing:'1.5px',
-              textTransform:'uppercase'
+              textTransform:
+                'uppercase'
             }}>
-              76. Gréiwemaacher Drauwen- a Wäifest 2026
+              76. Gréiwemaacher
+              Drauwen- a Wäifest 2026
             </p>
 
             <h1 style={{
@@ -239,7 +336,8 @@ export default function StreamPage() {
         {/* CONTENT */}
         <div style={{
           display:'grid',
-          gridTemplateColumns:'52% 48%',
+          gridTemplateColumns:
+            '52% 48%',
           gap:'24px',
           minHeight:0
         }}>
@@ -253,7 +351,8 @@ export default function StreamPage() {
               '0 10px 30px rgba(0,0,0,0.12)',
             display:'flex',
             flexDirection:'column',
-            justifyContent:'space-between'
+            justifyContent:
+              'space-between'
           }}>
 
             <div style={{
@@ -283,12 +382,13 @@ export default function StreamPage() {
               fontStyle:'italic',
               color:'#555'
             }}>
-              Konschtwierk: 160 cm x 120 cm
+              Konschtwierk:
+              160 cm x 120 cm
               <br />
-              © Kënschtler: André Scholtes
+              © Kënschtler:
+              André Scholtes
             </p>
 
-            {/* QR */}
             <div style={{
               display:'flex',
               justifyContent:'center'
@@ -296,7 +396,8 @@ export default function StreamPage() {
 
               <div style={{
                 background:'#f7fbff',
-                border:'1px solid #d9e8ff',
+                border:
+                  '1px solid #d9e8ff',
                 borderRadius:'20px',
                 padding:'18px',
                 textAlign:'center'
@@ -308,7 +409,8 @@ export default function StreamPage() {
                   fontWeight:'bold',
                   color:'#315f9c'
                 }}>
-                  Matbidden / Place your bid
+                  Matbidden /
+                  Place your bid
                 </p>
 
                 <img
@@ -321,6 +423,7 @@ export default function StreamPage() {
                 />
 
               </div>
+
             </div>
 
           </div>
@@ -328,7 +431,8 @@ export default function StreamPage() {
           {/* RIGHT */}
           <div style={{
             display:'grid',
-            gridTemplateRows:'1.35fr 0.75fr 0.75fr',
+            gridTemplateRows:
+              '1.35fr 0.75fr 0.75fr',
             gap:'24px',
             minHeight:0
           }}>
@@ -336,7 +440,8 @@ export default function StreamPage() {
             {/* BID */}
             <div style={{
               background:'white',
-              border:'1px solid #cfe5ff',
+              border:
+                '1px solid #cfe5ff',
               borderRadius:'26px',
               padding:'34px',
               boxShadow:
@@ -356,12 +461,12 @@ export default function StreamPage() {
 
               {auctionClosed ? (
 
-                /* NACH AUKTIONSENDE */
                 <div style={{
                   marginTop:'28px',
                   padding:'24px',
                   background:'#e8fff0',
-                  border:'2px solid #4caf50',
+                  border:
+                    '2px solid #4caf50',
                   borderRadius:'20px',
                   textAlign:'center'
                 }}>
@@ -372,7 +477,8 @@ export default function StreamPage() {
                     fontWeight:'bold',
                     color:'#1b5e20'
                   }}>
-                    Auktioun eriwwer / Auction ended
+                    Auktioun eriwwer /
+                    Auction ended
                   </p>
 
                   <p style={{
@@ -380,7 +486,8 @@ export default function StreamPage() {
                     fontSize:'24px',
                     color:'#315f9c'
                   }}>
-                    Finalt Gebot / Final Bid
+                    Finalt Gebot /
+                    Final Bid
                   </p>
 
                   <p style={{
@@ -400,14 +507,16 @@ export default function StreamPage() {
                     fontWeight:'bold',
                     color:'#315f9c'
                   }}>
-                    Merci fir Är Ënnerstëtzung · Thank you for your support
+                    Merci fir Är
+                    Ënnerstëtzung ·
+                    Thank you for
+                    your support
                   </p>
 
                 </div>
 
               ) : (
 
-                /* WÄHREND DER AUKTION */
                 <>
                   <p style={{
                     margin:0,
@@ -415,7 +524,8 @@ export default function StreamPage() {
                     lineHeight:'1',
                     fontWeight:'bold',
                     color:'#0f3d91',
-                    transition:'all 0.4s ease'
+                    transition:
+                      'all 0.4s ease'
                   }}>
                     {highestBid !== null
                       ? `${highestBid.toLocaleString('de-LU')} €`
@@ -425,14 +535,17 @@ export default function StreamPage() {
                   <div style={{
                     marginTop:'26px',
                     paddingTop:'22px',
-                    borderTop:'2px solid #d9e8ff',
+                    borderTop:
+                      '2px solid #d9e8ff',
                     fontSize:'28px',
                     lineHeight:'1.6',
                     color:'#444'
                   }}>
 
                     <div>
-                      Nächst méiglecht Gebot / Next Possible Bid:{' '}
+                      Nächst méiglecht
+                      Gebot / Next Possible
+                      Bid:{' '}
                       <strong style={{
                         color:'#0f3d91'
                       }}>
@@ -441,7 +554,8 @@ export default function StreamPage() {
                     </div>
 
                     <div>
-                      Max. Gebot / Maximum Bid:{' '}
+                      Max. Gebot /
+                      Maximum Bid:{' '}
                       <strong style={{
                         color:'#0f3d91'
                       }}>
@@ -461,16 +575,20 @@ export default function StreamPage() {
 
                       {highestBid === null ? (
                         <>
-                          Startgebot / Starting Bid:{' '}
+                          Startgebot /
+                          Starting Bid:{' '}
                           <strong>
                             2.500 €
                           </strong>
                         </>
                       ) : (
                         <>
-                          Erhéijung pro Gebot / Bid increase:{' '}
+                          Erhéijung pro
+                          Gebot /
+                          Bid increase:{' '}
                           <strong>
-                            min. 50 € · max. 500 €
+                            min. 50 € ·
+                            max. 500 €
                           </strong>
                         </>
                       )}
@@ -478,7 +596,8 @@ export default function StreamPage() {
                     </div>
 
                     <div>
-                      Viregt Gebot / Previous Bid:{' '}
+                      Viregt Gebot /
+                      Previous Bid:{' '}
                       <strong style={{
                         color:'#0f3d91'
                       }}>
@@ -499,7 +618,8 @@ export default function StreamPage() {
             {/* COUNTDOWN */}
             <div style={{
               background:'#eef6ff',
-              border:'1px solid #cfe5ff',
+              border:
+                '1px solid #cfe5ff',
               borderRadius:'26px',
               padding:'28px',
               textAlign:'center',
@@ -516,14 +636,16 @@ export default function StreamPage() {
               }}>
 
                 <div>
-                  Auktioun Enn / Auction closing:
+                  Auktioun Enn /
+                  Auction closing:
                 </div>
 
                 <div style={{
                   marginTop:'6px',
                   color:'#0f3d91'
                 }}>
-                  13 September 2026 · 19:26
+                  13 September 2026 ·
+                  19:26
                 </div>
 
               </div>
@@ -542,7 +664,8 @@ export default function StreamPage() {
             {/* VIEWERS */}
             <div style={{
               background:'white',
-              border:'1px solid #cfe5ff',
+              border:
+                '1px solid #cfe5ff',
               borderRadius:'26px',
               padding:'28px',
               textAlign:'center',
@@ -555,7 +678,8 @@ export default function StreamPage() {
                 fontSize:'28px',
                 color:'#315f9c'
               }}>
-                Live Zuschauer / Live Viewers
+                Live Zuschauer /
+                Live Viewers
               </p>
 
               <p style={{
