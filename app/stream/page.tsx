@@ -383,7 +383,7 @@ export default function StreamPage() {
               color:'#555'
             }}>
               Konschtwierk:
-              160 cm x 120 cm
+              160 cm × 120 cm
               <br />
               © Kënschtler:
               André Scholtes
