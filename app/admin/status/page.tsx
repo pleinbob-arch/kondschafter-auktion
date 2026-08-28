@@ -13,8 +13,12 @@ const ADMIN_EMAILS = [
   'kondschafter@gmail.com'
 ]
 
-const AUCTION_END = new Date('2026-09-13T19:26:00+02:00')
-const START_BID = 2500
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
+}
 
 export default function StatusPage() {
   const [session, setSession] = useState<Session | null>(null)
@@ -27,6 +31,8 @@ export default function StatusPage() {
   const [viewerCount, setViewerCount] = useState(0)
   const [lastRefresh, setLastRefresh] = useState('')
   const [timeLeft, setTimeLeft] = useState('')
+  const [auctionSettings, setAuctionSettings] =
+    useState<AuctionSettings | null>(null)
 
   const isAdmin =
     ADMIN_EMAILS.includes(session?.user?.email || '')
@@ -59,23 +65,43 @@ export default function StatusPage() {
     ...liveBidders
   ]).size
 
+  const startBid = auctionSettings
+    ? Number(auctionSettings.start_bid)
+    : null
+
+  const auctionEnd = auctionSettings
+    ? new Date(auctionSettings.auction_end)
+    : null
+
   const auctionClosed =
-    new Date() >= AUCTION_END
+    auctionEnd
+      ? new Date() >= auctionEnd
+      : false
 
   async function runChecks() {
     setDbStatus('checking')
 
-    const { data, error } =
-      await supabase
-        .rpc('admin_get_bids')
+    const [
+      { data: bidData, error: bidError },
+      { data: settingsData, error: settingsError }
+    ] = await Promise.all([
+      supabase.rpc('admin_get_bids'),
+      supabase.rpc('get_auction_settings')
+    ])
 
-    if (error) {
-      console.error('Status DB check failed:', error)
+    if (bidError || settingsError) {
+      console.error(
+        'Status check failed:',
+        bidError || settingsError
+      )
       setDbStatus('error')
       return
     }
 
-    setBids(data || [])
+    setBids(bidData || [])
+    setAuctionSettings(
+      (settingsData?.[0] || null) as AuctionSettings | null
+    )
     setDbStatus('ok')
     setLastRefresh(
       new Date().toLocaleString('de-LU')
@@ -159,9 +185,14 @@ export default function StatusPage() {
   }, [isAdmin])
 
   useEffect(() => {
+    if (!auctionEnd) {
+      setTimeLeft('…')
+      return
+    }
+
     const updateCountdown = () => {
       const difference =
-        AUCTION_END.getTime() -
+        auctionEnd.getTime() -
         new Date().getTime()
 
       if (difference <= 0) {
@@ -216,7 +247,7 @@ export default function StatusPage() {
 
     return () =>
       clearInterval(timer)
-  }, [])
+  }, [auctionSettings])
 
   if (loading) {
     return (
@@ -453,7 +484,9 @@ export default function StatusPage() {
             value={
               highestBid
                 ? `${Number(highestBid.amount).toLocaleString('de-LU')} €`
-                : `${START_BID.toLocaleString('de-LU')} €`
+                : startBid !== null
+                  ? `${startBid.toLocaleString('de-LU')} €`
+                  : '…'
             }
             detail={
               highestBid
@@ -493,7 +526,19 @@ export default function StatusPage() {
             }
             detail={
               auctionClosed
-                ? 'Enn: 13.09.2026 · 19:26'
+                ? auctionEnd
+                  ? `Enn: ${auctionEnd.toLocaleString(
+                      'de-LU',
+                      {
+                        timeZone: 'Europe/Luxembourg',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }
+                    )}`
+                  : 'Enn: —'
                 : timeLeft
             }
           />
