@@ -16,8 +16,7 @@ export default function PrivacyPage() {
           background: 'white',
           borderRadius: '28px',
           overflow: 'hidden',
-          boxShadow:
-            '0 15px 50px rgba(0,0,0,0.12)'
+          boxShadow: '0 15px 50px rgba(0,0,0,0.12)'
         }}
       >
         <section
@@ -43,8 +42,7 @@ export default function PrivacyPage() {
             style={{
               marginTop: '14px',
               fontWeight: 'normal',
-              fontSize:
-                'clamp(18px, 4vw, 28px)'
+              fontSize: 'clamp(18px, 4vw, 28px)'
             }}
           >
             Privacy Policy &amp; Auction Terms
@@ -52,8 +50,7 @@ export default function PrivacyPage() {
 
           <p
             style={{
-              margin:
-                '18px auto 0',
+              margin: '18px auto 0',
               maxWidth: '760px',
               fontSize: '14px',
               lineHeight: '1.6',
@@ -77,15 +74,16 @@ export default function PrivacyPage() {
             color: '#16324f'
           }}
         >
-          <SectionTitle title="Lëtzebuergesch" />
+          <SectionTitle title="Lëtzebuergesch – Dateschutz" />
 
           <Card>
             <SubTitle title="1. Verantwortlechen" />
 
             <p>
               Verantwortlech fir dës Websäit,
-              d&apos;Auktioun an d&apos;Veraarbechtung
-              vun de perséinlechen Donnéeën ass:
+              d&apos;Organisatioun vun der Auktioun
+              an d&apos;Veraarbechtung vun de
+              perséinlechen Donnéeën ass:
             </p>
 
             <p>
@@ -122,20 +120,19 @@ export default function PrivacyPage() {
               Den Erléis vun der Auktioun ass fir
               e gudden Zweck bestëmmt. Déi definitiv
               begënschtegt gemengnëtzeg Organisatioun
-              oder Stëftung gëtt spéitstens am
-              Zesummenhang mat der Auktioun bekannt
-              gemaach.
+              oder Stëftung gëtt am Zesummenhang
+              mat der Auktioun bekannt gemaach.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="3. Wéi eng Donnéeë gi verschafft?" />
+            <SubTitle title="3. Veraarbechtete perséinlech Donnéeën" />
 
             <p>
               Am Zesummenhang mat der Registréierung,
-              der Participatioun an der Ofwécklung vun
-              der Auktioun kënne besonnesch folgend
-              Donnéeë verschafft ginn:
+              der Participatioun an der Ofwécklung
+              vun der Auktioun kënne besonnesch
+              folgend Donnéeë verschafft ginn:
             </p>
 
             <ul>
@@ -145,9 +142,11 @@ export default function PrivacyPage() {
               <li>Telefonsnummer</li>
               <li>Benotzer- oder Kontidentifikatioun</li>
               <li>Héicht vum Gebot</li>
-              <li>Zäitpunkt vum Gebot</li>
-              <li>Quell vum Gebot, z. B. online oder live</li>
-              <li>ëffentlech IP-Adress bei Online-Geboter</li>
+              <li>Datum an Zäitpunkt vum Gebot</li>
+              <li>Quell vum Gebot, online oder live</li>
+              <li>
+                ëffentlech IP-Adress bei Online-Geboter
+              </li>
               <li>
                 Browser- an Apparatinformatiounen
                 (User-Agent)
@@ -159,10 +158,10 @@ export default function PrivacyPage() {
             </ul>
 
             <p>
-              Bei Live-Geboter kënnen amplaz vun
-              Online-Kontaktdonnéeën eng intern
-              Bieternummer an d&apos;Informatioun
-              „Live Bieter“ enregistréiert ginn.
+              Bei Live-Geboter kann eng intern
+              Bieternummer benotzt ginn. Dës déngt
+              der Zouuerdnung an der Dokumentatioun
+              vum Live-Gebot.
             </p>
           </Card>
 
@@ -171,43 +170,68 @@ export default function PrivacyPage() {
 
             <p>
               Beim Ofginn vun engem
-              <strong> Online-Gebot</strong> gëtt déi
-              ëffentlech IP-Adress vum benotzten
-              Internetuschloss ermëttelt an zesumme
-              mam Gebot gespäichert.
+              <strong> Online-Gebot</strong> gëtt
+              déi ëffentlech IP-Adress vum
+              Internetuschloss, iwwer deen d&apos;Gebot
+              ofgi gëtt, ermëttelt an zesumme mam
+              Gebot gespäichert.
             </p>
 
             <p>
-              Fir dës technesch Ermittlung gëtt den
-              externen Déngscht
-              <strong> api.ipify.org</strong>
-              benotzt. De Browser mécht dobäi eng
-              direkt Ufro un dësen Déngscht. Doduerch
-              kritt de Bedreiwer vum Déngscht
-              technesch bedéngt Kenntnis vun der
-              IP-Adress an den Donnéeën, déi fir
-              d&apos;Kommunikatioun néideg sinn.
+              Fir d&apos;Ermittlung vun der
+              ëffentlecher IP-Adress gëtt den externen
+              techneschen Déngscht
+              <strong> api.ipify.org</strong> benotzt.
+              De Browser vum Participant mécht
+              dobäi eng direkt Ufro un dësen
+              Déngscht.
             </p>
 
             <p>
-              D&apos;Späicherung vun der IP-Adress
-              duerch d&apos;Kondschafter déngt
-              besonnesch der Dokumentatioun vum
-              Gebot, der Erkennung vu Mëssbrauch,
-              der Sécherung vun der Auktioun an der
-              méiglecher Klärung vu Sträitfäll iwwer
-              d&apos;Authentizitéit oder d&apos;Ofginn
-              vun engem Gebot.
+              Doduerch kritt de Bedreiwer vun dësem
+              Déngscht technesch bedéngt Kenntnis
+              vun der IP-Adress an deenen
+              Informatiounen, déi fir d&apos;Iwwerdroung
+              vun der Ufro néideg sinn.
+            </p>
+
+            <p>
+              D&apos;Kondschafter späicheren déi
+              ermëttelt IP-Adress zesumme mam Gebot,
+              fir d&apos;Ofginn vum Gebot
+              nachvollzéibar ze dokumentéieren,
+              d&apos;Integritéit an d&apos;Sécherheet
+              vun der Auktioun ze schützen,
+              Mëssbrauch oder Manipulatioun
+              z&apos;erkennen an eventuell
+              Sträitfäll iwwer d&apos;Ofginn oder
+              d&apos;Authentizitéit vun engem Gebot
+              kënnen ze klären.
+            </p>
+
+            <p>
+              Wann e Participant e VPN,
+              Proxy oder en aneren techneschen
+              Zwëscheservice benotzt, kann déi
+              gespäichert IP-Adress d&apos;Adress
+              vun dësem Service an net déi
+              ursprénglech Anschlussadress sinn.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="5. Zwecker vun der Donnéeëveraarbechtung" />
+            <SubTitle title="5. Zwecker vun der Veraarbechtung" />
 
             <p>
-              D&apos;Donnéeë ginn nëmmen esou wäit
-              verschafft, wéi dat fir folgend Zwecker
-              néideg ass:
+              Perséinlech Donnéeë ginn nëmmen esou
+              wäit verschafft, wéi dat fir
+              d&apos;Organisatioun, d&apos;Sécherheet
+              an d&apos;Ofwécklung vun der Auktioun
+              néideg oder gesetzlech virgesinn ass.
+            </p>
+
+            <p>
+              Dozou gehéieren insbesondere:
             </p>
 
             <ul>
@@ -215,189 +239,179 @@ export default function PrivacyPage() {
                 Registréierung an Authentifikatioun
                 vun de Participanten
               </li>
-
               <li>
                 Organisatioun an technesch
                 Duerchféierung vun der Auktioun
               </li>
-
               <li>
                 Entgéinthuelen, späicheren an
                 dokumentéieren vun de Geboter
               </li>
-
               <li>
-                Feststellung vum héchste valabele
-                Gebot
+                Bestëmmung vum héchste valabele Gebot
               </li>
-
               <li>
-                Kontakt mam Gewënner
+                Identifikatioun a Kontakt mam
+                Gewënner
               </li>
-
               <li>
-                Ofwécklung vum Kaf, der Bezuelung an
-                der Iwwergab vum Konschtwierk
+                Ofwécklung vun der Bezuelung an
+                Iwwergab vum Konschtwierk
               </li>
-
               <li>
-                Verhënnerung an Ënnersichung vu
-                Bedruch, manipuléierte Geboter oder
-                techneschem Mëssbrauch
+                Sécherung vun der Integritéit vun
+                der Auktioun
               </li>
-
               <li>
-                Beweissicherung bei méigleche
-                Sträitfäll
+                Erkennung an Ënnersichung vu
+                Mëssbrauch oder Manipulatioun
               </li>
-
+              <li>
+                Dokumentatioun a Beweissicherung
+                bei eventuelle Sträitfäll
+              </li>
               <li>
                 Erfëllung vu gesetzlechen,
-                steierlechen, comptabelen oder
-                administrativen Obligatiounen
+                administrativen, comptabelen oder
+                steierlechen Obligatiounen
               </li>
             </ul>
           </Card>
 
           <Card>
-            <SubTitle title="6. Rechtsgrondlage" />
+            <SubTitle title="6. Rechtlech Grondlag" />
 
             <p>
-              Je no Zweck baséiert
-              d&apos;Veraarbechtung besonnesch op:
-            </p>
-
-            <ul>
-              <li>
-                <strong>
-                  Art. 6 Abs. 1 lit. b DSGVO
-                </strong>
-                : Veraarbechtung, déi fir
-                d&apos;Participatioun un der Auktioun,
-                virvertraglech Moossnamen an
-                d&apos;Ofwécklung vum entstoende
-                Vertragsverhältnis néideg ass;
-              </li>
-
-              <li>
-                <strong>
-                  Art. 6 Abs. 1 lit. c DSGVO
-                </strong>
-                : Veraarbechtung, déi fir
-                d&apos;Erfëllung vu gesetzlechen
-                Obligatiounen néideg ass;
-              </li>
-
-              <li>
-                <strong>
-                  Art. 6 Abs. 1 lit. f DSGVO
-                </strong>
-                : berechtegt Interesse un enger
-                sécherer, nachvollzéierbarer an
-                mëssbrauchsfräier Duerchféierung vun
-                der Auktioun, un der IT-Sécherheet an
-                un der Geltendmaachung oder
-                Verdeedegung vu Rechtsuspréch.
-              </li>
-            </ul>
-          </Card>
-
-          <Card>
-            <SubTitle title="7. Cookies, Sessions an Authentifikatioun" />
-
-            <p>
-              D&apos;Websäit benotzt nëmmen
-              technesch néideg Mechanismen,
-              Session-Donnéeën an, jee no technescher
-              Ëmsetzung, technesch néideg Cookies
-              oder lokal Browser-Späicherung.
+              D&apos;Veraarbechtung vun de
+              perséinlechen Donnéeë geschitt am
+              Aklang mat dem zu Lëtzebuerg
+              applicabelen Dateschutzrecht,
+              insbesondere der europäescher
+              Dateschutzgesetzgebung.
             </p>
 
             <p>
-              Dës Elementer si fir de Login, déi
-              sécher Authentifikatioun an d&apos;korrekt
-              Funktioun vun der Auktioun néideg.
+              Je no Zweck ass d&apos;Veraarbechtung
+              néideg fir d&apos;Participatioun un
+              der Auktioun an d&apos;Ofwécklung vum
+              domat verbonnene Vertragsverhältnis,
+              fir gesetzlech Obligatiounen
+              z&apos;erfëllen oder fir berechtegt
+              Interesse vun der Organisatioun ze
+              schützen.
             </p>
 
             <p>
-              Et ginn duerch d&apos;Kondschafter keng
-              Marketing-, Werbe- oder
-              Verhalensprofil-Cookies agesat.
+              Zu dëse berechtegten Interesse
+              gehéieren insbesondere
+              IT-Sécherheet, Schutz géint
+              Manipulatioun a Mëssbrauch,
+              nachvollzéierbar Dokumentatioun vun
+              de Geboter an d&apos;Geltendmaachung
+              oder Verdeedegung vu rechtlechen
+              Uspréch.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="8. Technesch Déngschtleeschter an Empfänger" />
+            <SubTitle title="7. Cookies, Session an Authentifikatioun" />
 
             <p>
-              Fir de Betrib vun der Plattform ginn
-              spezialiséiert technesch
-              Déngschtleeschter agesat. Dozou
-              gehéieren aktuell besonnesch:
+              D&apos;Websäit benotzt technesch
+              néideg Session- an
+              Authentifikatiounsmechanismen an,
+              jee no technescher Ëmsetzung,
+              technesch néideg Browser-Späicherung
+              oder Cookies.
+            </p>
+
+            <p>
+              Dës si fir de Login, d&apos;Sécherheet
+              an d&apos;korrekt Funktioun vun der
+              Auktioun néideg.
+            </p>
+
+            <p>
+              D&apos;Kondschafter setzen op dëser
+              Auktiounssäit keng Marketing-,
+              Werbe- oder Analyse-Cookies fir
+              eegestänneg Werbe- oder
+              Profilingzwecker an.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="8. Technesch Déngschtleeschter" />
+
+            <p>
+              Fir de Betrib vun der Auktiounsplattform
+              ginn extern technesch
+              Déngschtleeschter agesat.
+              Dozou gehéieren aktuell:
             </p>
 
             <ul>
               <li>
-                <strong>Vercel</strong> – Hosting an
-                Ausliwwerung vun der Webapplikatioun;
+                <strong>Vercel</strong> –
+                Hosting an Ausliwwerung vun der
+                Webapplikatioun;
               </li>
-
               <li>
                 <strong>Supabase</strong> –
                 Datebank, Authentifikatioun an
                 Realtime-Funktiounen;
               </li>
-
               <li>
                 <strong>Brevo</strong> –
                 Versand vun technesch néidegen
-                Transaktiouns- an
-                Authentifikatiouns-E-Mailen;
+                E-Mailen;
               </li>
-
               <li>
                 <strong>ipify</strong> –
                 technesch Ermittlung vun der
-                ëffentlecher IP-Adress bei engem
+                ëffentlecher IP-Adress beim
                 Online-Gebot.
               </li>
             </ul>
 
             <p>
-              Donnéeë ginn nëmmen esou wäit un dës
-              Déngschtleeschter iwwermëttelt, wéi dat
-              fir déi jeeweileg technesch Funktioun
-              néideg ass.
+              Am Kader vun dësen Déngschter kënne
+              perséinlech an technesch Donnéeë
+              verschafft ginn, souwäit dat fir
+              d&apos;Bereetstellung vum jeeweilegen
+              Déngscht néideg ass.
             </p>
 
             <p>
-              Perséinlech Donnéeë ginn net un
-              Drëttpersoune verkaaft an net fir
-              onofhängeg kommerziell Werbezwecker vun
-              de Kondschafter weiderginn.
+              D&apos;Kondschafter verkafe keng
+              perséinlech Donnéeën a benotzen
+              d&apos;Donnéeë vun de Participanten
+              net fir onofhängeg kommerziell
+              Werbezwecker.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="9. Veraarbechtung ausserhalb vum EWR" />
+            <SubTitle title="9. International Donnéeëveraarbechtung" />
 
             <p>
-              Bei Cloud-, Hosting- oder
+              Bei der Notzung vun internationalen
+              Cloud-, Hosting- oder
               Infrastruktur-Déngschtleeschter kann
-              net ausgeschloss ginn, datt Donnéeën
-              och ausserhalb vun der Europäescher
-              Unioun bzw. dem Europäesche
-              Wirtschaftsraum verschafft oder
-              transferéiert ginn.
+              et dozou kommen, datt Donnéeën och
+              ausserhalb vu Lëtzebuerg oder dem
+              Europäesche Wirtschaftsraum
+              verschafft ginn.
             </p>
 
             <p>
-              Wann esou en Transfert ënner
-              d&apos;DSGVO fält, soll en nëmmen op
-              Basis vun engem gesetzlech unerkannten
-              Transfertmechanismus oder anere
-              passenden Garantien am Sënn vun der
-              DSGVO erfollegen.
+              Souwäit dat applicabelt
+              Dateschutzrecht dofir speziell
+              Viraussetzunge virgesäit, soll esou
+              eng Veraarbechtung nëmmen ënner
+              de gesetzlech virgesinne Konditiounen
+              a mat den néidege Garantien
+              stattfannen.
             </p>
           </Card>
 
@@ -405,24 +419,23 @@ export default function PrivacyPage() {
             <SubTitle title="10. Späicherdauer" />
 
             <p>
-              Perséinlech Donnéeë ginn net méi laang
-              gespäichert wéi et fir d&apos;Zwecker
-              vun der Auktioun, d&apos;Ofwécklung vum
-              Verkaf, d&apos;Dokumentatioun vu
-              Geboter, d&apos;Verdeedegung vu
-              méigleche Rechtsuspréch oder
-              gesetzlech Opbewahrungsflichte
-              néideg ass.
+              Perséinlech Donnéeë ginn nëmme sou
+              laang gespäichert, wéi et fir
+              d&apos;Duerchféierung an
+              d&apos;Ofwécklung vun der Auktioun,
+              d&apos;Dokumentatioun vun de Geboter,
+              d&apos;Klärung vu méigleche
+              Sträitfäll oder d&apos;Erfëllung vu
+              gesetzlechen Obligatiounen néideg ass.
             </p>
 
             <p>
-              Donnéeën, déi gesetzlechen
-              Opbewahrungsflichte ënnerleien, kënnen
-              entspriechend méi laang gespäichert
-              ginn. Donnéeën, fir déi kee weidere
-              legitimen oder gesetzleche
-              Späichergrond besteet, ginn duerno
-              geläscht oder anonymiséiert.
+              Wann de Grond fir eng weider
+              Späicherung entfällt a keng
+              gesetzlech Opbewahrungsflicht oder
+              aner zulässeg Ursaach méi besteet,
+              ginn déi betraffen Donnéeë geläscht
+              oder anonymiséiert.
             </p>
           </Card>
 
@@ -430,56 +443,77 @@ export default function PrivacyPage() {
             <SubTitle title="11. Rechter vun de betraffene Persounen" />
 
             <p>
-              Am Kader vun den applicabele
-              Dateschutzbestëmmungen hutt Dir
-              besonnesch d&apos;Recht op:
+              Participanten an aner betraffe
+              Persoune kënnen am Kader vum
+              applicabele Lëtzebuerger an
+              europäeschen Dateschutzrecht
+              insbesondere d&apos;Recht hunn:
             </p>
 
             <ul>
-              <li>Informatioun an Auskunft</li>
-              <li>Berichtegung vun onkorrekten Donnéeën</li>
               <li>
-                Läschung, souwäit keng gesetzlech
-                oder aner zulässeg Grënn
-                dogéintstinn
+                Informatioun iwwer hir Donnéeën
+                ze kréien
               </li>
               <li>
+                Zougang zu hire gespäicherten
+                Donnéeën ze verlaangen
+              </li>
+              <li>
+                onkorrekt Donnéeën berichtigen
+                ze loossen
+              </li>
+              <li>
+                ënner de gesetzleche
+                Viraussetzungen eng Läschung oder
                 Aschränkung vun der Veraarbechtung
+                ze verlaangen
               </li>
               <li>
-                Donnéeëportabilitéit, wann déi
-                gesetzlech Viraussetzunge erfëllt
-                sinn
+                ënner de gesetzleche
+                Viraussetzungen Donnéeëportabilitéit
+                ze verlaangen
               </li>
               <li>
-                Widdersproch géint Veraarbechtungen,
-                déi op engem berechtegten Interesse
-                baséieren
+                géint bestëmmte Veraarbechtungen
+                Widdersproch anzeleeën
               </li>
             </ul>
 
             <p>
-              Fir esou Rechter auszeüben, kënnt Dir
-              Iech un
+              Eng Demande kann un
               <strong> kondschafter@gmail.com</strong>
-              wenden.
+              geriicht ginn.
+            </p>
+
+            <p>
+              Dës Rechter kënnen duerch gesetzlech
+              Obligatiounen oder aner zulässeg
+              Grënn limitéiert sinn, insbesondere
+              wann Donnéeën nach fir d&apos;Ofwécklung
+              vun der Auktioun, d&apos;Erfëllung
+              vun enger gesetzlecher Flicht oder
+              d&apos;Verdeedegung vu rechtlechen
+              Uspréch gebraucht ginn.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="12. Beschwerderecht bei der CNPD" />
+            <SubTitle title="12. Beschwerderecht" />
 
             <p>
-              Wann Dir der Meenung sidd, datt Är
-              perséinlech Donnéeën net am Aklang mat
-              dem applicabele Dateschutzrecht
-              verschafft ginn, hutt Dir d&apos;Recht,
-              Iech un déi zoustänneg
-              Dateschutzautoritéit ze wenden.
+              Eng betraffe Persoun huet d&apos;Recht,
+              sech bei der zoustänneger
+              Dateschutzautoritéit ze beschwéieren,
+              wann si der Meenung ass, datt hir
+              Donnéeën net am Aklang mam
+              applicabele Dateschutzrecht
+              verschafft ginn.
             </p>
 
             <p>
-              Fir Lëtzebuerg ass dat:
+              Déi zoustänneg Autoritéit zu
+              Lëtzebuerg ass:
             </p>
 
             <p>
@@ -492,23 +526,33 @@ export default function PrivacyPage() {
             </p>
           </Card>
 
-          <SectionTitle title="Auktiounsbedingungen" />
+          <SectionTitle title="Lëtzebuergesch – Auktiounsbedingungen" />
 
           <Card>
-            <SubTitle title="13. Uwendungsberäich" />
+            <SubTitle title="13. Uwendungsberäich an Akzeptanz" />
 
             <p>
-              Mat der Participatioun un der Auktioun
-              akzeptéiert de Bieter dës
-              Auktiounsbedingungen an déi
-              Dateschutzinformatioun an hirer zur
-              Zäit vum Gebot publizéierter Fassung.
+              Dës Auktiounsbedingungen gëlle fir
+              d&apos;Participatioun un der
+              Kondschafter Auktioun, souwuel online
+              wéi och am Kader vun der Live-Auktioun.
             </p>
 
             <p>
-              Eng Participatioun ass nëmme fir
-              Persounen erlaabt, déi rechtsfäeg sinn,
-              e verbindlecht Gebot ofzeginn.
+              Mat der Ofginn vun engem Gebot
+              akzeptéiert de Participant dës
+              Auktiounsbedingungen an déi
+              Dateschutzinformatioun an där Fassung,
+              déi zum Zäitpunkt vum Gebot op der
+              Auktiounssäit disponibel ass.
+            </p>
+
+            <p>
+              D&apos;Participatioun ass nëmme
+              Persounen erlaabt, déi no dem
+              applicabele Recht berechtegt sinn,
+              e verbindlecht Gebot ofzeginn an
+              e Kafvertrag ofzeschléissen.
             </p>
           </Card>
 
@@ -516,82 +560,100 @@ export default function PrivacyPage() {
             <SubTitle title="14. Konschtwierk" />
 
             <p>
-              Gegenstand vun der Auktioun ass
+              Géigestand vun der Auktioun ass
               d&apos;Konschtwierk
               <strong> „Kondschafter“</strong>,
-              eng Reinterpretatioun vum André
-              Scholtes.
+              eng Reinterpretatioun vum
+              André Scholtes.
             </p>
 
             <p>
-              D&apos;ugewise Fotoen,
-              Bildschirmduerstellungen an digital
-              Reproduktioune kënnen aus technesche
-              Grënn a Faarf, Hellegkeet,
-              Kontrast oder Detailer vum
-              Originalwierk ofwäichen.
+              D&apos;Konschtwierk huet eng Gréisst
+              vun ongeféier
+              <strong> 160 cm × 120 cm</strong>.
+            </p>
+
+            <p>
+              Fotoen, digital Reproduktiounen an
+              Duerstellungen um Bildschierm déngen
+              der Illustratioun. Faarf, Hellegkeet,
+              Kontrast an Detailer kënnen
+              technesch bedéngt vum Original
+              ofwäichen.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="15. Startgebot a Gebotsschrëtt" />
+            <SubTitle title="15. Startgebot a Gebotsreegelen" />
 
             <p>
-              D&apos;Startgebot läit bei
+              D&apos;Startgebot ass
               <strong> 2.500 €</strong>.
             </p>
 
             <p>
-              Solange nach kee Gebot virläit, muss
-              dat éischt valabelt Gebot tëscht
+              Wann nach kee valabelt Gebot
+              enregistréiert ass, muss dat éischt
+              Gebot tëscht
               <strong> 2.500 € an 3.000 €</strong>
               leien.
             </p>
 
             <p>
-              Duerno muss all neit Gebot dat bis
-              dohinner héchst valabelt Gebot ëm
+              Duerno muss all neit valabelt Gebot
+              dat aktuell héchst Gebot ëm
               mindestens
-              <strong> 50 €</strong> an ëm maximal
-              <strong> 500 €</strong> iwwerschreiden.
+              <strong> 50 €</strong> an ëm
+              maximal <strong>500 €</strong>
+              iwwerschreiden.
             </p>
 
             <p>
-              Geboter, déi dës Konditiounen net
-              erfëllen oder vum System ofgeleent
-              ginn, gëllen net als valabel Geboter.
+              E Gebot, dat dës technesch oder
+              materiell Konditiounen net erfëllt
+              oder vum Auktiounssystem ofgeleent
+              gëtt, gëllt net als valabel
+              enregistréiert Gebot.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="16. Verbindlechkeet vun de Geboter" />
+            <SubTitle title="16. Verbindlechkeet vun engem Gebot" />
 
             <p>
-              E valabelt Gebot ass
+              All valabelt Gebot ass
               <strong> verbindlech</strong>.
             </p>
 
             <p>
-              De Bieter ass selwer verantwortlech,
-              d&apos;Héicht vum Gebot ze kontrolléieren,
-              ier en et ofgëtt.
+              De Participant ass verantwortlech
+              dofir, d&apos;Héicht vum Gebot an
+              d&apos;ugewise Informatiounen ze
+              kontrolléieren, ier hien d&apos;Gebot
+              definitiv ofgëtt.
             </p>
 
             <p>
-              Eng einfache Feeler, Meenungsännerung
-              oder versehentlech Ofginn berechtegt
-              net automatesch dozou, e Gebot
-              zeréckzezéien.
+              Eng Meenungsännerung oder en einfache
+              Feeler beim Aginn féiert net
+              automatesch dozou, datt e valabelt
+              Gebot zeréckgezu ka ginn.
             </p>
 
             <p>
-              Bei engem offensichtlechen
-              Eingabefeeler oder enger
-              aussergewéinlecher Situatioun kann
-              d&apos;Organisatioun am Eenzelfall
-              entscheeden, ob e Gebot korrigéiert
-              oder annuléiert gëtt. Et besteet keen
-              automateschen Usproch dorop.
+              Bei engem offensichtleche Feeler,
+              enger technescher Anomalie oder
+              enger anerer aussergewéinlecher
+              Situatioun kann d&apos;Organisatioun
+              de Fall iwwerpréiwen an eng
+              raisonnabel Entscheedung treffen.
+            </p>
+
+            <p>
+              Zwingend Rechter, déi engem
+              Participant no dem applicabele
+              Lëtzebuerger Recht zoustinn, bleiwen
+              onberéiert.
             </p>
           </Card>
 
@@ -599,17 +661,20 @@ export default function PrivacyPage() {
             <SubTitle title="17. Online- a Live-Geboter" />
 
             <p>
-              Souwuel valabel Online-Geboter wéi och
-              valabel Geboter, déi am Kader vun der
-              Live-Auktioun duerch déi zoustänneg
-              Organisatioun erfaasst ginn, kënnen an
-              déi selwecht Gebotslëscht afléissen.
+              Online-Geboter a Geboter, déi am
+              Kader vun der Live-Auktioun vun der
+              Organisatioun enregistréiert ginn,
+              kënnen Deel vun der selwechter
+              Auktioun an der selwechter
+              Gebotsreiefolleg sinn.
             </p>
 
             <p>
-              Entscheedend ass den am
-              Auktiounssystem als valabel
-              enregistréierte Gebotsstand.
+              Fir d&apos;Bestëmmung vum aktuelle
+              Gebotsstand ass grondsätzlech de
+              valabel am Auktiounssystem
+              enregistréierte Gebotsstand
+              ausschlaggebend.
             </p>
           </Card>
 
@@ -617,94 +682,131 @@ export default function PrivacyPage() {
             <SubTitle title="18. Enn vun der Auktioun" />
 
             <p>
-              D&apos;Auktioun ass geplangt bis den
+              D&apos;Auktioun endet
               <strong>
-                {' '}13. September 2026 um 19:26 Auer
-                Lëtzebuerger Zäit
+                {' '}den 13. September 2026
+                um 19:26 Auer Lëtzebuerger Zäit
               </strong>
               .
             </p>
 
             <p>
-              Nom technesch festgeluechten Enn ginn
-              iwwer déi regulär Online-Funktioun keng
+              No dësem Zäitpunkt ginn iwwer déi
+              regulär Online-Gebotsfunktioun keng
               nei Geboter méi ugeholl.
+            </p>
+
+            <p>
+              Fir d&apos;Zäitbestëmmung ass déi
+              technesch Zäit vum Auktiounssystem
+              ausschlaggebend an net d&apos;Auer
+              um Endgerät vum Participant.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="19. Héichst Gebot a Gewënner" />
+            <SubTitle title="19. Héichst valabelt Gebot" />
 
             <p>
               Grondsätzlech ass dat héchst valabelt
-              a rechtzäiteg enregistréiert Gebot
+              Gebot, dat virum Enn vun der Auktioun
+              vum System enregistréiert gouf,
               ausschlaggebend.
             </p>
 
             <p>
-              D&apos;Organisatioun däerf e Gebot
-              ignoréieren oder annuléieren, wann
-              konkret Indizien op Manipulatioun,
-              Bedruch, technesche Feeler,
-              offensichtleche Mëssbrauch,
-              Onméiglechkeet vun der Identifikatioun
-              vum Bieter oder en anere wesentleche
-              Grond hiweisen.
+              D&apos;Organisatioun kann e Gebot
+              iwwerpréiwen an, wann et sachlech
+              gerechtfäerdegt ass, net
+              berücksichtegen oder annuléieren,
+              insbesondere wann konkret Indizien
+              bestinn fir:
             </p>
 
+            <ul>
+              <li>Manipulatioun oder Bedruch</li>
+              <li>eng falsch oder erfonnte Identitéit</li>
+              <li>
+                bewosst falsch Kontaktdonnéeën
+              </li>
+              <li>
+                automatiséierten oder technesche
+                Mëssbrauch
+              </li>
+              <li>
+                en offensichtlechen technesche Feeler
+              </li>
+              <li>
+                eng wesentlech Onregelméissegkeet
+                beim Gebot
+              </li>
+            </ul>
+
             <p>
-              Esou eng Entscheedung däerf net
-              willkürlech geholl ginn.
+              Esou Entscheedunge sollen op engem
+              sachleche Grond baséieren an net
+              willkürlech getraff ginn.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="20. Ofschloss vum Verkaf" />
+            <SubTitle title="20. Gewënner an Ofschloss vum Verkaf" />
 
             <p>
-              De Gewënner gëtt vun der
-              Organisatioun kontaktéiert.
+              Nom Enn vun der Auktioun gëtt de
+              Participant mam héchste valabele
+              Gebot vun der Organisatioun
+              kontaktéiert.
             </p>
 
             <p>
-              Souwäit gesetzlech zulässeg, kënnt de
-              definitive Verkaf mam Zouschlag bzw.
-              mat der Bestätegung vum Gewënner duerch
-              d&apos;Organisatioun zustanen.
-            </p>
-
-            <p>
-              D&apos;Organisatioun kann virun der
-              definitiver Bestätegung d&apos;Identitéit
+              D&apos;Organisatioun kann d&apos;Identitéit
               an d&apos;Kontaktdonnéeë vum
-              potenzielle Gewënner iwwerpréiwen.
+              potenzielle Gewënner kontrolléieren,
+              ier d&apos;Ofwécklung vum Verkaf
+              definitiv duerchgefouert gëtt.
+            </p>
+
+            <p>
+              D&apos;rechtlech Wierkung vum Gebot,
+              vum Zouschlag an dem Verkaf riicht
+              sech no dem zu Lëtzebuerg
+              applicabele Recht.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="21. Bezuelung" />
+            <SubTitle title="21. Bezuelung an Iwwergab" />
 
             <p>
-              De Gewënner ass verpflicht, den
-              zougeschloene Kafpräis no den
-              Instruktioune vun der Organisatioun
-              ze bezuelen.
+              De Gewënner ass verpflicht, de
+              Kafpräis no den Instruktioune vun
+              der Organisatioun ze bezuelen.
             </p>
 
             <p>
               D&apos;Konschtwierk gëtt
-              grondsätzlech eréischt no voller
+              grondsätzlech eréischt no kompletter
               Bezuelung iwwerreecht.
             </p>
 
             <p>
-              Wann de Gewënner trotz Ufro a
-              raisonnabeler Nofrist net bezilt, kann
-              d&apos;Organisatioun, souwäit
-              gesetzlech zulässeg, vum Verkaf
-              zerécktrieden an dat nächst valabelt
-              Gebot berücksichtegen oder d&apos;Wierk
-              anderwäerteg ubidden.
+              Wann de Gewënner seng
+              Bezuelungsverpflichtung net erfëllt,
+              kann d&apos;Organisatioun déi
+              Moossnamen huelen, déi no dem
+              applicabele Lëtzebuerger Recht
+              zulässeg sinn.
+            </p>
+
+            <p>
+              Dëst kann, wann déi rechtlech
+              Viraussetzungen erfëllt sinn,
+              insbesondere dozou féieren, datt de
+              Verkaf net weidergefouert gëtt an
+              d&apos;Konschtwierk engem anere
+              Participant oder op eng aner Manéier
+              ugebuede gëtt.
             </p>
           </Card>
 
@@ -719,77 +821,91 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              De Bieter gëtt opgefuerdert, sech, wann
-              méiglech, virum Gebot selwer en
-              Androck vum Wierk ze maachen.
+              Participante ginn opgefuerdert,
+              sech, wann dat méiglech ass, virum
+              Gebot selwer en Androck vum
+              Konschtwierk ze maachen.
             </p>
 
             <p>
-              D&apos;Kondschafter ginn, souwäit
-              gesetzlech zulässeg, keng
-              <strong> fräiwëlleg kommerziell Garantie</strong>
-              iwwer déi gesetzlech obligatoresch
-              Rechter eraus.
+              D&apos;Kondschafter ginn iwwer déi
+              eventuell vum applicabele Recht
+              virgeschriwwe Rechter eraus keng
+              zousätzlech fräiwëlleg kommerziell
+              Garantie.
             </p>
 
             <p>
-              Zwingend gesetzlech Rechter a
-              Haftungsbestëmmunge bleiwen onberéiert.
-            </p>
-          </Card>
-
-          <Card>
-            <SubTitle title="23. Récktrëtt, Retour a Remboursement" />
-
-            <p>
-              Geboter sinn am Prinzip verbindlech.
-              Eng fräiwëlleg Annulatioun oder e
-              fräiwëllege Remboursement ass no
-              engem valabele Verkaf net virgesinn.
-            </p>
-
-            <p>
-              Dëst gëllt awer
-              <strong> nëmmen esou wäit, wéi
-              zwingend gesetzlech Rechter näischt
-              Aneres virschreiwen</strong>.
-            </p>
-
-            <p>
-              Falls engem Participant am konkrete
-              Fall duerch zwingend applicabelt Recht
-              e Widerrufs-, Récktrëtts-, Garantie-
-              oder anert Verbraucherschutzrecht
-              zousteet, gëtt dat duerch dës
-              Auktiounsbedingungen net ausgeschloss.
+              Zwingend Rechter vum Keefer no dem
+              applicabele Lëtzebuerger Recht
+              bleiwen onberéiert.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="24. Technesch Problemer" />
+            <SubTitle title="23. Annulatioun, Retour a Remboursement" />
 
             <p>
-              Eng Online-Auktioun hänkt vu
-              Verbindungen, Apparater, Browseren,
-              Internetzougang an externen
+              Wéinst dem verbindlech Charakter vun
+              engem valabele Gebot ass eng
+              fräiwëlleg Annulatioun vum Gebot oder
+              vum Verkaf duerch de Participant
+              grondsätzlech net virgesinn.
+            </p>
+
+            <p>
+              Och e fräiwëllege Retour oder
+              Remboursement gëtt vun der
+              Organisatioun net generell ugebueden.
+            </p>
+
+            <p>
+              Dës Bestëmmung limitéiert awer keng
+              Rechter, déi engem Participant oder
+              Keefer no zwingendem applicabelem
+              Lëtzebuerger Recht zoustinn.
+            </p>
+
+            <p>
+              Wann am konkrete Fall eng zwingend
+              gesetzlech Schutzbestëmmung
+              applicabel ass, huet dës Virrang virun
+              enger entgéintstoender Bestëmmung vun
+              dësen Auktiounsbedingungen.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="24. Technesch Disponibilitéit" />
+
+            <p>
+              D&apos;Funktioun vun enger
+              Online-Auktioun hänkt ënner anerem
+              vun Internetverbindungen, Browseren,
+              Endgeräter an externe
               Infrastrukturservicer of.
             </p>
 
             <p>
-              D&apos;Organisatioun kann dofir net
-              garantéieren, datt d&apos;Websäit zu
-              all Zäit ouni Ënnerbriechung,
-              Verzögerung oder technesche Feeler
-              verfügbar ass.
+              Eng permanent an absolut
+              ënnerbriechungsfräi Disponibilitéit
+              vun der Plattform kann net garantéiert
+              ginn.
             </p>
 
             <p>
-              De Bieter ass verantwortlech dofir,
-              säi Gebot rechtzäiteg ofzeginn. Eng
-              nëmmen um eegene Gerät ugewisen oder
-              aginn Offer, déi net valabel vum
-              System enregistréiert gouf, gëllt net
-              als ofginn.
+              De Participant ass dofir
+              verantwortlech, säi Gebot mat
+              genuch Zäit virum Enn vun der
+              Auktioun ofzeginn.
+            </p>
+
+            <p>
+              E Betrag, deen nëmmen um Endgerät vum
+              Participant aginn oder ugewise gouf,
+              awer net valabel vum Auktiounssystem
+              enregistréiert gouf, gëllt net als
+              valabelt Gebot.
             </p>
           </Card>
 
@@ -797,75 +913,108 @@ export default function PrivacyPage() {
             <SubTitle title="25. Haftung" />
 
             <p>
-              Souwäit gesetzlech zulässeg, haft
-              d&apos;Organisatioun net fir Schied,
-              déi ausschliisslech aus externen
-              technesche Stéierungen,
-              Internetausfäll, Problemer um
-              Endgerät vum Participant oder
-              ähnlechen Ëmstänn entstinn, op déi
-              d&apos;Organisatioun keen
-              raisonnabelen Afloss huet.
+              D&apos;Organisatioun beméit sech ëm
+              eng sécher an ordnungsgeméiss
+              Duerchféierung vun der Auktioun.
             </p>
 
             <p>
-              Dës Haftungsbegrenzung gëllt
-              <strong> net</strong>, souwäit eng
-              Haftung no zwingendem Recht net
-              ausgeschloss oder limitéiert ka ginn.
+              Souwäit dat nom applicabele
+              Lëtzebuerger Recht zulässeg ass,
+              iwwerhëlt d&apos;Organisatioun keng
+              Verantwortung fir Problemer, déi
+              ausschliisslech duerch extern
+              Internetverbindungen,
+              Telekommunikatiounsnetzer,
+              Endgeräter vum Participant,
+              extern Déngschtleeschter oder aner
+              Ëmstänn verursaacht ginn, op déi
+              d&apos;Organisatioun kee raisonnabelen
+              Afloss huet.
             </p>
 
             <p>
-              Besonnesch bleift eng gesetzlech
-              Haftung fir vorsätzlecht oder, souwäit
-              applicabel, schwéier fahrlässegt
-              Verhalen, fir Verletzung vu Liewen,
-              Kierper oder Gesondheet an aner
-              zwingend Haftungsfäll onberéiert.
+              Näischt an dësen
+              Auktiounsbedingungen schléisst eng
+              Haftung aus oder limitéiert se, wann
+              esou en Ausschloss oder esou eng
+              Begrenzung no dem applicabele
+              Lëtzebuerger Recht net zulässeg ass.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="26. Integritéit vun der Auktioun" />
+            <SubTitle title="26. Manipulatioun a Mëssbrauch" />
 
             <p>
-              Manipulatiounsversich, automatiséiert
-              Mëssbrauch, Benotzung vu falschen
-              Identitéiten, bewosst falsch
-              Kontaktdonnéeën oder aner Handlungen,
-              déi d&apos;Integritéit vun der
-              Auktioun beeinträchtegen, sinn net
-              erlaabt.
+              All Versuch, d&apos;Auktioun oder den
+              technesche System ze manipuléieren,
+              ass verbueden.
             </p>
+
+            <p>
+              Dëst betrëfft insbesondere:
+            </p>
+
+            <ul>
+              <li>
+                Geboter ënner enger falscher
+                Identitéit
+              </li>
+              <li>
+                bewosst falsch Kontaktdonnéeën
+              </li>
+              <li>
+                automatiséiert oder massenhaft
+                technesch Ufroen, déi d&apos;Plattform
+                stéieren
+              </li>
+              <li>
+                Manipulatioun vun der
+                Authentifikatioun
+              </li>
+              <li>
+                bewosst Ausnotzung vun technesche
+                Feeler
+              </li>
+              <li>
+                aner Handlungen, déi eng fair
+                Duerchféierung vun der Auktioun
+                beeinträchtegen
+              </li>
+            </ul>
 
             <p>
               Bei engem begrënnte Verdacht kann
-              d&apos;Organisatioun de Participant
-              blockéieren, betraffe Geboter
-              iwwerpréiwen an, wann néideg,
-              annuléieren.
+              d&apos;Organisatioun déi betraffe
+              Geboter iwwerpréiwen an déi
+              Moossnamen huelen, déi fir eng fair
+              an ordnungsgeméiss Duerchféierung
+              néideg a rechtlech zulässeg sinn.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="27. Ënnerbriechung oder Ofbroch vun der Auktioun" />
+            <SubTitle title="27. Ënnerbriechung, Verlängerung oder Ofbroch" />
 
             <p>
               Bei engem schwéieren technesche
               Problem, engem Sécherheetsincident,
-              Manipulatioun, Force majeure oder
-              engem anere wesentleche Grond kann
+              Manipulatioun, engem Ausfall vu
+              wesentlecher Infrastruktur,
+              Force majeure oder engem anere
+              wesentleche Grond kann
               d&apos;Organisatioun d&apos;Auktioun
-              temporär ënnerbriechen, korrigéieren,
-              verlängeren oder ofbriechen, wann dat
-              fir eng fair an ordnungsgeméiss
+              temporär ënnerbriechen, verlängeren,
+              korrigéieren oder ofbriechen, wann
+              dëst fir eng fair an ordnungsgeméiss
               Duerchféierung néideg ass.
             </p>
 
             <p>
-              Esou eng Moossnam soll nëmmen aus
-              sachlechem Grond an am néidegen Ëmfang
-              geholl ginn.
+              Eng esou Entscheedung soll nëmmen aus
+              engem sachleche Grond an am
+              néidegen Ëmfang getraff ginn.
             </p>
           </Card>
 
@@ -873,41 +1022,51 @@ export default function PrivacyPage() {
             <SubTitle title="28. Applicabelt Recht" />
 
             <p>
-              Souwäit gesetzlech zulässeg, gëllt
-              Lëtzebuerger Recht.
+              Fir dës Auktioun an dës
+              Auktiounsbedingungen gëllt, souwäit
+              rechtlech zulässeg,
+              <strong> Lëtzebuerger Recht</strong>.
             </p>
 
             <p>
-              Zwingend gesetzlech Bestëmmungen,
-              besonnesch zwingend Rechter vun engem
-              Participant, déi duerch eng
-              Rechtswahl net ofbedonge kënne ginn,
-              bleiwen onberéiert.
+              Zwingend gesetzlech Bestëmmungen, déi
+              am konkrete Fall applicabel sinn a
+              vun deenen net duerch eng
+              vertraglech Bestëmmung ofgewise ka
+              ginn, bleiwen onberéiert.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="29. Salvatoresch Bestëmmung" />
+            <SubTitle title="29. Deelweis Ongëltegkeet" />
 
             <p>
-              Sollt eng Bestëmmung vun dësen
-              Auktiounsbedingungen ganz oder deelweis
-              ongëlteg oder net duerchsetzbar sinn,
-              bleift d&apos;Gëltegkeet vun deenen
-              anere Bestëmmungen, souwäit gesetzlech
-              zulässeg, onberéiert.
+              Wann eng Bestëmmung vun dësen
+              Auktiounsbedingungen ganz oder
+              deelweis net valabel oder net
+              duerchsetzbar sollt sinn, soll dëst,
+              souwäit nom applicabele Recht
+              méiglech, net automatesch
+              d&apos;Gëltegkeet vun deenen anere
+              Bestëmmunge beaflossen.
+            </p>
+
+            <p>
+              An esou engem Fall gëllen déi
+              gesetzlech Reegelen.
             </p>
           </Card>
 
-          <SectionTitle title="English" />
+          <SectionTitle title="English – Privacy" />
 
           <Card>
             <SubTitle title="1. Controller and Organizer" />
 
             <p>
-              The controller responsible for this
-              website, the auction and the processing
-              of personal data is:
+              The entity responsible for this
+              website, the organization of the
+              auction and the processing of personal
+              data is:
             </p>
 
             <p>
@@ -935,8 +1094,9 @@ export default function PrivacyPage() {
 
             <p>
               Depending on the manner of
-              participation, the following data may
-              be processed:
+              participation, data processed in
+              connection with the auction may
+              include:
             </p>
 
             <ul>
@@ -944,10 +1104,10 @@ export default function PrivacyPage() {
               <li>postal address</li>
               <li>email address</li>
               <li>telephone number</li>
-              <li>account or user identifier</li>
+              <li>user or account identifier</li>
               <li>bid amount</li>
               <li>date and time of the bid</li>
-              <li>bid source, such as online or live</li>
+              <li>bid source, online or live</li>
               <li>
                 public IP address for online bids
               </li>
@@ -968,54 +1128,69 @@ export default function PrivacyPage() {
             <p>
               When an online bid is submitted, the
               public IP address of the internet
-              connection used for the bid is
+              connection used for that bid is
               determined and stored together with
               the bid.
             </p>
 
             <p>
-              The external service
+              The external technical service
               <strong> api.ipify.org</strong> is
-              contacted for this purpose. This
-              requires the participant&apos;s browser
-              to make a direct request to that
-              service. The operator of that service
-              will therefore necessarily receive
-              the IP address and technical request
-              information required to process the
-              connection.
+              used to determine the public IP
+              address. The participant&apos;s browser
+              therefore makes a direct request to
+              this service.
             </p>
 
             <p>
-              The auction organizer stores the IP
-              address in particular for bid
-              documentation, fraud prevention,
-              security and the investigation or
-              defence of potential claims concerning
-              the authenticity of a bid.
+              The IP address is stored for
+              documentation of the bid, protection
+              of the integrity and security of the
+              auction, detection of abuse or
+              manipulation and the investigation of
+              potential disputes concerning the
+              submission or authenticity of a bid.
+            </p>
+
+            <p>
+              Where a participant uses a VPN, proxy
+              or similar service, the recorded IP
+              address may be the address of that
+              service rather than the participant&apos;s
+              original internet connection.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="4. Purposes and Legal Bases" />
+            <SubTitle title="4. Purposes and Legal Basis" />
 
             <p>
-              Personal data is processed where
-              necessary for registration,
-              authentication, the operation of the
-              auction, recording and documenting
-              bids, determining the successful
-              bidder, contacting the winner,
-              processing payment and transfer of the
-              artwork, preventing fraud and complying
-              with legal obligations.
+              Personal data is processed only where
+              necessary for the organization,
+              security and settlement of the
+              auction or where processing is
+              required by applicable law.
             </p>
 
             <p>
               Depending on the purpose, processing
-              may in particular be based on Article
-              6(1)(b), Article 6(1)(c) and Article
-              6(1)(f) GDPR.
+              may be necessary for participation in
+              the auction and performance of the
+              resulting contractual relationship,
+              compliance with legal obligations or
+              protection of legitimate interests
+              such as IT security, fraud prevention,
+              bid documentation and the
+              establishment or defence of legal
+              claims.
+            </p>
+
+            <p>
+              Processing is carried out in
+              accordance with the data protection
+              law applicable in Luxembourg,
+              including applicable European data
+              protection rules.
             </p>
           </Card>
 
@@ -1023,27 +1198,25 @@ export default function PrivacyPage() {
             <SubTitle title="5. Technical Service Providers" />
 
             <p>
-              The platform currently uses technical
-              service providers including:
+              The auction platform currently uses
+              external technical service providers,
+              including:
             </p>
 
             <ul>
               <li>
-                <strong>Vercel</strong> for hosting;
+                <strong>Vercel</strong> for hosting
+                and delivery of the web application;
               </li>
-
               <li>
                 <strong>Supabase</strong> for
                 database, authentication and
                 realtime functionality;
               </li>
-
               <li>
                 <strong>Brevo</strong> for
-                transactional and authentication
-                emails;
+                technically necessary emails;
               </li>
-
               <li>
                 <strong>ipify</strong> for
                 determining the public IP address
@@ -1052,10 +1225,17 @@ export default function PrivacyPage() {
             </ul>
 
             <p>
-              Personal data is not sold by
-              Kondschafter and is not disclosed for
-              independent commercial advertising
-              purposes.
+              Personal or technical data may be
+              processed by these providers to the
+              extent necessary to provide the
+              relevant technical service.
+            </p>
+
+            <p>
+              Kondschafter does not sell
+              participants&apos; personal data and
+              does not use it for independent
+              commercial advertising purposes.
             </p>
           </Card>
 
@@ -1063,18 +1243,19 @@ export default function PrivacyPage() {
             <SubTitle title="6. International Processing" />
 
             <p>
-              Depending on the infrastructure and
-              subprocessors used by the relevant
-              service providers, data may be
-              processed outside the European
+              The use of international cloud,
+              hosting or infrastructure providers
+              may involve processing of data
+              outside Luxembourg or the European
               Economic Area.
             </p>
 
             <p>
-              Where the GDPR applies to such a
-              transfer, an appropriate legal
-              transfer mechanism or other applicable
-              safeguard should be used.
+              Where applicable data protection law
+              imposes specific requirements on such
+              processing or transfers, the relevant
+              legal requirements and safeguards
+              apply.
             </p>
           </Card>
 
@@ -1083,52 +1264,45 @@ export default function PrivacyPage() {
 
             <p>
               Personal data is retained only for as
-              long as necessary for the auction,
-              settlement of the sale, documentation
-              of bids, establishment or defence of
-              legal claims, and compliance with
-              applicable statutory retention
+              long as necessary for conducting and
+              settling the auction, documenting
+              bids, resolving potential disputes or
+              complying with applicable legal
               obligations.
             </p>
 
             <p>
-              Data for which no further lawful
-              retention purpose exists will
-              subsequently be deleted or anonymised.
+              Where there is no longer a lawful
+              reason for continued retention, the
+              relevant data will be deleted or
+              anonymised.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="8. Data Subject Rights" />
+            <SubTitle title="8. Data Protection Rights" />
 
             <p>
-              Subject to the applicable statutory
-              requirements and limitations, data
-              subjects may have rights including:
+              Subject to the requirements and
+              limitations of applicable Luxembourg
+              and European data protection law,
+              individuals may have rights including
+              access, rectification, erasure,
+              restriction, data portability and
+              objection to certain forms of
+              processing.
             </p>
 
-            <ul>
-              <li>access</li>
-              <li>rectification</li>
-              <li>erasure</li>
-              <li>restriction of processing</li>
-              <li>data portability</li>
-              <li>
-                objection to processing based on
-                legitimate interests
-              </li>
-            </ul>
-
             <p>
-              Requests may be sent to
+              Requests may be addressed to
               <strong> kondschafter@gmail.com</strong>.
             </p>
 
             <p>
-              Data subjects also have the right to
-              lodge a complaint with the competent
-              data protection authority. In
-              Luxembourg, this is the
+              Individuals may also lodge a complaint
+              with the competent data protection
+              authority. In Luxembourg, the
+              competent authority is the
               <strong>
                 {' '}Commission nationale pour la
                 protection des données (CNPD)
@@ -1137,27 +1311,36 @@ export default function PrivacyPage() {
             </p>
           </Card>
 
-          <SectionTitle title="Auction Terms – English" />
+          <SectionTitle title="English – Auction Terms" />
 
           <Card>
-            <SubTitle title="9. Binding Bids" />
+            <SubTitle title="9. Scope and Acceptance" />
 
             <p>
-              Every valid bid is binding.
-              Participants are responsible for
-              checking the amount entered before
-              submitting a bid.
+              These auction terms apply to both
+              online and live participation in the
+              Kondschafter auction.
             </p>
 
             <p>
-              A change of mind or simple input error
-              does not automatically give a bidder
-              the right to withdraw a bid.
+              By submitting a bid, the participant
+              accepts these auction terms and the
+              privacy information in the version
+              available on the auction website at
+              the time the bid is submitted.
+            </p>
+
+            <p>
+              Participation is limited to persons
+              legally capable of submitting a
+              binding bid and entering into the
+              resulting transaction under applicable
+              law.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="10. Starting Bid and Bid Increments" />
+            <SubTitle title="10. Starting Bid and Bid Rules" />
 
             <p>
               The starting bid is
@@ -1165,24 +1348,77 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              If no bid has yet been recorded, the
-              first valid bid must be between
+              Where no valid bid has yet been
+              recorded, the first valid bid must be
+              between
               <strong> €2,500 and €3,000</strong>.
             </p>
 
             <p>
-              Every subsequent bid must exceed the
-              current highest valid bid by at least
-              <strong> €50</strong> and by no more
-              than <strong>€500</strong>.
+              Each subsequent valid bid must exceed
+              the current highest valid bid by at
+              least <strong>€50</strong> and by no
+              more than <strong>€500</strong>.
+            </p>
+
+            <p>
+              A bid that does not comply with these
+              requirements or is rejected by the
+              auction system is not considered a
+              valid recorded bid.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="11. Auction Closing" />
+            <SubTitle title="11. Binding Nature of Bids" />
 
             <p>
-              The auction is scheduled to close on
+              Every valid bid is
+              <strong> binding</strong>.
+            </p>
+
+            <p>
+              Participants are responsible for
+              checking the amount and information
+              displayed before finally submitting
+              their bid.
+            </p>
+
+            <p>
+              A change of mind or a simple input
+              error does not automatically entitle
+              a participant to withdraw a valid bid.
+            </p>
+
+            <p>
+              Any mandatory rights available to a
+              participant under applicable
+              Luxembourg law remain unaffected.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="12. Online and Live Bids" />
+
+            <p>
+              Online bids and bids recorded by the
+              organizer during the live auction may
+              form part of the same auction and the
+              same sequence of bids.
+            </p>
+
+            <p>
+              As a general rule, the valid bid
+              status recorded by the auction system
+              is decisive.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="13. Auction Closing" />
+
+            <p>
+              The auction closes on
               <strong>
                 {' '}13 September 2026 at 19:26
                 Luxembourg time
@@ -1191,183 +1427,271 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              After the technical closing time, no
-              further bids will be accepted through
-              the regular online bidding function.
+              No further bids will be accepted
+              through the regular online bidding
+              function after that time.
+            </p>
+
+            <p>
+              The technical time recorded by the
+              auction system is decisive rather
+              than the time displayed on the
+              participant&apos;s device.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="12. Successful Bidder" />
+            <SubTitle title="14. Highest Valid Bid" />
 
             <p>
               As a general rule, the highest valid
-              bid recorded by the auction system at
-              the relevant closing time will be
-              decisive.
+              bid recorded by the auction system
+              before the closing time is decisive.
             </p>
 
             <p>
-              The organizer may disregard or cancel
-              a bid where there are concrete
+              The organizer may review and, where
+              objectively justified, disregard or
+              cancel a bid where there are concrete
               indications of fraud, manipulation,
-              abuse, an obvious technical error,
-              inability to identify the bidder or
-              another material irregularity.
+              false identity, deliberately false
+              contact details, technical abuse, an
+              obvious technical error or another
+              material irregularity.
+            </p>
+
+            <p>
+              Such decisions must be based on an
+              objective reason and must not be
+              arbitrary.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="13. Payment and Transfer" />
+            <SubTitle title="15. Successful Bidder, Payment and Transfer" />
 
             <p>
-              The successful bidder must pay the
-              purchase price in accordance with the
-              instructions provided by the
+              After the auction closes, the
+              participant with the highest valid
+              bid will be contacted by the
               organizer.
             </p>
 
             <p>
-              The artwork will normally be released
-              only after payment in full.
+              The organizer may verify the identity
+              and contact details of the potential
+              successful bidder before final
+              settlement.
             </p>
 
             <p>
-              If the successful bidder fails to pay
-              despite a reasonable further deadline,
-              the organizer may, to the extent
-              permitted by law, cancel the sale and
-              consider the next valid bidder or
-              otherwise dispose of the artwork.
+              The successful bidder must pay the
+              purchase price in accordance with the
+              organizer&apos;s instructions.
+            </p>
+
+            <p>
+              The artwork will normally be handed
+              over only after payment in full.
+            </p>
+
+            <p>
+              The legal effects of the bid, award,
+              payment and sale are governed by the
+              law applicable in Luxembourg.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="14. Condition of the Artwork" />
+            <SubTitle title="16. Condition of the Artwork" />
 
             <p>
-              The artwork is transferred in its
-              actual condition at the time of
+              The artwork will be transferred in
+              its actual condition at the time of
               handover.
             </p>
 
             <p>
-              Digital photographs and screen
-              displays may differ from the original
-              artwork in colour, brightness,
-              contrast or detail.
+              Participants are encouraged, where
+              possible, to inspect the artwork
+              before bidding.
             </p>
 
             <p>
-              To the extent permitted by law, the
-              organizer does not provide any
+              Photographs and digital displays are
+              provided for illustration. Colour,
+              brightness, contrast and detail may
+              differ from the original artwork.
+            </p>
+
+            <p>
+              Kondschafter provides no additional
               voluntary commercial warranty beyond
-              rights that cannot lawfully be
-              excluded.
+              any rights that apply mandatorily
+              under applicable law.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="15. Cancellation, Returns and Refunds" />
+            <SubTitle title="17. Cancellation, Return and Refund" />
 
             <p>
-              Valid bids are intended to be binding,
-              and no voluntary cancellation, return
-              or refund is offered after a valid
-              sale.
+              Because valid bids are binding,
+              voluntary cancellation of a valid bid
+              or completed sale is not generally
+              offered by the organizer.
             </p>
 
             <p>
-              However, nothing in these terms
-              excludes any withdrawal, cancellation,
-              warranty, consumer protection or other
-              right that applies mandatorily under
-              applicable law.
-            </p>
-          </Card>
-
-          <Card>
-            <SubTitle title="16. Technical Availability" />
-
-            <p>
-              The organizer cannot guarantee that
-              the website, internet connections,
-              third-party infrastructure or
-              participant devices will operate
-              without interruption or delay at all
-              times.
+              No general voluntary return or refund
+              policy is offered.
             </p>
 
             <p>
-              A bid is only considered submitted
-              where it has been validly received and
-              recorded by the auction system.
+              Nothing in these terms limits any
+              mandatory right available to a
+              participant or purchaser under
+              applicable Luxembourg law.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="17. Liability" />
+            <SubTitle title="18. Technical Availability" />
 
             <p>
-              To the extent permitted by applicable
-              law, the organizer will not be liable
-              for losses caused solely by external
-              internet failures, participant device
-              problems or other circumstances beyond
-              its reasonable control.
+              The operation of an online auction
+              depends on internet connections,
+              browsers, participant devices and
+              external infrastructure providers.
+            </p>
+
+            <p>
+              Continuous and completely
+              interruption-free availability cannot
+              be guaranteed.
+            </p>
+
+            <p>
+              Participants are responsible for
+              submitting their bids sufficiently
+              before the closing time.
+            </p>
+
+            <p>
+              An amount merely entered or displayed
+              on a participant&apos;s device but not
+              validly recorded by the auction
+              system does not constitute a valid
+              bid.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="19. Liability" />
+
+            <p>
+              The organizer will use reasonable
+              efforts to operate the auction in a
+              secure and orderly manner.
+            </p>
+
+            <p>
+              To the extent permitted under
+              applicable Luxembourg law, the
+              organizer is not responsible for
+              problems caused exclusively by
+              external internet connections,
+              telecommunications networks,
+              participant devices, external service
+              providers or other circumstances
+              outside the organizer&apos;s reasonable
+              control.
             </p>
 
             <p>
               Nothing in these terms excludes or
               limits liability where such exclusion
-              or limitation is prohibited by
-              mandatory law.
+              or limitation is not permitted under
+              applicable Luxembourg law.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="18. Manipulation and Abuse" />
+            <SubTitle title="20. Manipulation and Abuse" />
 
             <p>
-              Fraudulent bids, false identities,
-              deliberately false contact details,
-              automated abuse or any attempt to
-              manipulate the auction are prohibited.
+              Any attempt to manipulate the auction
+              or its technical systems is
+              prohibited.
             </p>
 
             <p>
-              The organizer may investigate and,
-              where reasonably justified, reject or
-              cancel affected bids.
+              Where there is a reasonable suspicion
+              of manipulation, fraud, false
+              identity, deliberately false
+              information or technical abuse, the
+              organizer may investigate the
+              affected bids and take such measures
+              as are reasonably necessary and
+              legally permissible to protect the
+              integrity of the auction.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="19. Suspension or Cancellation" />
+            <SubTitle title="21. Suspension, Extension or Cancellation" />
 
             <p>
               In the event of a serious technical
-              failure, security incident,
-              manipulation, force majeure or another
-              material reason, the organizer may
-              suspend, correct, extend or cancel the
-              auction where reasonably necessary to
-              preserve a fair and orderly process.
+              problem, security incident,
+              manipulation, failure of essential
+              infrastructure, force majeure or
+              another material reason, the organizer
+              may suspend, extend, correct or cancel
+              the auction where reasonably necessary
+              to ensure a fair and orderly process.
+            </p>
+
+            <p>
+              Any such decision should be based on
+              an objective reason and limited to
+              what is reasonably necessary.
             </p>
           </Card>
 
           <Card>
-            <SubTitle title="20. Governing Law" />
+            <SubTitle title="22. Applicable Law" />
 
             <p>
-              To the extent permitted by law,
-              Luxembourg law applies.
+              To the extent legally permissible,
+              this auction and these auction terms
+              are governed by
+              <strong> Luxembourg law</strong>.
             </p>
 
             <p>
-              Any mandatory rights or protections
-              which cannot lawfully be excluded by
-              a choice of law remain unaffected.
+              Mandatory statutory provisions that
+              apply in a particular case and cannot
+              lawfully be excluded by agreement
+              remain unaffected.
+            </p>
+          </Card>
+
+          <Card>
+            <SubTitle title="23. Partial Invalidity" />
+
+            <p>
+              If any provision of these terms is
+              found to be wholly or partly invalid
+              or unenforceable, this shall, to the
+              extent permitted by applicable law,
+              not automatically affect the validity
+              of the remaining provisions.
+            </p>
+
+            <p>
+              Applicable statutory rules shall
+              apply where necessary.
             </p>
           </Card>
 
@@ -1375,16 +1699,11 @@ export default function PrivacyPage() {
             style={{
               marginTop: '40px',
               paddingTop: '24px',
-              borderTop:
-                '1px solid #d9e8ff',
+              borderTop: '1px solid #d9e8ff',
               lineHeight: '1.8'
             }}
           >
-            <h2
-              style={{
-                color: '#0f3d91'
-              }}
-            >
+            <h2 style={{ color: '#0f3d91' }}>
               Responsabilitéitsinformatiounen /
               Legal Information
             </h2>
@@ -1406,9 +1725,7 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              <strong>
-                Kënschtler / Artist
-              </strong>
+              <strong>Kënschtler / Artist</strong>
               <br />
               André Scholtes
               <br />
@@ -1475,8 +1792,7 @@ function SectionTitle({
         marginBottom: '20px',
         fontSize: '32px',
         color: '#0f3d91',
-        borderBottom:
-          '3px solid #6bb6ff',
+        borderBottom: '3px solid #6bb6ff',
         paddingBottom: '10px'
       }}
     >
@@ -1512,13 +1828,11 @@ function Card({
     <div
       style={{
         background: '#f7fbff',
-        border:
-          '1px solid #cfe5ff',
+        border: '1px solid #cfe5ff',
         borderRadius: '20px',
         padding: '24px',
         marginBottom: '22px',
-        boxShadow:
-          '0 4px 12px rgba(0,0,0,0.04)'
+        boxShadow: '0 4px 12px rgba(0,0,0,0.04)'
       }}
     >
       {children}
