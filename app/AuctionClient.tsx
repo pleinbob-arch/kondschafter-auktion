@@ -50,7 +50,8 @@ type AuctionClientProps = {
 export default function AuctionClient({
   initialHighestBid,
   initialLastBid,
-  initialAuctionSettings = null
+  initialAuctionSettings = null,
+  initialBidsLoaded = false
 }: AuctionClientProps) {
   const [session, setSession] = useState<Session | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
