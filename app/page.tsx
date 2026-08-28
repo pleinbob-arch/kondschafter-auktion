@@ -32,14 +32,23 @@ type BidderProfile = {
   language: string
 }
 
+type PublicBid = {
+  amount: number | string
+  created_at: string
+  source: string
+}
+
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
-  const [bidderProfile, setBidderProfile] = useState<BidderProfile | null>(null)
+  const [bidderProfile, setBidderProfile] =
+    useState<BidderProfile | null>(null)
 
   const [loginEmail, setLoginEmail] = useState('')
-  const [highestBid, setHighestBid] = useState<number | null>(null)
-  const [lastBid, setLastBid] = useState<any>(null)
+  const [highestBid, setHighestBid] =
+    useState<number | null>(null)
+  const [lastBid, setLastBid] =
+    useState<PublicBid | null>(null)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
@@ -72,23 +81,33 @@ export default function Home() {
     const { error } = await supabase.auth.signInWithOtp({
       email: loginEmail,
       options: {
-        emailRedirectTo: 'https://kondschafter-auktion.vercel.app'
+        emailRedirectTo:
+          'https://kondschafter-auktion.vercel.app'
       }
     })
 
     if (error) {
-      setMessage('Fehler: ' + error.message)
+      setMessage(
+        'De Bestätegungslink konnt net geschéckt ginn. ' +
+        'Probéier w.e.g. nach eng Kéier. / ' +
+        'The confirmation link could not be sent. ' +
+        'Please try again.'
+      )
       return
     }
 
     setMessage(
-      'Bestätegungslink gouf geschéckt. Kuck w.e.g. deng E-Mail.'
+      'De Bestätegungslink gouf geschéckt. ' +
+      'Kuck w.e.g. deng E-Mail. / ' +
+      'The confirmation link has been sent. ' +
+      'Please check your email.'
     )
   }
 
   async function loadHighestBid() {
-    const { data, error } = await supabase
-      .rpc('get_public_bids')
+    const { data, error } = await supabase.rpc(
+      'get_public_bids'
+    )
 
     if (error) {
       console.error(
@@ -98,25 +117,18 @@ export default function Home() {
       return
     }
 
-    const topBids = data?.slice(0, 2) || []
+    const topBids = (data?.slice(0, 2) || []) as PublicBid[]
 
     if (topBids.length > 0) {
-      setHighestBid(
-        Number(topBids[0].amount)
-      )
-
-      setLastBid(
-        topBids[1] || null
-      )
+      setHighestBid(Number(topBids[0].amount))
+      setLastBid(topBids[1] || null)
     } else {
       setHighestBid(null)
       setLastBid(null)
     }
   }
 
-  async function loadBidderProfile(
-    userId: string
-  ) {
+  async function loadBidderProfile(userId: string) {
     setProfileLoading(true)
 
     const { data, error } = await supabase
@@ -126,9 +138,16 @@ export default function Home() {
       .maybeSingle()
 
     if (error) {
+      console.error(
+        'Bidder profile could not be loaded:',
+        error
+      )
+
       setMessage(
-        'Fehler beim Laden der Bieterdaten: ' +
-        error.message
+        'Deng Donnéeë konnten net geluede ginn. ' +
+        'Probéier w.e.g. nach eng Kéier. / ' +
+        'Your details could not be loaded. ' +
+        'Please try again.'
       )
 
       setBidderProfile(null)
@@ -136,27 +155,20 @@ export default function Home() {
       return
     }
 
-    setBidderProfile(
-      data || null
-    )
-
+    setBidderProfile(data || null)
     setProfileLoading(false)
   }
 
-  async function saveBidderProfile(
-    e: React.FormEvent
-  ) {
+  async function saveBidderProfile(e: React.FormEvent) {
     e.preventDefault()
     setMessage('')
 
     const {
       data: sessionData,
       error: sessionError
-    } =
-      await supabase.auth.getSession()
+    } = await supabase.auth.getSession()
 
-    const currentSession =
-      sessionData.session
+    const currentSession = sessionData.session
 
     if (
       sessionError ||
@@ -164,56 +176,44 @@ export default function Home() {
       !currentSession.user.email
     ) {
       setMessage(
-        'Deng Sessioun ass net méi aktiv. Logg dech w.e.g. nach eng Kéier an. / Your session is no longer active. Please sign in again.'
+        'Deng Sessioun ass net méi aktiv. ' +
+        'Logg dech w.e.g. nach eng Kéier an. / ' +
+        'Your session is no longer active. ' +
+        'Please sign in again.'
       )
       return
     }
 
     if (
-      !profileForm.firstName ||
-      !profileForm.lastName ||
-      !profileForm.street ||
-      !profileForm.city ||
-      !profileForm.phone
+      !profileForm.firstName.trim() ||
+      !profileForm.lastName.trim() ||
+      !profileForm.street.trim() ||
+      !profileForm.city.trim() ||
+      !profileForm.phone.trim()
     ) {
       setMessage(
-        'Bitte alle Pflichtfelder ausfüllen.'
+        'Fëll w.e.g. all Pflichtfelder aus. / ' +
+        'Please complete all required fields.'
       )
       return
     }
 
-    const { data, error } =
-      await supabase
-        .from('bidders')
-        .insert([
-          {
-            user_id:
-              currentSession.user.id,
-
-            email:
-              currentSession.user.email,
-
-            first_name:
-              profileForm.firstName,
-
-            last_name:
-              profileForm.lastName,
-
-            street:
-              profileForm.street,
-
-            city:
-              profileForm.city,
-
-            phone:
-              profileForm.phone,
-
-            language:
-              profileForm.language
-          }
-        ])
-        .select('*')
-        .single()
+    const { data, error } = await supabase
+      .from('bidders')
+      .insert([
+        {
+          user_id: currentSession.user.id,
+          email: currentSession.user.email,
+          first_name: profileForm.firstName.trim(),
+          last_name: profileForm.lastName.trim(),
+          street: profileForm.street.trim(),
+          city: profileForm.city.trim(),
+          phone: profileForm.phone.trim(),
+          language: profileForm.language
+        }
+      ])
+      .select('*')
+      .single()
 
     if (error) {
       console.error(
@@ -222,8 +222,10 @@ export default function Home() {
       )
 
       setMessage(
-        'Fehler beim Speichern der Bieterdaten: ' +
-        error.message
+        'Deng Donnéeë konnten net gespäichert ginn. ' +
+        'Probéier w.e.g. nach eng Kéier. / ' +
+        'Your details could not be saved. ' +
+        'Please try again.'
       )
       return
     }
@@ -231,118 +233,171 @@ export default function Home() {
     setBidderProfile(data)
 
     setMessage(
-      'Merci! Deng Donnéeë goufe gespäichert. Du kanns elo bidden.'
+      'Merci! Deng Donnéeë goufe gespäichert. ' +
+      'Du kanns elo bidden. / ' +
+      'Thank you! Your details have been saved. ' +
+      'You can now place a bid.'
     )
   }
 
-  async function submitBid(
-    e: React.FormEvent
-  ) {
+  async function submitBid(e: React.FormEvent) {
     e.preventDefault()
     setMessage('')
 
     if (!session?.user?.email) {
       setMessage(
-        'Bitte zuerst per E-Mail bestätigen.'
+        'Confirméier w.e.g. fir d’éischt deng E-Mail. / ' +
+        'Please confirm your email first.'
       )
       return
     }
 
     if (!bidderProfile) {
       setMessage(
-        'Bitte zuerst deine Daten ausfüllen.'
+        'Fëll w.e.g. fir d’éischt deng Donnéeën aus. / ' +
+        'Please complete your details first.'
       )
       return
     }
 
-    if (
-      new Date() >= AUCTION_END
-    ) {
+    if (new Date() >= AUCTION_END) {
       setMessage(
-        'Auktioun beendet / Auction ended'
+        'D’Auktioun ass eriwwer. / The auction has ended.'
       )
       return
     }
 
-    const amount =
-      Number(bidAmount)
+    const amount = Number(bidAmount)
 
-    if (!amount) {
+    if (!Number.isFinite(amount) || amount <= 0) {
       setMessage(
-        'Bitte ein Gebot eingeben.'
+        'Gëff w.e.g. e valabelt Gebot an. / ' +
+        'Please enter a valid bid.'
       )
       return
     }
 
-    if (
-      amount < minBid ||
-      amount > maxBid
-    ) {
+    if (amount < minBid || amount > maxBid) {
       setMessage(
-        `Däi Gebot muss tëscht ${minBid.toLocaleString('de-LU')} € an ${maxBid.toLocaleString('de-LU')} € leien.|` +
-        `Your bid must be between ${minBid.toLocaleString('de-LU')} € and ${maxBid.toLocaleString('de-LU')} €.`
+        `Däi Gebot muss tëscht ${minBid.toLocaleString(
+          'de-LU'
+        )} € an ${maxBid.toLocaleString(
+          'de-LU'
+        )} € leien.|` +
+        `Your bid must be between ${minBid.toLocaleString(
+          'de-LU'
+        )} € and ${maxBid.toLocaleString(
+          'de-LU'
+        )} €.`
       )
       return
     }
 
     /*
-     * Öffentliche IP-Adresse des
-     * Bieters ermitteln.
+     * Ëffentlech IP-Adress vum Bieter ermëttelen.
      */
     let ipAddress = ''
 
     try {
-      const ipData =
-        await fetch(
-          'https://api.ipify.org?format=json'
-        )
+      const ipData = await fetch(
+        'https://api.ipify.org?format=json'
+      )
 
-      const ipJson =
-        await ipData.json()
-
-      ipAddress =
-        ipJson.ip || ''
+      if (ipData.ok) {
+        const ipJson = await ipData.json()
+        ipAddress = ipJson.ip || ''
+      }
     } catch {
-      ipAddress =
-        'unknown'
+      ipAddress = ''
     }
 
     /*
-     * Gebot sicher über die
-     * Supabase RPC-Funktion speichern.
+     * Gebot iwwer déi geséchert
+     * Supabase RPC-Funktioun späicheren.
      */
-    const { error } =
-      await supabase.rpc(
-        'place_bid',
-        {
-          p_amount:
-            amount,
-
-          p_ip_address:
-            ipAddress || 'unknown',
-
-          p_user_agent:
-            navigator.userAgent
-        }
-      )
+    const { error } = await supabase.rpc(
+      'place_bid',
+      {
+        p_amount: amount,
+        p_ip_address: ipAddress || 'unknown',
+        p_user_agent: navigator.userAgent
+      }
+    )
 
     if (error) {
+      console.error('Bid submission failed:', error)
+
+      const errorText = error.message || ''
+
+      if (errorText.includes('BID_TOO_LOW')) {
+        setMessage(
+          'Däi Gebot ass ze niddreg. ' +
+          'De Gebotsstand gouf eventuell an der Tëschenzäit erhéicht. / ' +
+          'Your bid is too low. ' +
+          'The current bid may have increased in the meantime.'
+        )
+        await loadHighestBid()
+        return
+      }
+
+      if (errorText.includes('BID_TOO_HIGH')) {
+        setMessage(
+          'Däi Gebot ass ze héich. ' +
+          'Déi maximal Erhéijung pro Gebot ass 500 €. / ' +
+          'Your bid is too high. ' +
+          'The maximum increase per bid is €500.'
+        )
+        await loadHighestBid()
+        return
+      }
+
+      if (errorText.includes('AUCTION_ENDED')) {
+        setAuctionClosed(true)
+
+        setMessage(
+          'D’Auktioun ass eriwwer. / The auction has ended.'
+        )
+        return
+      }
+
+      if (errorText.includes('NOT_AUTHENTICATED')) {
+        setMessage(
+          'Deng Sessioun ass net méi aktiv. ' +
+          'Logg dech w.e.g. nach eng Kéier an. / ' +
+          'Your session is no longer active. ' +
+          'Please sign in again.'
+        )
+        return
+      }
+
+      if (errorText.includes('BIDDER_PROFILE_MISSING')) {
+        setMessage(
+          'Deng Bieterdonnéeë feelen. ' +
+          'Logg dech w.e.g. nach eng Kéier an. / ' +
+          'Your bidder details are missing. ' +
+          'Please sign in again.'
+        )
+        return
+      }
+
       setMessage(
-        'Fehler: ' +
-        error.message
+        'Däi Gebot konnt net gespäichert ginn. ' +
+        'Probéier w.e.g. nach eng Kéier. / ' +
+        'Your bid could not be saved. ' +
+        'Please try again.'
       )
       return
     }
 
     /*
-     * Eigene Anzeige sofort
-     * aktualisieren.
+     * Eegent Gebot direkt um Bildschierm weisen.
      */
     setHighestBid(amount)
     setBidAmount('')
 
     setMessage(
-      'Merci! Däi Gebot gouf gespäichert.'
+      'Merci! Däi Gebot gouf gespäichert. / ' +
+      'Thank you! Your bid has been recorded.'
     )
   }
 
@@ -358,16 +413,10 @@ export default function Home() {
     supabase.auth
       .getSession()
       .then(({ data }) => {
-        setSession(
-          data.session
-        )
+        setSession(data.session)
 
-        if (
-          data.session?.user?.id
-        ) {
-          loadBidderProfile(
-            data.session.user.id
-          )
+        if (data.session?.user?.id) {
+          loadBidderProfile(data.session.user.id)
         } else {
           setProfileLoading(false)
         }
@@ -384,59 +433,45 @@ export default function Home() {
         }
       })
 
-    const authListener =
-      supabase.auth
-        .onAuthStateChange(
-          (_event, session) => {
-            setSession(session)
+    const authListener = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session)
 
-            if (
-              session?.user?.id
-            ) {
-              loadBidderProfile(
-                session.user.id
-              )
-            } else {
-              setBidderProfile(null)
-              setProfileLoading(false)
-            }
-          }
-        )
+        if (session?.user?.id) {
+          loadBidderProfile(session.user.id)
+        } else {
+          setBidderProfile(null)
+          setProfileLoading(false)
+        }
+      }
+    )
 
     loadHighestBid()
 
-    const checkAuctionClosed =
-      () => {
-        setAuctionClosed(
-          new Date() >=
-          AUCTION_END
-        )
-      }
+    const checkAuctionClosed = () => {
+      setAuctionClosed(new Date() >= AUCTION_END)
+    }
 
     checkAuctionClosed()
 
-    const closeInterval =
-      setInterval(
-        checkAuctionClosed,
-        1000
-      )
+    const closeInterval = setInterval(
+      checkAuctionClosed,
+      1000
+    )
 
     /*
-     * Presence Channel
-     * für Live-Zuschauer.
+     * Presence Channel fir Live-Zuschauer.
      */
-    const viewerChannel =
-      supabase.channel(
-        'auction-viewers',
-        {
-          config: {
-            presence: {
-              key:
-                crypto.randomUUID()
-            }
+    const viewerChannel = supabase.channel(
+      'auction-viewers',
+      {
+        config: {
+          presence: {
+            key: crypto.randomUUID()
           }
         }
-      )
+      }
+    )
 
     viewerChannel
       .on(
@@ -445,52 +480,34 @@ export default function Home() {
           event: 'sync'
         },
         () => {
-          const state =
-            viewerChannel
-              .presenceState()
+          const state = viewerChannel.presenceState()
 
-          const count =
-            Object.values(state)
-              .flat()
-              .length
+          const count = Object.values(state).flat().length
 
-          setViewerCount(
-            count || 1
-          )
+          setViewerCount(count || 1)
         }
       )
-      .subscribe(
-        async (status) => {
-          if (
-            status ===
-            'SUBSCRIBED'
-          ) {
-            await viewerChannel
-              .track({
-                online_at:
-                  new Date()
-                    .toISOString()
-              })
-          }
+      .subscribe(async status => {
+        if (status === 'SUBSCRIBED') {
+          await viewerChannel.track({
+            online_at: new Date().toISOString()
+          })
         }
-      )
+      })
 
     /*
-     * Neue Gebote sofort über
-     * Supabase Realtime Broadcast
-     * empfangen.
+     * Nei Geboter direkt iwwer
+     * Supabase Realtime Broadcast empfänken.
      */
-    const bidChannel =
-      supabase.channel(
-        'auction-bids'
-      )
+    const bidChannel = supabase.channel(
+      'auction-bids'
+    )
 
     bidChannel
       .on(
         'broadcast',
         {
-          event:
-            'new_bid'
+          event: 'new_bid'
         },
         () => {
           loadHighestBid()
@@ -499,52 +516,33 @@ export default function Home() {
       .subscribe()
 
     /*
-     * 2-Sekunden-Polling bleibt
-     * als Sicherheitsnetz bestehen.
+     * 2-Sekonnen-Polling bleift als
+     * zousätzlecht Sécherheetsnetz bestoen.
      */
-    const bidRefreshInterval =
-      setInterval(
-        () => {
-          loadHighestBid()
-        },
-        2000
-      )
+    const bidRefreshInterval = setInterval(
+      () => {
+        loadHighestBid()
+      },
+      2000
+    )
 
     return () => {
-      authListener
-        .data
-        .subscription
-        .unsubscribe()
+      authListener.data.subscription.unsubscribe()
 
-      supabase.removeChannel(
-        bidChannel
-      )
+      supabase.removeChannel(bidChannel)
+      supabase.removeChannel(viewerChannel)
 
-      supabase.removeChannel(
-        viewerChannel
-      )
-
-      clearInterval(
-        bidRefreshInterval
-      )
-
-      clearInterval(
-        closeInterval
-      )
+      clearInterval(bidRefreshInterval)
+      clearInterval(closeInterval)
     }
-
   }, [])
 
   useEffect(() => {
-    const handleVisibility =
-      () => {
-        if (
-          document.visibilityState ===
-          'visible'
-        ) {
-          loadHighestBid()
-        }
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadHighestBid()
       }
+    }
 
     document.addEventListener(
       'visibilitychange',
@@ -562,224 +560,132 @@ export default function Home() {
   return (
     <main
       style={{
-        minHeight:
-          '100vh',
-
-        padding:
-          '24px',
-
-        fontFamily:
-          'Arial, sans-serif',
-
+        minHeight: '100vh',
+        padding: '24px',
+        fontFamily: 'Arial, sans-serif',
         backgroundImage:
           'linear-gradient(rgba(15,61,145,0.25), rgba(15,61,145,0.35)), url(https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/background.jpeg)',
-
-        backgroundSize:
-          'cover',
-
-        backgroundPosition:
-          'center',
-
-        backgroundAttachment:
-          'fixed'
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       }}
     >
-
       <style jsx global>{`
         .auction-button {
           transition:
             transform 0.08s ease,
             box-shadow 0.08s ease,
             filter 0.15s ease;
-
-          box-shadow:
-            0 4px 0 #082b69;
-
-          cursor:
-            pointer;
+          box-shadow: 0 4px 0 #082b69;
+          cursor: pointer;
         }
 
         .auction-button:hover {
-          filter:
-            brightness(1.06);
+          filter: brightness(1.06);
         }
 
         .auction-button:active {
-          transform:
-            translateY(3px);
-
-          box-shadow:
-            0 1px 0 #082b69;
+          transform: translateY(3px);
+          box-shadow: 0 1px 0 #082b69;
         }
 
         .auction-button:disabled {
-          transform:
-            none;
-
-          box-shadow:
-            none;
-
-          cursor:
-            not-allowed;
+          transform: none;
+          box-shadow: none;
+          cursor: not-allowed;
         }
       `}</style>
 
       <div
         style={{
-          maxWidth:
-            '1100px',
-
-          margin:
-            '0 auto',
-
-          background:
-            'rgba(255,255,255,0.95)',
-
-          borderRadius:
-            '28px',
-
-          overflow:
-            'hidden',
-
-          boxShadow:
-            '0 20px 60px rgba(0,0,0,0.25)'
+          maxWidth: '1100px',
+          margin: '0 auto',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '28px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.25)'
         }}
       >
-
         <section
           style={{
-            padding:
-              '18px 28px',
-
-            textAlign:
-              'center',
-
+            padding: '18px 28px',
+            textAlign: 'center',
             background:
               'linear-gradient(135deg, #0f3d91, #6bb6ff)',
-
-            color:
-              'white'
+            color: 'white'
           }}
         >
-
           <p
             style={{
               margin: 0,
-
-              letterSpacing:
-                '2px',
-
-              textTransform:
-                'uppercase',
-
-              fontSize:
-                '20px'
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              fontSize: '20px'
             }}
           >
-            76. Gréiwemaacher
-            Drauwen- A Wäifest
+            76. Gréiwemaacher Drauwen- a Wäifest
           </p>
 
           <div
             style={{
-              display:
-                'flex',
-
-              alignItems:
-                'center',
-
-              justifyContent:
-                'center',
-
-              gap:
-                '14px',
-
-              marginBottom:
-                '10px'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '14px',
+              marginBottom: '10px'
             }}
           >
-
             <img
               src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/logo.png"
               alt="Kondschafter Logo"
               style={{
-                width:
-                  '42px',
-
-                height:
-                  '42px',
-
-                objectFit:
-                  'contain'
+                width: '42px',
+                height: '42px',
+                objectFit: 'contain'
               }}
             />
 
             <h1
               style={{
                 margin: 0,
-
-                fontSize:
-                  'clamp(34px, 8vw, 64px)',
-
-                lineHeight:
-                  '1.05'
+                fontSize: 'clamp(34px, 8vw, 64px)',
+                lineHeight: '1.05'
               }}
             >
               Kondschafter Auktioun
             </h1>
-
           </div>
 
           <p
             style={{
-              margin:
-                '0 0 14px',
-
-              fontSize:
-                '16px',
-
-              opacity:
-                0.92
+              margin: '0 0 14px',
+              fontSize: '16px',
+              opacity: 0.92
             }}
           >
             Fir de gudden Zweck ·
             Pour la bonne cause ·
             For a good cause
           </p>
-
         </section>
 
         <section
           style={{
-            display:
-              'grid',
-
+            display: 'grid',
             gridTemplateColumns:
               'repeat(auto-fit, minmax(280px, 1fr))',
-
-            gap:
-              '28px',
-
-            padding:
-              '32px'
+            gap: '28px',
+            padding: '32px'
           }}
         >
-
           <div>
-
             <img
               src="https://raw.githubusercontent.com/pleinbob-arch/kondschafter-auktion/main/kondschafter.jpg"
               alt="Kondschafter"
               style={{
-                width:
-                  '100%',
-
-                borderRadius:
-                  '22px',
-
-                display:
-                  'block',
-
+                width: '100%',
+                borderRadius: '22px',
+                display: 'block',
                 boxShadow:
                   '0 12px 30px rgba(0,0,0,0.25)'
               }}
@@ -787,76 +693,43 @@ export default function Home() {
 
             <p
               style={{
-                marginTop:
-                  '10px',
-
-                marginBottom:
-                  '20px',
-
-                fontSize:
-                  '13px',
-
-                color:
-                  '#666',
-
-                textAlign:
-                  'center',
-
-                fontStyle:
-                  'italic'
+                marginTop: '10px',
+                marginBottom: '20px',
+                fontSize: '13px',
+                color: '#666',
+                textAlign: 'center',
+                fontStyle: 'italic'
               }}
             >
-
-              Konschtwierk:
-              160 cm x 120 cm
-
+              Konschtwierk: 160 cm × 120 cm
               <br />
-
-              © Kënschtler:
-              André Scholtes
+              © Kënschtler: André Scholtes
 
               <a
                 href="https://www.instagram.com/itwasnotme_scholtes/"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram vum André Scholtes"
                 style={{
-                  marginLeft:
-                    '10px',
-
-                  textDecoration:
-                    'none',
-
-                  fontStyle:
-                    'normal'
+                  marginLeft: '10px',
+                  textDecoration: 'none',
+                  fontStyle: 'normal'
                 }}
               >
                 📸
               </a>
-
             </p>
-
           </div>
 
           <div>
-
             <div style={cardStyle}>
-
               <p
                 style={{
-                  margin:
-                    '0 0 10px',
-
-                  fontSize:
-                    '18px',
-
-                  fontWeight:
-                    'bold',
-
-                  color:
-                    '#315f9c',
-
-                  letterSpacing:
-                    '0.3px'
+                  margin: '0 0 10px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  color: '#315f9c',
+                  letterSpacing: '0.3px'
                 }}
               >
                 {highestBid === null
@@ -867,15 +740,9 @@ export default function Home() {
               <p
                 style={{
                   margin: 0,
-
-                  fontSize:
-                    'clamp(42px, 9vw, 62px)',
-
-                  fontWeight:
-                    'bold',
-
-                  color:
-                    '#0f3d91'
+                  fontSize: 'clamp(42px, 9vw, 62px)',
+                  fontWeight: 'bold',
+                  color: '#0f3d91'
                 }}
               >
                 {highestBid !== null
@@ -885,302 +752,170 @@ export default function Home() {
 
               <div
                 style={{
-                  marginTop:
-                    '16px',
-
-                  paddingTop:
-                    '14px',
-
-                  borderTop:
-                    '1px solid #d9e8ff',
-
-                  display:
-                    'flex',
-
-                  flexDirection:
-                    'column',
-
-                  gap:
-                    '8px',
-
-                  fontSize:
-                    '14px',
-
-                  color:
-                    '#555'
+                  marginTop: '16px',
+                  paddingTop: '14px',
+                  borderTop: '1px solid #d9e8ff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                  fontSize: '14px',
+                  color: '#555'
                 }}
               >
-
                 <div>
                   Nächst méiglecht Gebot /
                   Next Possible Bid:{' '}
-
-                  <strong
-                    style={{
-                      color:
-                        '#0f3d91'
-                    }}
-                  >
+                  <strong style={{ color: '#0f3d91' }}>
                     {minBid.toLocaleString('de-LU')} €
                   </strong>
                 </div>
 
-                <div
-                  style={{
-                    marginTop:
-                      '6px'
-                  }}
-                >
-                  Max. Gebot /
-                  Maximum Bid:{' '}
-
-                  <strong
-                    style={{
-                      color:
-                        '#0f3d91'
-                    }}
-                  >
+                <div style={{ marginTop: '6px' }}>
+                  Max. Gebot / Maximum Bid:{' '}
+                  <strong style={{ color: '#0f3d91' }}>
                     {maxBid.toLocaleString('de-LU')} €
                   </strong>
                 </div>
 
                 <div
                   style={{
-                    marginTop:
-                      '10px',
-
-                    padding:
-                      '9px 12px',
-
-                    background:
-                      '#eef6ff',
-
-                    borderRadius:
-                      '10px',
-
-                    fontSize:
-                      '13px',
-
-                    color:
-                      '#315f9c'
+                    marginTop: '10px',
+                    padding: '9px 12px',
+                    background: '#eef6ff',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    color: '#315f9c'
                   }}
                 >
-
                   {highestBid === null ? (
                     <>
-                      Startgebot /
-                      Starting Bid:{' '}
-
-                      <strong>
-                        2.500 €
-                      </strong>
+                      Startgebot / Starting Bid:{' '}
+                      <strong>2.500 €</strong>
                     </>
                   ) : (
                     <>
                       Erhéijung pro Gebot /
                       Bid increase:{' '}
-
                       <strong>
                         min. 50 € · max. 500 €
                       </strong>
                     </>
                   )}
-
                 </div>
 
                 {lastBid && (
-                  <div
-                    style={{
-                      marginTop:
-                        '6px'
-                    }}
-                  >
-                    Viregt Gebot /
-                    Previous Bid:{' '}
-
-                    <strong
-                      style={{
-                        color:
-                          '#0f3d91'
-                      }}
-                    >
-                      {Number(lastBid.amount)
-                        .toLocaleString('de-LU')} €
+                  <div style={{ marginTop: '6px' }}>
+                    Viregt Gebot / Previous Bid:{' '}
+                    <strong style={{ color: '#0f3d91' }}>
+                      {Number(lastBid.amount).toLocaleString(
+                        'de-LU'
+                      )}{' '}
+                      €
                     </strong>
                   </div>
                 )}
-
               </div>
             </div>
 
             <div
               style={{
                 ...cardStyle,
-
-                background:
-                  '#eef6ff',
-
-                textAlign:
-                  'center'
+                background: '#eef6ff',
+                textAlign: 'center'
               }}
             >
-
-              <p
-                style={{
-                  margin:
-                    '0 0 8px'
-                }}
-              >
-                <strong>
-                  Auktioun Enn:
-                </strong>{' '}
-                13 September 2026 - 19:26
+              <p style={{ margin: '0 0 8px' }}>
+                <strong>Auktiounsenn:</strong>{' '}
+                13. September 2026 – 19:26 Auer
               </p>
 
               <Countdown />
-
             </div>
 
             <div
               style={{
                 ...cardStyle,
-
-                background:
-                  '#f7fbff',
-
-                textAlign:
-                  'center'
+                background: '#f7fbff',
+                textAlign: 'center'
               }}
             >
-
               <p
                 style={{
-                  margin:
-                    '0 0 6px',
-
-                  fontSize:
-                    '14px',
-
-                  color:
-                    '#315f9c'
+                  margin: '0 0 6px',
+                  fontSize: '14px',
+                  color: '#315f9c'
                 }}
               >
-                Live Zuschauer /
-                Live Viewers
+                Live Zuschauer / Live Viewers
               </p>
 
               <p
                 style={{
-                  margin:
-                    0,
-
-                  fontSize:
-                    '30px',
-
-                  fontWeight:
-                    'bold',
-
-                  color:
-                    '#0f3d91'
+                  margin: 0,
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  color: '#0f3d91'
                 }}
               >
                 {viewerCount}
               </p>
-
             </div>
 
             <p
               style={{
-                marginTop:
-                  '22px',
-
-                fontSize:
-                  '16px',
-
-                lineHeight:
-                  '1.9',
-
-                maxWidth:
-                  '760px',
-
-                marginLeft:
-                  'auto',
-
-                marginRight:
-                  'auto',
-
-                opacity:
-                  0.96,
-
-                textAlign:
-                  'center'
+                marginTop: '22px',
+                fontSize: '16px',
+                lineHeight: '1.9',
+                maxWidth: '760px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                opacity: 0.96,
+                textAlign: 'center'
               }}
             >
-
               <span
                 style={{
-                  fontWeight:
-                    'bold',
-
-                  fontSize:
-                    '22px',
-
-                  display:
-                    'block',
-
-                  marginBottom:
-                    '10px'
+                  fontWeight: 'bold',
+                  fontSize: '22px',
+                  display: 'block',
+                  marginBottom: '10px'
                 }}
               >
-                Wëllkomm op der offizieller Auktiounssäit vun de Kondschafter ASBL
+                Wëllkomm op der offizieller
+                Auktiounssäit vun de Kondschafter ASBL
               </span>
 
               <span
                 style={{
-                  fontStyle:
-                    'italic',
-
-                  display:
-                    'block',
-
-                  color:
-                    '#1d3557'
+                  fontStyle: 'italic',
+                  display: 'block',
+                  color: '#1d3557'
                 }}
               >
-                D’Kondschafter engagéieren sech säit ville Joren fir
-                d’Traditiounen an d’Liewe ronderëm d’Gréiwemaacher
+                D’Kondschafter engagéieren sech säit
+                ville Jore fir d’Traditiounen an
+                d’Liewe ronderëm d’Gréiwemaacher
                 Drauwen- a Wäifest.
-
                 <br />
-
-                Mat dëser Auktioun ënnerstëtze mir e gudden Zweck
-                a verbannen Konscht, Traditioun a Solidaritéit.
+                Mat dëser Auktioun ënnerstëtze mir
+                e gudden Zweck a verbannen Konscht,
+                Traditioun a Solidaritéit.
               </span>
-
             </p>
 
             {!session ? (
-
               <form
                 onSubmit={sendMagicLink}
                 style={formBoxStyle}
               >
-
-                <h2
-                  style={{
-                    marginTop:
-                      0
-                  }}
-                >
-                  1. E-Mail Bestätegung
+                <h2 style={{ marginTop: 0 }}>
+                  1. E-Mail-Bestätegung
                 </h2>
 
                 <p>
                   Fir ze bidden, muss deng E-Mail
-                  fir d'éischt confirméiert ginn.
-
+                  fir d’éischt confirméiert ginn.
                   <br />
-
                   To place a bid, please confirm
                   your email first.
                 </p>
@@ -1190,9 +925,7 @@ export default function Home() {
                   type="email"
                   value={loginEmail}
                   onChange={e =>
-                    setLoginEmail(
-                      e.target.value
-                    )
+                    setLoginEmail(e.target.value)
                   }
                   style={inputStyle}
                   required
@@ -1208,110 +941,64 @@ export default function Home() {
 
                 <p
                   style={{
-                    fontSize:
-                      '13px',
-
-                    color:
-                      '#666',
-
-                    marginTop:
-                      '10px',
-
-                    lineHeight:
-                      '1.5'
+                    fontSize: '13px',
+                    color: '#666',
+                    marginTop: '10px',
+                    lineHeight: '1.5'
                   }}
                 >
                   Falls keng E-Mail ukënnt,
                   kontrolléier w.e.g. och däi
                   Spam-Ordner.
-
                   <br />
-
                   If you do not receive an email,
                   please also check your spam folder.
                 </p>
 
                 {message && (
                   <p>
-                    <strong>
-                      {message}
-                    </strong>
+                    <strong>{message}</strong>
                   </p>
                 )}
-
               </form>
-
             ) : profileLoading ? (
-
               <div style={formBoxStyle}>
-
-                <h2
-                  style={{
-                    marginTop:
-                      0
-                  }}
-                >
-                  Donnéeë ginn gelueden...
+                <h2 style={{ marginTop: 0 }}>
+                  Donnéeë gi gelueden...
                 </h2>
 
-                <p>
-                  Please wait...
-                </p>
-
+                <p>Please wait...</p>
               </div>
-
             ) : !bidderProfile ? (
-
               <form
                 onSubmit={saveBidderProfile}
                 style={formBoxStyle}
               >
-
-                <h2
-                  style={{
-                    marginTop:
-                      0
-                  }}
-                >
-                  2. Deng Donnéeën /
-                  Your Details
+                <h2 style={{ marginTop: 0 }}>
+                  2. Deng Donnéeën / Your Details
                 </h2>
 
                 <p
                   style={{
-                    padding:
-                      '10px',
-
-                    background:
-                      '#eef6ff',
-
-                    borderRadius:
-                      '10px',
-
-                    fontSize:
-                      '14px'
+                    padding: '10px',
+                    background: '#eef6ff',
+                    borderRadius: '10px',
+                    fontSize: '14px'
                   }}
                 >
                   Confirméiert E-Mail /
                   Confirmed email:
-
                   <br />
-
-                  <strong>
-                    {session.user.email}
-                  </strong>
+                  <strong>{session.user.email}</strong>
                 </p>
 
                 <input
                   placeholder="Virnumm / First Name *"
-                  value={
-                    profileForm.firstName
-                  }
+                  value={profileForm.firstName}
                   onChange={e =>
                     setProfileForm({
                       ...profileForm,
-                      firstName:
-                        e.target.value
+                      firstName: e.target.value
                     })
                   }
                   style={inputStyle}
@@ -1320,14 +1007,11 @@ export default function Home() {
 
                 <input
                   placeholder="Numm / Last Name *"
-                  value={
-                    profileForm.lastName
-                  }
+                  value={profileForm.lastName}
                   onChange={e =>
                     setProfileForm({
                       ...profileForm,
-                      lastName:
-                        e.target.value
+                      lastName: e.target.value
                     })
                   }
                   style={inputStyle}
@@ -1336,14 +1020,11 @@ export default function Home() {
 
                 <input
                   placeholder="Strooss + Nummer / Street + Number *"
-                  value={
-                    profileForm.street
-                  }
+                  value={profileForm.street}
                   onChange={e =>
                     setProfileForm({
                       ...profileForm,
-                      street:
-                        e.target.value
+                      street: e.target.value
                     })
                   }
                   style={inputStyle}
@@ -1352,14 +1033,11 @@ export default function Home() {
 
                 <input
                   placeholder="PLZ + Uertschaft / ZIP Code + City *"
-                  value={
-                    profileForm.city
-                  }
+                  value={profileForm.city}
                   onChange={e =>
                     setProfileForm({
                       ...profileForm,
-                      city:
-                        e.target.value
+                      city: e.target.value
                     })
                   }
                   style={inputStyle}
@@ -1368,14 +1046,12 @@ export default function Home() {
 
                 <input
                   placeholder="Telefon / Phone *"
-                  value={
-                    profileForm.phone
-                  }
+                  type="tel"
+                  value={profileForm.phone}
                   onChange={e =>
                     setProfileForm({
                       ...profileForm,
-                      phone:
-                        e.target.value
+                      phone: e.target.value
                     })
                   }
                   style={inputStyle}
@@ -1395,103 +1071,38 @@ export default function Home() {
                   onClick={signOut}
                   style={logoutStyle}
                 >
-                  Ausloggen /
-                  Sign out
+                  Ausloggen / Sign out
                 </button>
 
                 {message && (
-                  <div
-                    style={{
-                      marginTop:
-                        '14px',
-
-                      padding:
-                        '14px',
-
-                      borderRadius:
-                        '14px',
-
-                      background:
-                        message.includes('Merci')
-                          ? '#e8fff0'
-                          : '#fff0f0',
-
-                      border:
-                        message.includes('Merci')
-                          ? '1px solid #4caf50'
-                          : '1px solid #d9534f',
-
-                      color:
-                        message.includes('Merci')
-                          ? '#1b5e20'
-                          : '#8b0000',
-
-                      fontWeight:
-                        'bold',
-
-                      textAlign:
-                        'center',
-
-                      whiteSpace:
-                        'pre-line'
-                    }}
-                  >
-                    {message}
-                  </div>
+                  <MessageBox message={message} />
                 )}
-
               </form>
-
             ) : (
-
               <form
                 onSubmit={submitBid}
                 style={formBoxStyle}
               >
-
-                <h2
-                  style={{
-                    marginTop:
-                      0
-                  }}
-                >
-                  Gebot ofginn /
-                  Submit Bid
+                <h2 style={{ marginTop: 0 }}>
+                  Gebot ofginn / Submit Bid
                 </h2>
 
                 <p
                   style={{
-                    padding:
-                      '10px',
-
-                    background:
-                      '#eef6ff',
-
-                    borderRadius:
-                      '10px',
-
-                    fontSize:
-                      '14px',
-
-                    lineHeight:
-                      '1.6'
+                    padding: '10px',
+                    background: '#eef6ff',
+                    borderRadius: '10px',
+                    fontSize: '14px',
+                    lineHeight: '1.6'
                   }}
                 >
                   Confirméiert E-Mail /
                   Confirmed email:
-
                   <br />
-
-                  <strong>
-                    {bidderProfile.email}
-                  </strong>
-
+                  <strong>{bidderProfile.email}</strong>
                   <br />
-
-                  Bidder:
-
+                  Bieter / Bidder:
                   <br />
-
                   <strong>
                     {bidderProfile.first_name}{' '}
                     {bidderProfile.last_name}
@@ -1500,33 +1111,19 @@ export default function Home() {
 
                 <div
                   style={{
-                    padding:
-                      '10px',
-
-                    borderRadius:
-                      '10px',
-
-                    background:
-                      '#fff7d6',
-
-                    color:
-                      '#604b00',
-
-                    fontSize:
-                      '14px',
-
-                    lineHeight:
-                      '1.6'
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: '#fff7d6',
+                    color: '#604b00',
+                    fontSize: '14px',
+                    lineHeight: '1.6'
                   }}
                 >
-                  Erlaabt Gebot /
-                  Allowed bid:
-
+                  Erlaabt Gebot / Allowed bid:
                   <br />
-
                   <strong>
                     {minBid.toLocaleString('de-LU')} €
-                    {' '}–{' '}
+                    {' – '}
                     {maxBid.toLocaleString('de-LU')} €
                   </strong>
                 </div>
@@ -1535,11 +1132,11 @@ export default function Home() {
                   placeholder="Gebot an Euro / Bid amount in Euro *"
                   type="number"
                   step="1"
+                  min={minBid}
+                  max={maxBid}
                   value={bidAmount}
                   onChange={e =>
-                    setBidAmount(
-                      e.target.value
-                    )
+                    setBidAmount(e.target.value)
                   }
                   style={inputStyle}
                   required
@@ -1547,50 +1144,63 @@ export default function Home() {
 
                 <button
                   className="auction-button"
-                  disabled={
-                    auctionClosed
-                  }
+                  disabled={auctionClosed}
                   style={{
                     ...buttonStyle,
-
-                    background:
-                      auctionClosed
-                        ? '#777'
-                        : '#0f3d91',
-
-                    cursor:
-                      auctionClosed
-                        ? 'not-allowed'
-                        : 'pointer'
+                    background: auctionClosed
+                      ? '#777'
+                      : '#0f3d91',
+                    cursor: auctionClosed
+                      ? 'not-allowed'
+                      : 'pointer'
                   }}
                 >
                   {auctionClosed
-                    ? 'Auktioun beendet / Auction ended'
-                    : 'Gebot ofginn / Submit Bid *'}
+                    ? 'Auktioun eriwwer / Auction ended'
+                    : 'Gebot verbindlech ofginn / Submit binding bid *'}
                 </button>
 
                 <p
                   style={{
-                    fontSize:
-                      '12px',
-
-                    lineHeight:
-                      '1.5',
-
-                    color:
-                      '#555'
+                    fontSize: '12px',
+                    lineHeight: '1.6',
+                    color: '#555'
                   }}
                 >
                   * Mat der Ofginn vun engem Gebot
                   akzeptéiert de Participant
-                  d'Dateschutzerklärung an
-                  d'Auktiounsbedingungen.
-
+                  d&apos;Dateschutzinformatioun an
+                  d&apos;Auktiounsbedingungen.{' '}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#0f3d91',
+                      fontWeight: 'bold',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Dateschutz &amp; Auktiounsbedingungen
+                  </a>
+                  .
                   <br />
-
                   * By submitting a bid, the
-                  participant agrees to the privacy
-                  policy and auction terms.
+                  participant accepts the Privacy
+                  Policy and Auction Terms.{' '}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#0f3d91',
+                      fontWeight: 'bold',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Privacy Policy &amp; Auction Terms
+                  </a>
+                  .
                 </p>
 
                 <button
@@ -1598,178 +1208,121 @@ export default function Home() {
                   onClick={signOut}
                   style={logoutStyle}
                 >
-                  Ausloggen /
-                  Sign out
+                  Ausloggen / Sign out
                 </button>
 
                 {message && (
-                  <div
-                    style={{
-                      marginTop:
-                        '14px',
-
-                      padding:
-                        '14px',
-
-                      borderRadius:
-                        '14px',
-
-                      background:
-                        message.includes('Merci')
-                          ? '#e8fff0'
-                          : '#fff0f0',
-
-                      border:
-                        message.includes('Merci')
-                          ? '1px solid #4caf50'
-                          : '1px solid #d9534f',
-
-                      color:
-                        message.includes('Merci')
-                          ? '#1b5e20'
-                          : '#8b0000',
-
-                      fontWeight:
-                        'bold',
-
-                      textAlign:
-                        'center'
-                    }}
-                  >
-
-                    {message.includes('|') ? (
-                      <>
-                        <div>
-                          {message.split('|')[0]}
-                        </div>
-
-                        <div
-                          style={{
-                            marginTop:
-                              '6px'
-                          }}
-                        >
-                          {message.split('|')[1]}
-                        </div>
-                      </>
-                    ) : (
-                      message
-                    )}
-
-                  </div>
+                  <MessageBox message={message} />
                 )}
-
               </form>
-
             )}
-
           </div>
-
         </section>
 
         <footer
           style={{
-            padding:
-              '22px 32px',
-
-            background:
-              '#0f3d91',
-
-            color:
-              'white',
-
-            fontSize:
-              '14px'
+            padding: '22px 32px',
+            background: '#0f3d91',
+            color: 'white',
+            fontSize: '14px'
           }}
         >
-
           <p
             style={{
-              textAlign:
-                'center',
-
-              margin:
-                0,
-
-              lineHeight:
-                '1.8'
+              textAlign: 'center',
+              margin: 0,
+              lineHeight: '1.8'
             }}
           >
-
-            <a
-              href="/privacy"
-              style={footerLink}
-            >
-              Dateschutz /
-              Privacy Policy
+            <a href="/privacy" style={footerLink}>
+              Dateschutz &amp; Auktiounsbedingungen /
+              Privacy Policy &amp; Auction Terms
             </a>
 
             {' · '}
 
-            <a
-              href="/admin"
-              style={footerLink}
-            >
+            <a href="/admin" style={footerLink}>
               Admin Login
             </a>
-
           </p>
 
           <p
             style={{
-              textAlign:
-                'center',
-
-              marginTop:
-                '16px',
-
-              fontSize:
-                '12px',
-
-              opacity:
-                0.82
+              textAlign: 'center',
+              marginTop: '16px',
+              fontSize: '12px',
+              opacity: 0.82
             }}
           >
-            © 2026 Kondschafter -
-            association sans but lucratif -
-            Grevenmacher -
-            All rights reserved.
+            © 2026 Kondschafter –
+            association sans but lucratif –
+            Grevenmacher – All rights reserved.
           </p>
 
           <div
             style={{
-              textAlign:
-                'right',
-
-              marginTop:
-                '6px'
+              textAlign: 'right',
+              marginTop: '6px'
             }}
           >
             <a
               href="/stream"
               style={{
-                color:
-                  'rgba(255,255,255,0.22)',
-
-                textDecoration:
-                  'none',
-
-                fontSize:
-                  '11px',
-
-                letterSpacing:
-                  '0.5px'
+                color: 'rgba(255,255,255,0.22)',
+                textDecoration: 'none',
+                fontSize: '11px',
+                letterSpacing: '0.5px'
               }}
             >
               Stream
             </a>
           </div>
-
         </footer>
-
       </div>
-
     </main>
+  )
+}
+
+function MessageBox({
+  message
+}: {
+  message: string
+}) {
+  const success =
+    message.includes('Merci') ||
+    message.includes('Thank you')
+
+  return (
+    <div
+      style={{
+        marginTop: '14px',
+        padding: '14px',
+        borderRadius: '14px',
+        background: success
+          ? '#e8fff0'
+          : '#fff0f0',
+        border: success
+          ? '1px solid #4caf50'
+          : '1px solid #d9534f',
+        color: success
+          ? '#1b5e20'
+          : '#8b0000',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        whiteSpace: 'pre-line'
+      }}
+    >
+      {message.includes('|') ? (
+        <>
+          <div>{message.split('|')[0]}</div>
+          <div style={{ marginTop: '6px' }}>
+            {message.split('|')[1]}
+          </div>
+        </>
+      ) : (
+        message
+      )}
+    </div>
   )
 }
 
@@ -1823,107 +1376,69 @@ const footerLink = {
 }
 
 function Countdown() {
-  const [timeLeft, setTimeLeft] =
-    useState('')
+  const [timeLeft, setTimeLeft] = useState('')
 
   useEffect(() => {
-    const targetDate =
-      new Date(
-        '2026-09-13T19:26:00+02:00'
+    const targetDate = new Date(
+      '2026-09-13T19:26:00+02:00'
+    )
+
+    const updateCountdown = () => {
+      const now = new Date()
+
+      const difference =
+        targetDate.getTime() - now.getTime()
+
+      if (difference <= 0) {
+        setTimeLeft(
+          'Auktioun eriwwer / Auction ended'
+        )
+        return
+      }
+
+      const days = Math.floor(
+        difference /
+          (1000 * 60 * 60 * 24)
       )
 
-    const updateCountdown =
-      () => {
-        const now =
-          new Date()
+      const hours = Math.floor(
+        (difference /
+          (1000 * 60 * 60)) %
+          24
+      )
 
-        const difference =
-          targetDate.getTime() -
-          now.getTime()
+      const minutes = Math.floor(
+        (difference /
+          (1000 * 60)) %
+          60
+      )
 
-        if (
-          difference <= 0
-        ) {
-          setTimeLeft(
-            'Auktioun beendet / Auction ended'
-          )
-          return
-        }
+      const seconds = Math.floor(
+        (difference / 1000) % 60
+      )
 
-        const days =
-          Math.floor(
-            difference /
-            (
-              1000 *
-              60 *
-              60 *
-              24
-            )
-          )
-
-        const hours =
-          Math.floor(
-            (
-              difference /
-              (
-                1000 *
-                60 *
-                60
-              )
-            ) % 24
-          )
-
-        const minutes =
-          Math.floor(
-            (
-              difference /
-              (
-                1000 *
-                60
-              )
-            ) % 60
-          )
-
-        const seconds =
-          Math.floor(
-            (
-              difference /
-              1000
-            ) % 60
-          )
-
-        setTimeLeft(
-          `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
-        )
-      }
+      setTimeLeft(
+        `${days} Deeg / Days · ${hours}h ${minutes}m ${seconds}s`
+      )
+    }
 
     updateCountdown()
 
-    const interval =
-      setInterval(
-        updateCountdown,
-        1000
-      )
+    const interval = setInterval(
+      updateCountdown,
+      1000
+    )
 
-    return () =>
-      clearInterval(interval)
-
+    return () => clearInterval(interval)
   }, [])
 
   return (
     <p
       style={{
-        margin:
-          0,
-
-        fontSize:
-          '18px',
-
-        fontWeight:
-          'bold',
-
-        color:
-          '#0f3d91'
+        margin: 0,
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: '#0f3d91'
       }}
     >
       {timeLeft}
