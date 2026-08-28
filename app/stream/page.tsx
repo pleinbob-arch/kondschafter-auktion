@@ -242,21 +242,6 @@ export default function StreamPage() {
 
   }, [])
 
-  /*
-   * Zusätzliche Sicherheitsmaßnahme:
-   * Seite alle 5 Minuten neu laden.
-   */
-  useEffect(() => {
-    const interval =
-      setInterval(() => {
-        window.location.reload()
-      }, 1000 * 60 * 5)
-
-    return () =>
-      clearInterval(interval)
-
-  }, [])
-
   return (
     <main style={{
       width:'100vw',
