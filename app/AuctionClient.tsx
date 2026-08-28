@@ -70,6 +70,7 @@ export default function AuctionClient({
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
   const [showAuctionInfo, setShowAuctionInfo] = useState(false)
+  const [magicLinkCooldown, setMagicLinkCooldown] = useState(0)
 
   const [profileForm, setProfileForm] = useState({
     firstName: '',
@@ -116,6 +117,11 @@ export default function AuctionClient({
 
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault()
+
+    if (magicLinkCooldown > 0) {
+      return
+    }
+
     setMessage('')
 
     const { error } = await supabase.auth.signInWithOtp({
@@ -129,6 +135,24 @@ export default function AuctionClient({
     if (error) {
       console.error('Magic Link error:', error)
 
+      if (
+        error.status === 429 ||
+        error.message?.toLowerCase().includes('security purposes') ||
+        error.message?.toLowerCase().includes('rate limit')
+      ) {
+        setMagicLinkCooldown(60)
+
+        setMessage(
+          'E Bestätegungslink gouf scho gefrot. ' +
+          'Kuck w.e.g. deng E-Mail an och däi Spam-Ordner. ' +
+          'Waart e Moment, éier s de en neie Link ufroos. / ' +
+          'A confirmation link has already been requested. ' +
+          'Please check your email and spam folder. ' +
+          'Wait a moment before requesting another link.'
+        )
+        return
+      }
+
       setMessage(
         'Et gouf e Problem bei der Ufro. ' +
         'Falls de Bestätegungslink ukomm ass, benotz w.e.g. deen. ' +
@@ -139,6 +163,8 @@ export default function AuctionClient({
       )
       return
     }
+
+    setMagicLinkCooldown(60)
 
     setMessage(
       'De Bestätegungslink gouf geschéckt. ' +
@@ -652,6 +678,20 @@ export default function AuctionClient({
       )
     }
   }, [])
+
+  useEffect(() => {
+    if (magicLinkCooldown <= 0) {
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setMagicLinkCooldown(seconds =>
+        Math.max(0, seconds - 1)
+      )
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [magicLinkCooldown])
 
   useEffect(() => {
     try {
@@ -1306,10 +1346,22 @@ export default function AuctionClient({
 
                 <button
                   className="auction-button"
-                  style={buttonStyle}
+                  disabled={magicLinkCooldown > 0}
+                  style={{
+                    ...buttonStyle,
+                    background:
+                      magicLinkCooldown > 0
+                        ? '#777'
+                        : '#0f3d91',
+                    cursor:
+                      magicLinkCooldown > 0
+                        ? 'not-allowed'
+                        : 'pointer'
+                  }}
                 >
-                  Bestätegungslink schécken /
-                  Send confirmation link
+                  {magicLinkCooldown > 0
+                    ? `Neie Link a ${magicLinkCooldown} s / New link in ${magicLinkCooldown} s`
+                    : 'Bestätegungslink schécken / Send confirmation link'}
                 </button>
 
                 <p
