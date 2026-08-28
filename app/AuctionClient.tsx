@@ -836,11 +836,11 @@ export default function AuctionClient({
                   color: '#0f3d91'
                 }}
               >
-                {!auctionSettings
-                  ? '…'
-                  : highestBid !== null
-                    ? `${highestBid.toLocaleString('de-LU')} €`
-                    : `${startBid?.toLocaleString('de-LU')} €`}
+                {!auctionSettings || !bidsLoaded
+  ? '…'
+  : highestBid !== null
+    ? `${highestBid.toLocaleString('de-LU')} €`
+    : `${startBid?.toLocaleString('de-LU')} €`}
               </p>
 
               <div
