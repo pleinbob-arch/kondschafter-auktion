@@ -15,9 +15,12 @@ const ADMIN_EMAILS = [
   'kondschafter@gmail.com'
 ]
 
-const START_BID = 2500
-const MIN_INCREASE = 50
-const MAX_INCREASE = 500
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
+}
 
 type Bid = {
   id: number
@@ -42,6 +45,8 @@ export default function AdminPage() {
   const [bids, setBids] = useState<Bid[]>([])
   const [message, setMessage] = useState('')
   const [viewerCount, setViewerCount] = useState(0)
+  const [auctionSettings, setAuctionSettings] =
+    useState<AuctionSettings | null>(null)
 
   const [deleteCode, setDeleteCode] = useState('')
   const [deleteMessage, setDeleteMessage] = useState('')
@@ -64,13 +69,31 @@ export default function AdminPage() {
   const highestBid = bids[0] || null
   const totalBids = bids.length
 
-  const minBid = highestBid
-    ? Number(highestBid.amount) + MIN_INCREASE
-    : START_BID
+  const startBid = auctionSettings
+    ? Number(auctionSettings.start_bid)
+    : null
 
-  const maxBid = highestBid
-    ? Number(highestBid.amount) + MAX_INCREASE
-    : START_BID + MAX_INCREASE
+  const minIncrease = auctionSettings
+    ? Number(auctionSettings.min_increase)
+    : null
+
+  const maxIncrease = auctionSettings
+    ? Number(auctionSettings.max_increase)
+    : null
+
+  const minBid =
+    startBid === null || minIncrease === null
+      ? null
+      : highestBid
+        ? Number(highestBid.amount) + minIncrease
+        : startBid
+
+  const maxBid =
+    startBid === null || maxIncrease === null
+      ? null
+      : highestBid
+        ? Number(highestBid.amount) + maxIncrease
+        : startBid + maxIncrease
 
   const onlineBidders = bids
     .filter(
@@ -136,6 +159,30 @@ export default function AdminPage() {
     setMessage(
       'Magic Link geschéckt. Kuck w.e.g. deng E-Mail.'
     )
+  }
+
+  async function loadAuctionSettings() {
+    const { data, error } =
+      await supabase.rpc(
+        'get_auction_settings'
+      )
+
+    if (error) {
+      console.error(
+        'Auction settings load failed:',
+        error
+      )
+
+      setMessage(
+        'D’Auktiounsdonnéeë konnten net geluede ginn.'
+      )
+      return
+    }
+
+    const settings =
+      (data?.[0] || null) as AuctionSettings | null
+
+    setAuctionSettings(settings)
   }
 
   async function loadBids() {
@@ -218,6 +265,7 @@ export default function AdminPage() {
     /*
      * Aktuelle Stand direkt lueden.
      */
+    loadAuctionSettings()
     loadBids()
 
     /*
@@ -905,6 +953,16 @@ Kondschafter ASBL
     }
 
     if (
+      minBid === null ||
+      maxBid === null
+    ) {
+      setLiveBidMessage(
+        'D’Auktiounsdonnéeë konnten nach net geluede ginn.'
+      )
+      return
+    }
+
+    if (
       amount < minBid ||
       amount > maxBid
     ) {
@@ -994,7 +1052,7 @@ Kondschafter ASBL
         ) {
           setLiveBidMessage(
             'D’Gebot ass ze héich. ' +
-            'Déi maximal Erhéijung ass 500 €.'
+            `Déi maximal Erhéijung ass ${maxIncrease?.toLocaleString('de-LU')} €.`
           )
 
           await loadBids()
@@ -1422,9 +1480,11 @@ Kondschafter ASBL
                   ).toLocaleString(
                     'de-LU'
                   )} €`
-                : `${START_BID.toLocaleString(
-                    'de-LU'
-                  )} €`
+                : startBid !== null
+                  ? `${startBid.toLocaleString(
+                      'de-LU'
+                    )} €`
+                  : '…'
             }
             detail={
               highestBid
@@ -1554,7 +1614,8 @@ Kondschafter ASBL
                     )
                 }
                 disabled={
-                  liveBidLoading
+                  liveBidLoading ||
+                  !auctionSettings
                 }
                 style={{
                   width:
@@ -1594,11 +1655,13 @@ Kondschafter ASBL
 
               <input
                 type="number"
-                min={minBid}
-                max={maxBid}
+                min={minBid ?? undefined}
+                max={maxBid ?? undefined}
                 step="1"
                 placeholder={
-                  `z. B. ${minBid}`
+                  minBid !== null
+                    ? `z. B. ${minBid}`
+                    : 'Auktiounsdonnéeë gi gelueden...'
                 }
                 value={
                   liveBidAmount
@@ -1610,7 +1673,8 @@ Kondschafter ASBL
                     )
                 }
                 disabled={
-                  liveBidLoading
+                  liveBidLoading ||
+                  !auctionSettings
                 }
                 style={{
                   width:
@@ -1635,7 +1699,8 @@ Kondschafter ASBL
                 submitLiveBid
               }
               disabled={
-                liveBidLoading
+                liveBidLoading ||
+                !auctionSettings
               }
               style={{
                 padding:
@@ -1645,7 +1710,8 @@ Kondschafter ASBL
                 borderRadius:
                   '12px',
                 background:
-                  liveBidLoading
+                  liveBidLoading ||
+                  !auctionSettings
                     ? '#999'
                     : '#0f3d91',
                 color:
@@ -1655,7 +1721,8 @@ Kondschafter ASBL
                 fontSize:
                   '16px',
                 cursor:
-                  liveBidLoading
+                  liveBidLoading ||
+                  !auctionSettings
                     ? 'not-allowed'
                     : 'pointer',
                 minHeight:
@@ -1665,7 +1732,9 @@ Kondschafter ASBL
               {
                 liveBidLoading
                   ? 'Gëtt gespäichert...'
-                  : 'LIVE-GEBOT SPÄICHEREN'
+                  : !auctionSettings
+                    ? 'AUKTIOUNSDONNÉEË GI GELUEDEN...'
+                    : 'LIVE-GEBOT SPÄICHEREN'
               }
             </button>
           </div>
@@ -1680,20 +1749,24 @@ Kondschafter ASBL
                 '#555'
             }}
           >
-            {highestBid ? (
+            {!auctionSettings ? (
+              <>Auktiounsdonnéeë gi gelueden...</>
+            ) : highestBid ? (
               <>
                 Erlaabt
                 Erhéijung:{' '}
                 <strong>
-                  min. 50 € ·
-                  max. 500 €
+                  min. {minIncrease?.toLocaleString('de-LU')} € ·
+                  {' '}max. {maxIncrease?.toLocaleString('de-LU')} €
                 </strong>
               </>
             ) : (
               <>
                 Startgebot:{' '}
                 <strong>
-                  2.500 €
+                  {startBid !== null
+                    ? `${startBid.toLocaleString('de-LU')} €`
+                    : '…'}
                 </strong>
               </>
             )}
@@ -1713,20 +1786,24 @@ Kondschafter ASBL
 
             <strong>
               {
-                minBid.toLocaleString(
-                  'de-LU'
-                )
-              } €
+                minBid !== null
+                  ? `${minBid.toLocaleString(
+                      'de-LU'
+                    )} €`
+                  : '…'
+              }
             </strong>
 
             {' '}bis{' '}
 
             <strong>
               {
-                maxBid.toLocaleString(
-                  'de-LU'
-                )
-              } €
+                maxBid !== null
+                  ? `${maxBid.toLocaleString(
+                      'de-LU'
+                    )} €`
+                  : '…'
+              }
             </strong>
           </p>
 
