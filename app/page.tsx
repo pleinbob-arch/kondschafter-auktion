@@ -15,19 +15,27 @@ type AuctionSettings = {
 }
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default async function Page() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false
-      }
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    },
+    global: {
+      fetch: (url, options = {}) =>
+        fetch(url, {
+          ...options,
+          cache: 'no-store'
+        })
     }
-  )
+  }
+)
 
   const [
     { data: bidData, error: bidError },
