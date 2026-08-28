@@ -38,7 +38,15 @@ type PublicBid = {
   source: string
 }
 
-export default function Home() {
+type AuctionClientProps = {
+  initialHighestBid: number | null
+  initialLastBid: PublicBid | null
+}
+
+export default function AuctionClient({
+  initialHighestBid,
+  initialLastBid
+}: AuctionClientProps) {
   const [session, setSession] = useState<Session | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
   const [bidderProfile, setBidderProfile] =
@@ -46,9 +54,9 @@ export default function Home() {
 
   const [loginEmail, setLoginEmail] = useState('')
   const [highestBid, setHighestBid] =
-    useState<number | null>(null)
+    useState<number | null>(initialHighestBid)
   const [lastBid, setLastBid] =
-    useState<PublicBid | null>(null)
+    useState<PublicBid | null>(initialLastBid)
   const [message, setMessage] = useState('')
   const [auctionClosed, setAuctionClosed] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
