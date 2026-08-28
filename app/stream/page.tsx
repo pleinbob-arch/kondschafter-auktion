@@ -636,8 +636,8 @@ export default function StreamPage() {
               }}>
 
                 <div>
-                  Auktioun Enn /
-                  Auction closing:
+                  Auktiounsenn /
+Auction closing:
                 </div>
 
                 <div style={{
