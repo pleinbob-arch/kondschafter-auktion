@@ -1,4 +1,102 @@
-export default function PrivacyPage() {
+import { createClient } from '@supabase/supabase-js'
+
+type AuctionSettings = {
+  start_bid: number | string
+  min_increase: number | string
+  max_increase: number | string
+  auction_end: string
+}
+
+export const dynamic = 'force-dynamic'
+
+export default async function PrivacyPage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    }
+  )
+
+  const { data, error } =
+    await supabase.rpc('get_auction_settings')
+
+  if (error) {
+    console.error(
+      'Auction settings konnten op der Privacy-Säit net geluede ginn:',
+      error
+    )
+  }
+
+  const settings =
+    ((data || [])[0] || null) as AuctionSettings | null
+
+  const startBid = settings
+    ? Number(settings.start_bid)
+    : null
+
+  const minIncrease = settings
+    ? Number(settings.min_increase)
+    : null
+
+  const maxIncrease = settings
+    ? Number(settings.max_increase)
+    : null
+
+  const firstBidMax =
+    startBid !== null && maxIncrease !== null
+      ? startBid + maxIncrease
+      : null
+
+  const auctionEnd = settings
+    ? new Date(settings.auction_end)
+    : null
+
+  const formatEuro = (value: number | null) =>
+    value === null
+      ? '—'
+      : `${value.toLocaleString('de-LU')} €`
+
+  const formatEuroEnglish = (value: number | null) =>
+    value === null
+      ? '—'
+      : `€${value.toLocaleString('en-IE')}`
+
+  const auctionEndLb = auctionEnd
+    ? auctionEnd.toLocaleString(
+        'lb-LU',
+        {
+          timeZone: 'Europe/Luxembourg',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }
+      )
+    : '—'
+
+  const auctionEndEn = auctionEnd
+    ? auctionEnd.toLocaleString(
+        'en-GB',
+        {
+          timeZone: 'Europe/Luxembourg',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }
+      )
+    : '—'
+
+  return (
   return (
     <main
       style={{
@@ -588,14 +686,16 @@ export default function PrivacyPage() {
 
             <p>
               D&apos;Startgebot ass
-              <strong> 2.500 €</strong>.
+              <strong> {formatEuro(startBid)}</strong>.
             </p>
 
             <p>
               Wann nach kee valabelt Gebot
               enregistréiert ass, muss dat éischt
               Gebot tëscht
-              <strong> 2.500 € an 3.000 €</strong>
+              <strong>
+                {' '}{formatEuro(startBid)} an {formatEuro(firstBidMax)}
+              </strong>
               leien.
             </p>
 
@@ -603,8 +703,8 @@ export default function PrivacyPage() {
               Duerno muss all neit valabelt Gebot
               dat aktuell héchst Gebot ëm
               mindestens
-              <strong> 50 €</strong> an ëm
-              maximal <strong>500 €</strong>
+              <strong> {formatEuro(minIncrease)}</strong> an ëm
+              maximal <strong>{formatEuro(maxIncrease)}</strong>
               iwwerschreiden.
             </p>
 
@@ -684,8 +784,7 @@ export default function PrivacyPage() {
             <p>
               D&apos;Auktioun endet
               <strong>
-                {' '}den 13. September 2026
-                um 19:26 Auer Lëtzebuerger Zäit
+                {' '}den {auctionEndLb} Auer Lëtzebuerger Zäit
               </strong>
               .
             </p>
@@ -1344,21 +1443,23 @@ export default function PrivacyPage() {
 
             <p>
               The starting bid is
-              <strong> €2,500</strong>.
+              <strong> {formatEuroEnglish(startBid)}</strong>.
             </p>
 
             <p>
               Where no valid bid has yet been
               recorded, the first valid bid must be
               between
-              <strong> €2,500 and €3,000</strong>.
+              <strong>
+                {' '}{formatEuroEnglish(startBid)} and {formatEuroEnglish(firstBidMax)}
+              </strong>.
             </p>
 
             <p>
               Each subsequent valid bid must exceed
               the current highest valid bid by at
-              least <strong>€50</strong> and by no
-              more than <strong>€500</strong>.
+              least <strong>{formatEuroEnglish(minIncrease)}</strong> and by no
+              more than <strong>{formatEuroEnglish(maxIncrease)}</strong>.
             </p>
 
             <p>
@@ -1420,8 +1521,7 @@ export default function PrivacyPage() {
             <p>
               The auction closes on
               <strong>
-                {' '}13 September 2026 at 19:26
-                Luxembourg time
+                {' '}{auctionEndEn} Luxembourg time
               </strong>
               .
             </p>
