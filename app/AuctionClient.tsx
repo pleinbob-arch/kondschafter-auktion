@@ -44,6 +44,7 @@ type AuctionClientProps = {
   initialHighestBid: number | null
   initialLastBid: PublicBid | null
   initialAuctionSettings?: AuctionSettings | null
+  initialBidsLoaded?: boolean
 }
 
 export default function AuctionClient({
