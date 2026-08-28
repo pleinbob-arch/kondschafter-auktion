@@ -79,9 +79,10 @@ export default async function Page() {
 
   return (
     <AuctionClient
-      initialHighestBid={initialHighestBid}
-      initialLastBid={initialLastBid}
-      initialAuctionSettings={initialAuctionSettings}
-    />
+  initialHighestBid={initialHighestBid}
+  initialLastBid={initialLastBid}
+  initialAuctionSettings={initialAuctionSettings}
+  initialBidsLoaded={!bidError}
+/>
   )
 }
