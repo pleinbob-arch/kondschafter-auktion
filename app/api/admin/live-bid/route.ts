@@ -139,16 +139,17 @@ export async function POST(request: Request) {
     }
 
     /*
-     * 5. Atomare Datenbankfunktion aufrufen.
-     *
-     * Dort werden:
-     * - Auktionsende 19:26
-     * - Startgebot 2.500–3.000
-     * - danach +50 bis +500
-     * - gleichzeitige Gebote
-     *
-     * serverseitig geprüft.
-     */
+ * 5. Atomare Datenbankfunktion aufrufen.
+ *
+ * Dort werden zentral anhand von
+ * public.auction_settings geprüft:
+ * - Auktionsende
+ * - Startgebot
+ * - minimale und maximale Gebotserhöhung
+ * - gleichzeitige Gebote
+ *
+ * Die verbindliche Prüfung erfolgt serverseitig.
+ */
     const { error } =
       await supabaseAdmin.rpc(
         'admin_place_live_bid',
