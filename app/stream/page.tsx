@@ -414,13 +414,13 @@ export default function StreamPage() {
                 </p>
 
                 <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://kondschafter-auktion.vercel.app"
-                  alt="QR Code"
-                  style={{
-                    width:'180px',
-                    height:'180px'
-                  }}
-                />
+  src="/qr-auction.png"
+  alt="QR Code zur Auktioun"
+  style={{
+    width:'180px',
+    height:'180px'
+  }}
+/>
 
               </div>
 
