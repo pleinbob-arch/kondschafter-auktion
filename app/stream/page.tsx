@@ -28,6 +28,9 @@ export default function StreamPage() {
   const [previousBid, setPreviousBid] =
     useState<number | null>(null)
 
+  const [isLoading, setIsLoading] =
+    useState(true)
+
   const [viewerCount, setViewerCount] =
     useState(1)
 
@@ -49,14 +52,15 @@ export default function StreamPage() {
 
   async function loadHighestBid() {
     const { data, error } =
-      await supabase
-        .rpc('get_public_bids')
+      await supabase.rpc('get_public_bids')
 
     if (error) {
       console.error(
         'Public bids konnten nicht geladen werden:',
         error
       )
+
+      setIsLoading(false)
       return
     }
 
@@ -80,30 +84,20 @@ export default function StreamPage() {
       setHighestBid(null)
       setPreviousBid(null)
     }
+
+    setIsLoading(false)
   }
 
   useEffect(() => {
-    /*
-     * Beim Öffnen sofort aktuellen Stand laden.
-     */
     loadHighestBid()
 
-    /*
-     * Sicherheitsnetz:
-     * weiterhin alle 2 Sekunden DB prüfen.
-     */
     const bidRefreshInterval =
       setInterval(() => {
         loadHighestBid()
       }, 2000)
 
-    /*
-     * Sofortige Gebotsmeldung via Realtime Broadcast.
-     */
     const bidChannel =
-      supabase.channel(
-        'auction-bids'
-      )
+      supabase.channel('auction-bids')
 
     bidChannel
       .on(
@@ -112,23 +106,13 @@ export default function StreamPage() {
           event: 'new_bid'
         },
         () => {
-          /*
-           * Sobald ein Gebot gemeldet wird,
-           * sofort die beiden höchsten
-           * Gebote aus der sicheren RPC laden.
-           */
           loadHighestBid()
         }
       )
       .subscribe()
 
-    /*
-     * Live-Zuschauer.
-     */
     const viewerChannel =
-      supabase.channel(
-        'auction-viewers'
-      )
+      supabase.channel('auction-viewers')
 
     viewerChannel
       .on(
@@ -138,8 +122,7 @@ export default function StreamPage() {
         },
         () => {
           const state =
-            viewerChannel
-              .presenceState()
+            viewerChannel.presenceState()
 
           const count =
             Object.values(state)
@@ -298,11 +281,7 @@ export default function StreamPage() {
             }}
           />
 
-          <div
-            style={{
-              textAlign: 'center'
-            }}
-          >
+          <div>
             <p
               style={{
                 margin: '0 0 6px',
@@ -449,181 +428,209 @@ export default function StreamPage() {
                   '0 10px 30px rgba(0,0,0,0.1)'
               }}
             >
-              <p
-                style={{
-                  margin: '0 0 16px',
-                  fontSize: '34px',
-                  fontWeight: 'bold',
-                  color: '#315f9c'
-                }}
-              >
-                {highestBid === null
-                  ? 'Startgebot / Starting Bid'
-                  : 'Aktuellt Héichstgebot / Current Highest Bid'}
-              </p>
-
-              {auctionClosed ? (
-                <div
-                  style={{
-                    marginTop: '28px',
-                    padding: '24px',
-                    background: '#e8fff0',
-                    border:
-                      '2px solid #4caf50',
-                    borderRadius: '20px',
-                    textAlign: 'center'
-                  }}
-                >
+              {isLoading ? (
+                <>
                   <p
                     style={{
-                      margin: '0 0 10px',
+                      margin: '0 0 16px',
                       fontSize: '34px',
                       fontWeight: 'bold',
-                      color: '#1b5e20'
+                      color: '#315f9c'
                     }}
                   >
-                    Auktioun eriwwer /
-                    Auction ended
+                    Aktuellt Héichstgebot /
+                    Current Highest Bid
                   </p>
 
                   <p
                     style={{
                       margin: 0,
-                      fontSize: '24px',
-                      color: '#315f9c'
-                    }}
-                  >
-                    Finalt Gebot /
-                    Final Bid
-                  </p>
-
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      fontSize: '54px',
-                      fontWeight: 'bold',
-                      color: '#0f3d91'
-                    }}
-                  >
-                    {highestBid !== null
-                      ? `${highestBid.toLocaleString('de-LU')} €`
-                      : '—'}
-                  </p>
-
-                  <p
-                    style={{
-                      margin: '18px 0 0',
-                      fontSize: '24px',
+                      fontSize: '46px',
                       fontWeight: 'bold',
                       color: '#315f9c'
                     }}
                   >
-                    Merci fir Är
-                    Ënnerstëtzung ·
-                    Thank you for
-                    your support
+                    Gebot gëtt gelueden… /
+                    Loading bid…
                   </p>
-                </div>
+                </>
               ) : (
                 <>
                   <p
                     style={{
-                      margin: 0,
-                      fontSize: '118px',
-                      lineHeight: '1',
+                      margin: '0 0 16px',
+                      fontSize: '34px',
                       fontWeight: 'bold',
-                      color: '#0f3d91',
-                      transition:
-                        'all 0.4s ease'
+                      color: '#315f9c'
                     }}
                   >
-                    {highestBid !== null
-                      ? `${highestBid.toLocaleString('de-LU')} €`
-                      : `${START_BID.toLocaleString('de-LU')} €`}
+                    {highestBid === null
+                      ? 'Startgebot / Starting Bid'
+                      : 'Aktuellt Héichstgebot / Current Highest Bid'}
                   </p>
 
-                  <div
-                    style={{
-                      marginTop: '26px',
-                      paddingTop: '22px',
-                      borderTop:
-                        '2px solid #d9e8ff',
-                      fontSize: '28px',
-                      lineHeight: '1.6',
-                      color: '#444'
-                    }}
-                  >
-                    <div>
-                      Nächst méiglecht
-                      Gebot / Next Possible
-                      Bid:{' '}
-                      <strong
-                        style={{
-                          color: '#0f3d91'
-                        }}
-                      >
-                        {minBid.toLocaleString('de-LU')} €
-                      </strong>
-                    </div>
-
-                    <div>
-                      Max. Gebot /
-                      Maximum Bid:{' '}
-                      <strong
-                        style={{
-                          color: '#0f3d91'
-                        }}
-                      >
-                        {maxBid.toLocaleString('de-LU')} €
-                      </strong>
-                    </div>
-
+                  {auctionClosed ? (
                     <div
                       style={{
-                        marginTop: '10px',
-                        marginBottom: '10px',
-                        padding: '9px 12px',
-                        background: '#eef6ff',
-                        borderRadius: '10px',
-                        fontSize: '22px',
-                        color: '#315f9c'
+                        marginTop: '28px',
+                        padding: '24px',
+                        background: '#e8fff0',
+                        border:
+                          '2px solid #4caf50',
+                        borderRadius: '20px',
+                        textAlign: 'center'
                       }}
                     >
-                      {highestBid === null ? (
-                        <>
-                          Startgebot /
-                          Starting Bid:{' '}
-                          <strong>
-                            2.500 €
-                          </strong>
-                        </>
-                      ) : (
-                        <>
-                          Erhéijung pro
-                          Gebot /
-                          Bid increase:{' '}
-                          <strong>
-                            min. 50 € ·
-                            max. 500 €
-                          </strong>
-                        </>
-                      )}
-                    </div>
-
-                    <div>
-                      Viregt Gebot /
-                      Previous Bid:{' '}
-                      <strong
+                      <p
                         style={{
+                          margin: '0 0 10px',
+                          fontSize: '34px',
+                          fontWeight: 'bold',
+                          color: '#1b5e20'
+                        }}
+                      >
+                        Auktioun eriwwer /
+                        Auction ended
+                      </p>
+
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: '24px',
+                          color: '#315f9c'
+                        }}
+                      >
+                        Finalt Gebot /
+                        Final Bid
+                      </p>
+
+                      <p
+                        style={{
+                          margin: '10px 0 0',
+                          fontSize: '54px',
+                          fontWeight: 'bold',
                           color: '#0f3d91'
                         }}
                       >
-                        {previousBid !== null
-                          ? `${previousBid.toLocaleString('de-LU')} €`
+                        {highestBid !== null
+                          ? `${highestBid.toLocaleString('de-LU')} €`
                           : '—'}
-                      </strong>
+                      </p>
+
+                      <p
+                        style={{
+                          margin: '18px 0 0',
+                          fontSize: '24px',
+                          fontWeight: 'bold',
+                          color: '#315f9c'
+                        }}
+                      >
+                        Merci fir Är
+                        Ënnerstëtzung ·
+                        Thank you for
+                        your support
+                      </p>
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: '118px',
+                          lineHeight: '1',
+                          fontWeight: 'bold',
+                          color: '#0f3d91'
+                        }}
+                      >
+                        {highestBid !== null
+                          ? `${highestBid.toLocaleString('de-LU')} €`
+                          : `${START_BID.toLocaleString('de-LU')} €`}
+                      </p>
+
+                      <div
+                        style={{
+                          marginTop: '26px',
+                          paddingTop: '22px',
+                          borderTop:
+                            '2px solid #d9e8ff',
+                          fontSize: '28px',
+                          lineHeight: '1.6',
+                          color: '#444'
+                        }}
+                      >
+                        <div>
+                          Nächst méiglecht
+                          Gebot / Next Possible
+                          Bid:{' '}
+                          <strong
+                            style={{
+                              color: '#0f3d91'
+                            }}
+                          >
+                            {minBid.toLocaleString('de-LU')} €
+                          </strong>
+                        </div>
+
+                        <div>
+                          Max. Gebot /
+                          Maximum Bid:{' '}
+                          <strong
+                            style={{
+                              color: '#0f3d91'
+                            }}
+                          >
+                            {maxBid.toLocaleString('de-LU')} €
+                          </strong>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: '10px',
+                            marginBottom: '10px',
+                            padding: '9px 12px',
+                            background: '#eef6ff',
+                            borderRadius: '10px',
+                            fontSize: '22px',
+                            color: '#315f9c'
+                          }}
+                        >
+                          {highestBid === null ? (
+                            <>
+                              Startgebot /
+                              Starting Bid:{' '}
+                              <strong>
+                                2.500 €
+                              </strong>
+                            </>
+                          ) : (
+                            <>
+                              Erhéijung pro
+                              Gebot /
+                              Bid increase:{' '}
+                              <strong>
+                                min. 50 € ·
+                                max. 500 €
+                              </strong>
+                            </>
+                          )}
+                        </div>
+
+                        <div>
+                          Viregt Gebot /
+                          Previous Bid:{' '}
+                          <strong
+                            style={{
+                              color: '#0f3d91'
+                            }}
+                          >
+                            {previousBid !== null
+                              ? `${previousBid.toLocaleString('de-LU')} €`
+                              : '—'}
+                          </strong>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
