@@ -543,9 +543,9 @@ export default function StreamPage() {
                         }}
                       >
                         Merci fir Är
-                        Ënnerstëtzung ·
+                        Ënnerstëtzung! ·
                         Thank you for
-                        your support
+                        your support!
                       </p>
                     </div>
                   ) : (
