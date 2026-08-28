@@ -94,13 +94,13 @@ export default function AuctionClient({
     ? new Date(auctionSettings.auction_end)
     : null
 
-  const minBid =
-    startBid === null ||
-    minIncrease === null
-      ? null
-      : highestBid === null
-        ? startBid
-        : highestBid + minIncrease
+ const minBid =
+  startBid === null ||
+  minIncrease === null
+    ? null
+    : highestBid === null
+      ? startBid + minIncrease
+      : highestBid + minIncrease
 
   const maxBid =
     startBid === null ||
