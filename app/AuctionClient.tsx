@@ -189,6 +189,7 @@ export default function AuctionClient({
       setHighestBid(null)
       setLastBid(null)
     }
+    setBidsLoaded(true)
   }
 
   async function loadBidderProfile(userId: string) {
