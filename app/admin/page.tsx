@@ -165,45 +165,87 @@ export default function AdminPage() {
   }, [])
 
   useEffect(() => {
-    if (!isAdmin) return
+  if (!isAdmin) return
 
-    loadBids()
+  /*
+   * Aktuellen Stand sofort laden
+   */
+  loadBids()
 
-    const bidRefreshInterval =
-      setInterval(() => {
+  /*
+   * Sicherheitsnetz:
+   * alle 2 Sekunden nochmals prüfen.
+   */
+  const bidRefreshInterval =
+    setInterval(() => {
+      loadBids()
+    }, 2000)
+
+  /*
+   * Sofortige Aktualisierung bei
+   * einem neuen Online- oder Live-Gebot.
+   */
+  const bidChannel =
+    supabase.channel(
+      'auction-bids'
+    )
+
+  bidChannel
+    .on(
+      'broadcast',
+      {
+        event:'new_bid'
+      },
+      () => {
         loadBids()
-      }, 2000)
+      }
+    )
+    .subscribe()
 
-    const viewerChannel =
-      supabase.channel(
-        'auction-viewers'
-      )
+  /*
+   * Live Zuschauer
+   */
+  const viewerChannel =
+    supabase.channel(
+      'auction-viewers'
+    )
 
-    viewerChannel
-      .on(
-        'presence',
-        { event:'sync' },
-        () => {
-          const state =
-            viewerChannel.presenceState()
+  viewerChannel
+    .on(
+      'presence',
+      {
+        event:'sync'
+      },
+      () => {
+        const state =
+          viewerChannel
+            .presenceState()
 
-          const count =
-            Object.values(state)
-              .flat()
-              .length
+        const count =
+          Object.values(state)
+            .flat()
+            .length
 
-          setViewerCount(count)
-        }
-      )
-      .subscribe()
+        setViewerCount(count)
+      }
+    )
+    .subscribe()
 
-    return () => {
-      clearInterval(bidRefreshInterval)
-      supabase.removeChannel(
-        viewerChannel
-      )
-    }
-  }, [isAdmin])
+  return () => {
+    clearInterval(
+      bidRefreshInterval
+    )
+
+    supabase.removeChannel(
+      bidChannel
+    )
+
+    supabase.removeChannel(
+      viewerChannel
+    )
+  }
+
+}, [isAdmin])
 
   function createInvoiceEmail(
     bid:any,
