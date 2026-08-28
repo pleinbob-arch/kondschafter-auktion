@@ -727,7 +727,7 @@ export default function AuctionClient({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
+            padding: '18px',
             background: 'rgba(0,0,0,0.62)'
           }}
         >
@@ -735,53 +735,48 @@ export default function AuctionClient({
             style={{
               position: 'relative',
               width: '100%',
-              maxWidth: '680px',
-              maxHeight: '92vh',
-              overflowY: 'auto',
-              background: '#ffffff',
-              borderRadius: '34px 34px 34px 10px',
-              padding: '34px 30px 30px',
-              boxShadow:
-                '0 24px 70px rgba(0,0,0,0.38)',
-              border: '4px solid #0f3d91'
+              maxWidth: '620px',
+              background: '#fff',
+              border: '4px solid #0f3d91',
+              borderRadius: '34px',
+              padding: '24px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+              textAlign: 'center'
             }}
           >
             <div
               style={{
                 position: 'absolute',
                 left: '42px',
-                bottom: '-24px',
+                bottom: '-30px',
                 width: 0,
                 height: 0,
-                borderTop: '24px solid #0f3d91',
-                borderRight: '28px solid transparent'
+                borderTop: '30px solid #0f3d91',
+                borderRight: '38px solid transparent'
               }}
             />
-
             <div
               style={{
                 position: 'absolute',
-                left: '46px',
-                bottom: '-17px',
+                left: '47px',
+                bottom: '-21px',
                 width: 0,
                 height: 0,
-                borderTop: '20px solid #ffffff',
-                borderRight: '23px solid transparent'
+                borderTop: '24px solid #fff',
+                borderRight: '30px solid transparent'
               }}
             />
 
             <div
               style={{
                 display: 'inline-block',
-                margin: '0 auto 14px',
-                padding: '9px 16px',
+                padding: '7px 16px',
                 borderRadius: '999px',
                 background: '#ffcf33',
                 color: '#0d2e67',
                 fontWeight: '900',
-                fontSize: '15px',
-                letterSpacing: '0.6px',
-                textTransform: 'uppercase',
+                fontSize: '14px',
+                letterSpacing: '0.7px',
                 boxShadow: '0 4px 0 #d7a900'
               }}
             >
@@ -791,26 +786,22 @@ export default function AuctionClient({
             <h2
               id="auction-info-title"
               style={{
-                margin: '0 0 10px',
+                margin: '14px 0 4px',
                 color: '#0f3d91',
-                fontSize: 'clamp(34px, 7vw, 52px)',
-                lineHeight: '0.98',
-                textAlign: 'center',
-                fontWeight: '900',
-                textTransform: 'uppercase',
-                letterSpacing: '-1px'
+                fontSize: 'clamp(34px, 7vw, 48px)',
+                lineHeight: '1',
+                fontWeight: '900'
               }}
             >
-              Final 15 Minutes
+              FINAL 15 MINUTES
             </h2>
 
             <p
               style={{
-                margin: '0 0 24px',
-                textAlign: 'center',
-                fontSize: '17px',
+                margin: '0 0 16px',
+                color: '#315f9c',
                 fontWeight: '800',
-                color: '#315f9c'
+                fontSize: '15px'
               }}
             >
               Déi lescht 15 Minutten · The final 15 minutes
@@ -818,101 +809,50 @@ export default function AuctionClient({
 
             <div
               style={{
-                display: 'grid',
-                gap: '16px',
-                marginBottom: '22px'
+                padding: '15px 18px',
+                background: '#eaf3ff',
+                border: '2px solid #8ec5ff',
+                borderRadius: '18px',
+                color: '#16365f',
+                lineHeight: '1.45',
+                marginBottom: '12px'
               }}
             >
-              <div
-                style={{
-                  padding: '20px',
-                  background: '#eaf3ff',
-                  borderRadius: '20px',
-                  border: '2px solid #8ec5ff',
-                  textAlign: 'center',
-                  lineHeight: '1.65',
-                  color: '#16365f',
-                  fontSize: '16px'
-                }}
-              >
-                <div
-                  style={{
-                    display: 'inline-block',
-                    marginBottom: '10px',
-                    padding: '5px 11px',
-                    borderRadius: '999px',
-                    background: '#0f3d91',
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: '900',
-                    letterSpacing: '0.8px'
-                  }}
-                >
-                  LËTZEBUERGESCH
-                </div>
+              <strong style={{ fontSize: '17px' }}>
+                LËTZEBUERGESCH
+              </strong>
+              <p style={{ margin: '8px 0 0' }}>
+                <strong>Live-Auktioun:</strong> déi lescht 15 Minutten
+                um Stand vun de Kondschafter.
+                <br />
+                <strong>Aschreiwen um Stand → Bieternummer kréien.</strong>
+                <br />
+                Ouni Bieternummer <strong>kee Matbidden.</strong>
+              </p>
+            </div>
 
-                <div>
-                  <strong>
-                    Déi lescht 15 Minutte vun der Auktioun ginn als
-                    Live-Auktioun um Stand vun de Kondschafter
-                    duerchgefouert.
-                  </strong>
-                  <br /><br />
-                  Fir matzebidden, muss du dech um Stand vun de
-                  Kondschafter aschreiwen. Bei der Aschreiwung kriss du
-                  eng <strong>Bieternummer</strong>.
-                  <br /><br />
-                  <strong>
-                    Ouni Bieternummer ass et net méiglech, un der
-                    Live-Auktioun matzebidden.
-                  </strong>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  padding: '20px',
-                  background: '#fff3df',
-                  borderRadius: '20px',
-                  border: '2px solid #f1bc63',
-                  textAlign: 'center',
-                  lineHeight: '1.65',
-                  color: '#5b3a08',
-                  fontSize: '16px'
-                }}
-              >
-                <div
-                  style={{
-                    display: 'inline-block',
-                    marginBottom: '10px',
-                    padding: '5px 11px',
-                    borderRadius: '999px',
-                    background: '#b96b00',
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: '900',
-                    letterSpacing: '0.8px'
-                  }}
-                >
-                  ENGLISH
-                </div>
-
-                <div>
-                  <strong>
-                    The final 15 minutes of the auction will be conducted
-                    as a live auction at the Kondschafter stand.
-                  </strong>
-                  <br /><br />
-                  To participate, you must register at the Kondschafter
-                  stand. When registering, you will receive a
-                  <strong> bidder number</strong>.
-                  <br /><br />
-                  <strong>
-                    Without a bidder number, participation in the live
-                    auction is not possible.
-                  </strong>
-                </div>
-              </div>
+            <div
+              style={{
+                padding: '15px 18px',
+                background: '#fff3df',
+                border: '2px solid #f1bc63',
+                borderRadius: '18px',
+                color: '#5b3a08',
+                lineHeight: '1.45',
+                marginBottom: '16px'
+              }}
+            >
+              <strong style={{ fontSize: '17px' }}>
+                ENGLISH
+              </strong>
+              <p style={{ margin: '8px 0 0' }}>
+                <strong>Live auction:</strong> final 15 minutes at the
+                Kondschafter stand.
+                <br />
+                <strong>Register at the stand → receive a bidder number.</strong>
+                <br />
+                No bidder number = <strong>no live bidding.</strong>
+              </p>
             </div>
 
             <button
@@ -922,26 +862,12 @@ export default function AuctionClient({
               style={{
                 ...buttonStyle,
                 width: '100%',
-                fontSize: '18px',
-                padding: '17px'
+                padding: '14px',
+                fontSize: '17px'
               }}
             >
               Verstanen / Understood
             </button>
-
-            <p
-              style={{
-                margin: '14px 0 0',
-                textAlign: 'center',
-                fontSize: '12px',
-                color: '#777'
-              }}
-            >
-              Dës Informatioun gëtt pro Browser-Sessioun nëmmen eemol
-              gewisen.
-              <br />
-              This information is shown only once per browser session.
-            </p>
           </div>
         </div>
       )}
