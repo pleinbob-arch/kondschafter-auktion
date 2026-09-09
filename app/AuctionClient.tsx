@@ -1084,10 +1084,10 @@ export default function AuctionClient({
 
             <div
               style={{
-                marginTop: '14px',
-                marginBottom: '12px',
-                padding: '14px 16px',
-                borderRadius: '16px',
+                marginTop: '10px',
+                marginBottom: '10px',
+                padding: '9px 12px',
+                borderRadius: '12px',
                 background:
                   'linear-gradient(135deg, #fff7d6, #ffe8a3)',
                 border: '2px solid #ffcf33',
@@ -1097,7 +1097,7 @@ export default function AuctionClient({
             >
               <div
                 style={{
-                  fontSize: '13px',
+                  fontSize: '11px',
                   fontWeight: 'bold',
                   color: '#604b00',
                   textTransform: 'uppercase',
@@ -1106,18 +1106,17 @@ export default function AuctionClient({
                 }}
               >
                 Wäert vum Konschtwierk / Artwork value
-2.000 € +
               </div>
 
               <div
                 style={{
-                  fontSize: 'clamp(28px, 6vw, 38px)',
+                  fontSize: 'clamp(22px, 5vw, 30px)',
                   lineHeight: '1',
                   fontWeight: '900',
                   color: '#0f3d91'
                 }}
               >
-                iwwer 2.000 €
+                2.000 €+
               </div>
             </div>
 
