@@ -1086,7 +1086,7 @@ export default function AuctionClient({
               style={{
                 marginTop: '10px',
                 marginBottom: '10px',
-                padding: '9px 12px',
+                padding: '10px 12px',
                 borderRadius: '12px',
                 background:
                   'linear-gradient(135deg, #fff7d6, #ffe8a3)',
@@ -1097,27 +1097,31 @@ export default function AuctionClient({
             >
               <div
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 'bold',
-                  color: '#604b00',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  marginBottom: '4px'
+                  fontSize: '15px',
+                  fontWeight: '900',
+                  color: '#0f3d91',
+                  marginBottom: '6px'
                 }}
               >
-                Startgebot / Starting bid: 500 €
+                Startgebot / Starting bid:{' '}
+                {startBid !== null
+                  ? `${startBid.toLocaleString('de-LU')} €`
+                  : '…'}
               </div>
 
               <div
                 style={{
-                  fontSize: 'clamp(22px, 5vw, 30px)',
-                  lineHeight: '1',
-                  fontWeight: '900',
-                  color: '#0f3d91'
+                  fontSize: '11px',
+                  lineHeight: '1.45',
+                  color: '#604b00',
+                  fontWeight: '600'
                 }}
               >
-                D’Startgebot ass bewosst niddreg ugesat a stellt keng Bewäertung vum Konschtwierk duer.
-The starting bid is intentionally set low and does not represent a valuation of the artwork.
+                D’Startgebot ass bewosst niddreg ugesat a stellt keng
+                Bewäertung vum Konschtwierk duer.
+                <br />
+                The starting bid is intentionally set low and does not
+                represent a valuation of the artwork.
               </div>
             </div>
 
