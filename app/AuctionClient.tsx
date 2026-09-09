@@ -1105,7 +1105,8 @@ export default function AuctionClient({
                   marginBottom: '4px'
                 }}
               >
-                Wäert / Value
+                Wäert vum Konschtwierk / Artwork value
+2.000 € +
               </div>
 
               <div
