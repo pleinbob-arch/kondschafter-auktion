@@ -1105,7 +1105,7 @@ export default function AuctionClient({
                   marginBottom: '4px'
                 }}
               >
-                Geschätzte Wäert / Estimated value
+                Wäert / Value
               </div>
 
               <div
