@@ -1105,7 +1105,7 @@ export default function AuctionClient({
                   marginBottom: '4px'
                 }}
               >
-                Wäert vum Konschtwierk / Artwork value
+                Startgebot / Starting bid: 500 €
               </div>
 
               <div
@@ -1116,7 +1116,8 @@ export default function AuctionClient({
                   color: '#0f3d91'
                 }}
               >
-                2.000 €+
+                D’Startgebot ass bewosst niddreg ugesat a stellt keng Bewäertung vum Konschtwierk duer.
+The starting bid is intentionally set low and does not represent a valuation of the artwork.
               </div>
             </div>
 
