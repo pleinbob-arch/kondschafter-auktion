@@ -1082,14 +1082,53 @@ export default function AuctionClient({
               }}
             />
 
+            <div
+              style={{
+                marginTop: '14px',
+                marginBottom: '12px',
+                padding: '14px 16px',
+                borderRadius: '16px',
+                background:
+                  'linear-gradient(135deg, #fff7d6, #ffe8a3)',
+                border: '2px solid #ffcf33',
+                textAlign: 'center',
+                boxShadow: '0 6px 18px rgba(15,61,145,0.10)'
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  color: '#604b00',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  marginBottom: '4px'
+                }}
+              >
+                Geschätzte Wäert / Estimated value
+              </div>
+
+              <div
+                style={{
+                  fontSize: 'clamp(28px, 6vw, 38px)',
+                  lineHeight: '1',
+                  fontWeight: '900',
+                  color: '#0f3d91'
+                }}
+              >
+                iwwer 2.000 €
+              </div>
+            </div>
+
             <p
               style={{
-                marginTop: '10px',
+                marginTop: '0',
                 marginBottom: '20px',
                 fontSize: '13px',
                 color: '#666',
                 textAlign: 'center',
-                fontStyle: 'italic'
+                fontStyle: 'italic',
+                lineHeight: '1.6'
               }}
             >
               Konschtwierk: 160 cm × 120 cm
